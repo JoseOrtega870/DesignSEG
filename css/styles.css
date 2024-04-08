@@ -1,0 +1,72 @@
+*{
+    font-family: "Poppins", sans-serif;
+    overflow: hidden;
+}
+
+body {
+    background: rgb(1,145,96);
+    background: linear-gradient(180deg, rgba(1,145,96,1) 0%, rgba(1,42,134,1) 100%);
+    background-attachment: fixed;
+    font-size: 20px;
+}
+.aln{
+    margin-top: 90px;
+}
+.form-container {
+  background-color: #FFFFFF;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin: 40px auto;
+  margin-top: 90px;
+  max-width: 400px;
+}
+.form-container h1 {
+  font-weight: bold;  
+  text-align: center;
+  margin-bottom: 30px;
+  padding: 10px;
+}
+.form-container input[type="text"],
+.form-container input[type="password"] {
+  font-weight: 600;  
+  border-radius: 5px;
+  border: 1px solid #CCCCCC;
+  margin: 0 10px;
+  padding: 10px;
+  width: 200px;
+}
+.form-container button {
+  font-weight: 600;  
+  background-color: #012A86;
+  border: none;
+  color: #FFFFFF;
+  padding: 10px 20px;
+  border-radius: 5px;
+  margin-top: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.form-container img {
+    width: 111px;
+    margin-bottom: 40px;
+}
+.form-container button:hover {
+  background-color: #019160;
+}
+.form-container p {
+  font-weight: 400;  
+  text-align: center;
+  margin-top: 20px;
+  font-size: 0.9rem;
+}
+.form-container a {
+  font-weight: 400;  
+  color: #012A86;
+  text-decoration: none;
+}
+.mb-3,
+.centerlb {
+    display: flex;
+    justify-content: center;
+}
