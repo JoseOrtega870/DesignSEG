@@ -1,0 +1,23 @@
+.bg-plim{
+    height: 100vh;
+    width: 100vw;
+    background: linear-gradient(to bottom, #019160, #012A86);
+    background: -webkit-linear-gradient(to bottom, #019160, #012A86);
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+.bg-plim-button{
+    background: linear-gradient(to bottom, #019160, #012A86);
+    background: -webkit-linear-gradient(to bottom, #019160, #012A86);
+}
+
+.loginToSignupButton{
+    color : #012A86;
+    font-size: small;
+}
+
+.smallText{
+    font-size: x-small;
+    align-items: start;
+}
