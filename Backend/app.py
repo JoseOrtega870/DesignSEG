@@ -13,7 +13,8 @@ cursor.execute("""CREATE TABLE IF NOT EXISTS users(
                 role VARCHAR(10) NOT NULL,
                 firstname VARCHAR(30) NOT NULL,
                 middlename VARCHAR(30) NOT NULL,
-                lastname VARCHAR(30) NOT NULL
+                lastname VARCHAR(30) NOT NULL,
+                points INT(9) NOT NULL DEFAULT 0
                )""")
 
 # TEST DATA
@@ -38,12 +39,15 @@ def index():
 
 # 10.25.240.250
 
-
 @app.route('/login', methods=["POST"])
 def login():
+    # TO DO : VALIDATE DATA AND LOGIN
+
     print (request.get_json())
     return "200 OK"
 
+""" 
+    *** TEST END POINT ***
 @app.route('/users', methods=["GET"])
 def get_users():
     connection = sqlite3.connect('database.db')
@@ -54,4 +58,5 @@ def get_users():
     connection.close()
     return {'users': users}
 
+"""
 
