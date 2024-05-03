@@ -4,8 +4,8 @@
 
 El siguiente software cuenta con los archivos html pertenecientes al frontEnd asi como el BackEnd
 
-### Endpoints disponibles
-## Endpoint para usuarios
+## Endpoints disponibles
+### Endpoint para usuarios
 Con este endpoint se maneja la tabla de usuarios registrados en el sistema para poder controlar el acceso al sistema y qué funcionalidades tiene el usuario en la plataforma
 
 * /users  > 
@@ -35,7 +35,7 @@ Con este endpoint se maneja la tabla de usuarios registrados en el sistema para 
                 } 
             ```
 
-## Endpoint para login
+### Endpoint para login
 Verificar acceso al sistema 
 
 * /login
@@ -52,7 +52,7 @@ Verificar acceso al sistema
 
         * DELETE: Cierra una sesión de usuario
      
-##Endpoint para mmanejo de propuestas
+### Endpoint para mmanejo de propuestas
 Con este endpoint se administran las propuestas, desde su creación hasta la revisión y aceptación o rechazo
 
 * /propuestas
@@ -91,7 +91,7 @@ Con este endpoint se administran las propuestas, desde su creación hasta la rev
         * GET _< server >/proopuesta/< id >_
             * Obtiene una propuesta por ID
 
-## Endpoint para pedidos
+### Endpoint para pedidos
 Administrar pedidos para el canje de puntos 
 
 * /orders
