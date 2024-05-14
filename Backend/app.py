@@ -196,9 +196,13 @@ def insertUser(data:dict):
         cursor.close()
         connection.close()
         return False
+    
+    #Check if points where passed, if not default to 0
+    if "points" not in data:
+        data["points"] = 0
 
     # Insert user
-    cursor.execute("INSERT INTO users (username, password, role, firstname, middlename, lastname) VALUES (?, ?, ?, ?, ?, ?)", (data["username"], data["password"], data["role"], data["firstname"], data["middlename"], data["lastname"]))
+    cursor.execute("INSERT INTO users (username, password, role, firstname, middlename, lastname, points) VALUES (?, ?, ?, ?, ?, ?, ?)", (data["username"], data["password"], data["role"], data["firstname"], data["middlename"], data["lastname"], data["points"]))
     
     # Commit the transaction
     connection.commit()
