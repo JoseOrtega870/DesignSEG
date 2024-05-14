@@ -158,7 +158,25 @@ def users():
 
 
     elif request.method == "DELETE":
-        pass
+        id = request.args.get("id")
+        if not id:
+            data = {
+                "Status Code": 400,
+                "Motive":"Incorrect parameters sent"}
+            response = jsonify(data)
+            response.status_code = 400
+            return response
+        
+        if deleteUser(id):
+            return "",200
+        else:
+            data = {
+                "Status Code": 400,
+                "Motive":"User doesn't exist"}
+            response = jsonify(data)
+            response.status_code = 400
+            return response
+        
     elif request.method == "GET":
         pass
     elif request.method == "PUT":
@@ -179,7 +197,7 @@ def insertUser(data:dict):
         connection.close()
         return False
 
-    # Insertar al usuario
+    # Insert user
     cursor.execute("INSERT INTO users (username, password, role, firstname, middlename, lastname) VALUES (?, ?, ?, ?, ?, ?)", (data["username"], data["password"], data["role"], data["firstname"], data["middlename"], data["lastname"]))
     
     # Commit the transaction
@@ -190,4 +208,24 @@ def insertUser(data:dict):
     connection.close()
     return True
 
+def deleteUser(id:str):
+    # Connect to the database
+    connection = sqlite3.connect('database.db')
+    cursor = connection.cursor()
 
+    # Checks wheter the user exists
+    cursor.execute("SELECT * FROM users WHERE id = ?", (id,))
+    user = cursor.fetchone()
+    if not user:
+        # Close the database connection
+        cursor.close()
+        connection.close()
+        return False
+
+    # Borrar al usuario indicado
+    cursor.execute("DELETE FROM users WHERE id = ?", (id,))
+    connection.commit()
+    # Close the database connection
+    cursor.close()
+    connection.close()
+    return True
