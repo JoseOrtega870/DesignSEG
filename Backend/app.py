@@ -7,7 +7,7 @@ app = Flask(__name__)
 database = 'database.db'
 
 # Function to decorate functions that requiere a connection to the database
-def query(database:str):
+def query(database:str): 
     def wrapper(customQuery):
         def wrapFunction(*args,**kwargs):
             # Creates connection to the database and closes it when done
@@ -78,6 +78,7 @@ def createTables(cursor:sqlite3.Cursor,connection:sqlite3.Connection):
                )""")
     cursor.execute("""CREATE TABLE IF NOT EXISTS proposals(
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
+                title VARCHAR(50) NOT NULL,
                 current_situation VARCHAR(50) NOT NULL,
                 area VARCHAR(50) NOT NULL,
                 status VARCHAR(50) NOT NULL,
@@ -85,13 +86,13 @@ def createTables(cursor:sqlite3.Cursor,connection:sqlite3.Connection):
                 type VARCHAR(50) NOT NULL,
                 feedback VARCHAR(50) NOT NULL
                )""")
-    
     cursor.execute("""CREATE TABLE IF NOT EXISTS userProposals(
                 user_id INT NOT NULL,
                 proposal_id INT NOT NULL,
                 FOREIGN KEY (user_id) REFERENCES users(id),
                 FOREIGN KEY (proposal_id) REFERENCES proposals(id)
-               )""")     
+               )""")   
+    connection.commit()  
 
 @app.route('/')
 def index():
@@ -285,3 +286,141 @@ def editUser(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
     # Commit the transaction
     connection.commit()
     return True
+
+@app.route('/proposals', methods=["POST","PUT","GET"])
+def proposals():
+    if request.method == "POST":
+        # Create a new proposal
+        jsonData = request.get_json()
+        if validateData(["title","description","currentSituation","area","status","type","feedback","usersId"],jsonData) == False:
+            response = responseJson(400,"Incorrect parameters sent")
+            return response
+
+        if createProposal(jsonData):
+            return "",200
+        else:
+            response = responseJson(400,"User not found")
+            return response
+
+    elif request.method == "PUT":
+        # Edit an existing proposal
+        jsonData = request.get_json()
+        if validateData(["currentUserId","proposalId","title","description","currentSituation","area","status","type","feedback","usersId"],jsonData) == False:
+            response = responseJson(400,"Incorrect parameters sent")
+            return response
+        
+        result = editProposal(jsonData)
+        
+        if result == 0:
+            response = responseJson(400,"User not found")
+            return response
+        elif result == 1:
+            response = responseJson(401,"User not authorized to edit")
+            return response
+        elif result == 2:
+            response = responseJson(404,"Proposal not found")
+            return response
+        else:
+            return "",200
+        
+
+    elif request.method == "GET":   
+        # Get data for a given user
+        id = request.args.get("id")
+        if not id:
+            response = responseJson(400,"Incorrect parameters sent")
+            return response
+        
+        proposal = getProposal(id)
+        if proposal != None:
+            # Success
+            response = jsonify(proposal)
+            response.status_code = 200
+            return response
+        else:
+            # Proposal not found
+            response = responseJson(404,"Proposal not found")
+            return response
+
+@query(database)
+def createProposal(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
+    #check if it breaks when deleting and adding new proposals
+    # Insert proposal
+    cursor.execute("INSERT INTO proposals (title,current_situation, area, status, proposal, type, feedback) VALUES (?,?, ?, ?, ?, ?, ?)",
+                    (data["title"], data["currentSituation"], data["area"], data["status"], data["description"], data["type"], data["feedback"]))
+    
+    proposalId = cursor.lastrowid
+
+    # Insert into userProposals
+    for id in data["usersId"]:
+        data = cursor.execute("SELECT * FROM users WHERE id = ?", (id,))
+        row = data.fetchone()
+        if not row:
+            connection.rollback()
+            return False
+        cursor.execute("INSERT INTO userProposals (user_id, proposal_id) VALUES (?, ?)",(id,proposalId))
+
+    # Commit the transaction
+    connection.commit()
+    return True
+
+@query(database)
+def editProposal(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
+    # Checks wheter the proposal exists
+    cursor.execute("SELECT * FROM proposals WHERE id = ?", (data["proposalId"],))
+    proposal = cursor.fetchone()
+    if not proposal:
+        return 2
+
+    # Edit proposal
+    cursor.execute("UPDATE proposals SET current_situation = ?, area = ?, status = ?, proposal = ?, type = ? WHERE id = ?",
+                    (data["currentSituation"], data["area"], data["status"], data["description"], data["type"], data["proposalId"]))
+        
+    cursor.execute("DELETE FROM userProposals WHERE proposal_id = ?",(data["proposalId"],))
+    # Insert into userProposals
+    for id in data["usersId"]:
+        result = cursor.execute("SELECT * FROM users WHERE id = ?", (id,))
+        row = result.fetchone()
+        if not row:
+            connection.rollback()
+            return 0
+        cursor.execute("INSERT INTO userProposals (user_id, proposal_id) VALUES (?, ?)",(id,data["proposalId"]))
+    
+    # Checks whether the user is an admin
+    cursor.execute("SELECT role FROM users WHERE id = ?",(data["currentUserId"],))
+    row = result.fetchone()
+    if row:
+        connection.commit()
+        return 3
+    # Checks whether the user editing is one of the people who suggested it
+    cursor.execute("SELECT user_id FROM userProposals WHERE proposal_id = ?",(data["proposalId"],))
+    for i in cursor:
+        if i[0] == data["currentUserId"]:
+            connection.commit()
+            return 3   
+         
+    connection.rollback()
+    return 1
+
+@query(database)
+def getProposal(cursor:sqlite3.Cursor,connection:sqlite3.Connection,id):
+    # Retrieve proposal(will be None in case it's not found)
+    data = cursor.execute("SELECT id,title,current_situation,area,status,proposal,type,feedback FROM proposals WHERE id = ?", (id,))
+    row = data.fetchone()
+    if not row:
+        return None
+    
+    # Add keys to the values returned 
+    proposal = {}
+    for i,column in enumerate(data.description):
+        proposal[column[0]] = row[i]
+
+    # Append all the users involved
+    cursor.execute("SELECT user_id FROM userProposals WHERE proposal_id = ?",(id,))
+    users = []
+    for i in cursor:
+        print(i)
+        users.append(i[0])
+    proposal["usersId"] = users
+            
+    return proposal
