@@ -57,7 +57,7 @@ def checkAdmin(cursor:sqlite3.Cursor,connection:sqlite3.Connection,id:int)->bool
         return False
     return True
 
-#Creates tables needed for the database
+# Creates tables needed for the database
 @query(database)
 def createTables(cursor:sqlite3.Cursor,connection:sqlite3.Connection):
     cursor.execute("""CREATE TABLE IF NOT EXISTS users(
@@ -342,6 +342,7 @@ def proposals():
             response = responseJson(404,"Proposal not found")
             return response
 
+# Function to create a proposal, returns true if succesful and false if unsuccesful
 @query(database)
 def createProposal(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
     #check if it breaks when deleting and adding new proposals
@@ -364,6 +365,7 @@ def createProposal(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict
     connection.commit()
     return True
 
+# Function to edit an existing proposal, returns 0 if succesful. Other numbers are different errors
 @query(database)
 def editProposal(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
     # Checks wheter the proposal exists
@@ -402,6 +404,7 @@ def editProposal(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
     connection.rollback()
     return 1
 
+# Function to retrieve a proposal, return None if it fails
 @query(database)
 def getProposal(cursor:sqlite3.Cursor,connection:sqlite3.Connection,id):
     # Retrieve proposal(will be None in case it's not found)
