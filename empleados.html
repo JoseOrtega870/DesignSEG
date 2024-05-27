@@ -111,9 +111,35 @@
                     </tbody>
                 </table>
 
-                <button class="boton d-grid gap-2 col-6 mx-auto">Nueva Mejora</button>
+                <button class="boton d-grid gap-2 col-6 mb-10 mx-auto" data-bs-toggle="modal" data-bs-target="#nueva-mejora">Nueva Mejora</button>
             </div>
         </main>
+
+        <!--Ventana Emergente-->
+        <div class="modal fade" id="nueva-mejora" tabindex="-1" aria-hidden="true" aria-labelledby="label-modal-1" data-bs-backdrop="static">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header border-bottom-0">
+                            <h5 class="modal-title mx-auto">Registrar PLIM</h5>
+                        </div>
+                        <div class="modal-body">
+                            <form action="">
+                                <label for="area">Linea/Area en donde se propone la mejora:</label>
+                                <select name="area" id="area">
+                                    <option selected>Selecciona el departamento o area</option>
+                                </select>
+                            </form>
+                        </div>
+                        <div class="modal-footer mx-auto border-top-0 p-6">
+                            <button type="button" class="boton">Enviar</button>
+                            <button type="button" class="boton" data-bs-dismiss="modal">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+        </div>
     </div>
+
+    <script src="js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

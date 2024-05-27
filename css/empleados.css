@@ -145,14 +145,19 @@ td a:hover {
 
 .boton {
     background-color: #012A86;
+    margin-bottom: 20px;
     color: #FFFFFF;
-    margin-bottom: 10px;
     text-decoration: none;
     border: none;
     outline: none;
     font-size: 15px;
     width: fit-content;
     padding: 10px;
+}
+
+.modal-footer .boton {
+    margin: 0;
+    border-top: #FFFFFF;
 }
 
 .boton:hover {
@@ -163,6 +168,11 @@ td a:hover {
     margin: 0;
     display: flex;
     justify-content: center;
+}
+
+.modal-body {
+    height: 500px;
+    width: 500px;
 }
 
 section h4 {
