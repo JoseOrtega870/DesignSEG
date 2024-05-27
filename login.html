@@ -18,12 +18,12 @@
             <div class="col-md-6 offset-md-3 form-container text-center">
                 <h1>Bienvenid@</h1>
                 <img src="img/Logo.svg" alt="logo">
-                <form>
+                <form id="loginForm">
                     <div class="mb-3">
                         <input type="text" class="form-control" id="usuario" placeholder="Usuario">
                     </div>
                     <div class="mb-3">
-                        <input type="password" class="form-control" id="contraseña" placeholder="Contraseña" >
+                        <input type="password" class="form-control" id="contrasena" placeholder="Contraseña" >
                     </div>
                     <button type="submit" class="btn">Iniciar Sesion</button>
                 </form>
@@ -33,5 +33,35 @@
     </div>
 
     <script src="js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('usuario').value;
+            const password = document.getElementById('contrasena').value;
+            
+            console.log(username, password);
+
+            fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    username: username,
+                    password: password
+                })
+            })
+            .then(response => {
+               //Handle the response from the server
+                console.log(response);
+            })
+            .catch(error => {
+               //Handle any errors
+                console.error('Error:', error);
+            });
+        });
+    </script>
 </body>
 </html>
