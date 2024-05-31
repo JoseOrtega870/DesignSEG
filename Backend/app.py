@@ -64,10 +64,11 @@ def createTables(cursor:sqlite3.Cursor,connection:sqlite3.Connection):
                 id INTEGER PRIMARY KEY AUTOINCREMENT, 
                 username VARCHAR(50) NOT NULL, 
                 password VARCHAR(50) NOT NULL,
-                role VARCHAR(10) NOT NULL,
+                role VARCHAR(10),
                 firstname VARCHAR(50) NOT NULL,
                 middlename VARCHAR(50) NOT NULL,
                 lastname VARCHAR(50) NOT NULL,
+                email VARCHAR(50) NOT NULL,
                 points INT NOT NULL DEFAULT 0
                )""")
     cursor.execute("""CREATE TABLE IF NOT EXISTS Product(
@@ -99,7 +100,12 @@ def createTables(cursor:sqlite3.Cursor,connection:sqlite3.Connection):
                 feedback VARCHAR(50) NOT NULL,
                 creationDate DATE NOT NULL DEFAULT CURRENT_DATE,
                 closeDate DATE DEFAULT NULL,
-                category VARCHAR(50) NOT NULL
+                category VARCHAR(50) NOT NULL,
+                assignedPoints INTEGER NOT NULL DEFAULT 0,
+                formerEvaluatorId INTEGER,
+                currentEvaluatorId INTEGER,
+                FOREIGN KEY (formerEvaluatorId) REFERENCES users(id),
+                FOREIGN KEY (currentEvaluatorId) REFERENCES users(id)
                )""")
     cursor.execute("""CREATE TABLE IF NOT EXISTS UserProposal(
                 userId INT NOT NULL,
@@ -166,7 +172,7 @@ def users():
     if request.method == "POST":
         # Signup a new user
         jsonData = request.get_json()
-        if validateData(["username","password","role","firstname","middlename","lastname"],jsonData) == False:
+        if validateData(["username","password","role","firstname","middlename","lastname","email"],jsonData) == False:
             response = responseJson(400,"Incorrect parameters sent")
             return response
 
@@ -176,7 +182,6 @@ def users():
         else:
             response = responseJson(400,"User already exists")
             return response
-
 
     elif request.method == "DELETE":
         # Delete an existing user
@@ -219,7 +224,7 @@ def users():
         # Edit existing user
         jsonData = request.get_json()
 
-        if validateData(["currentUserId","userId","username","password","role","firstname","middlename","lastname"],jsonData) == False:
+        if validateData(["currentUserId","userId","username","password","role","firstname","middlename","lastname","email"],jsonData) == False:
             response = responseJson(400,"Incorrect parameters sent")
             return response
 
@@ -249,7 +254,8 @@ def insertUser(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
         data["points"] = 0
 
     # Insert user
-    cursor.execute("INSERT INTO users (username, password, role, firstname, middlename, lastname, points) VALUES (?, ?, ?, ?, ?, ?, ?)", (data["username"], data["password"], data["role"], data["firstname"], data["middlename"], data["lastname"], data["points"]))
+    cursor.execute("INSERT INTO users (username, password, role, firstname, middlename, lastname, email, points) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", 
+                   (data["username"], data["password"], data["role"], data["firstname"], data["middlename"], data["lastname"], data["email"], data["points"]))
     
     # Commit the transaction
     connection.commit()
@@ -274,7 +280,7 @@ def deleteUser(cursor:sqlite3.Cursor,connection:sqlite3.Connection,id:str):
 @query(database)
 def getUser(cursor:sqlite3.Cursor,connection:sqlite3.Connection,id:str):
     # Retrieve user(will be None in case it's not found)
-    data = cursor.execute("SELECT id,role,firstname,middlename,lastname,username,points FROM users WHERE id = ?", (id,))
+    data = cursor.execute("SELECT id,role,firstname,middlename,lastname,username,email,points FROM users WHERE id = ?", (id,))
     row = data.fetchone()
     if not row:
         return None
@@ -300,8 +306,8 @@ def editUser(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
         data["points"] = 0
 
     # Insert user
-    cursor.execute("UPDATE users SET username = ?, password = ?, role = ?, firstname = ?, middlename = ?, lastname = ?, points = ? WHERE id = ?",
-                    (data["username"], data["password"], data["role"], data["firstname"], data["middlename"], data["lastname"], data["points"],data["userId"]))
+    cursor.execute("UPDATE users SET username = ?, password = ?, role = ?, firstname = ?, middlename = ?, lastname = ?, points = ?, email = ? WHERE id = ?",
+                    (data["username"], data["password"], data["role"], data["firstname"], data["middlename"], data["lastname"], data["points"], data["email"],data["userId"]))
     
     # Commit the transaction
     connection.commit()
