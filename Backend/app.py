@@ -58,6 +58,9 @@ def checkAdmin(cursor:sqlite3.Cursor,connection:sqlite3.Connection,id:int)->bool
     return True
 
 # Creates tables needed for the database
+
+
+
 @query(database)
 def createTables(cursor:sqlite3.Cursor,connection:sqlite3.Connection):
     cursor.execute("""CREATE TABLE IF NOT EXISTS users(
@@ -92,7 +95,33 @@ def createTables(cursor:sqlite3.Cursor,connection:sqlite3.Connection):
                 FOREIGN KEY (user_id) REFERENCES users(id),
                 FOREIGN KEY (proposal_id) REFERENCES proposals(id)
                )""")   
+    cursor.execute("""CREATE TABLE IF NOT EXISTS userProposals(
+                user_id INT NOT NULL,
+                proposal_id INT NOT NULL,
+                FOREIGN KEY (user_id) REFERENCES users(id),
+                FOREIGN KEY (proposal_id) REFERENCES proposals(id)
+               )""")   
+    cursor.execute("""CREATE TABLE IF NOT EXISTS products(
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name VARCHAR(50) NOT NULL,
+                description VARCHAR(100) NOT NULL,
+                price DECIMAL(10,2) NOT NULL,
+                image VARCHAR(100) NOT NULL
+               )""")   
+    cursor.execute("""CREATE TABLE IF NOT EXISTS orders(
+                user_id INT NOT NULL,
+                product_id INT NOT NULL,
+                quantity INT NOT NULL,
+                order_status VARCHAR(50) NOT NULL,
+                order_date DATE NOT NULL DEFAULT CURRENT_DATE,
+                total DECIMAL(10,2) NOT NULL,
+                FOREIGN KEY (user_id) REFERENCES users(id),
+                FOREIGN KEY (product_id) REFERENCES products(id)
+               )""")   
     connection.commit()  
+
+createTables()
+
 
 @app.route('/')
 def index():
@@ -427,3 +456,267 @@ def getProposal(cursor:sqlite3.Cursor,connection:sqlite3.Connection,id):
     proposal["usersId"] = users
             
     return proposal
+
+# Order endpoints
+@app.route("/orders", methods=["GET", "POST", "PUT"]) 
+def orders():
+    if request.method == "POST":
+        # Create a new order
+        jsonData = request.get_json()
+        if validateData(["userId","productId","quantity","orderStatus","orderDate","total"],jsonData) == False:
+            response = responseJson(400,"Incorrect parameters sent")
+            return response
+        if createOrder(jsonData):
+            return "",200
+        else:
+            response = responseJson(400,"Could not create order")
+            return response
+
+    elif request.method == "PUT":
+        # Edit an existing order
+        if updateOrder(request.get_json()):
+            return "",200
+        else:
+            response = responseJson(404,"Order not found")
+            return response
+    elif request.method == "GET":
+        if request.args.get("id"):
+            response = getOrderById(request.args.get("id"))
+            if response != None:
+                response = jsonify(response)
+                response.status_code = 200
+                return response
+            else:
+                # Order not found
+                response = responseJson(404,"Order not found")
+                return response
+        else:    
+            response = getOrders()
+            if response != None:
+                response = jsonify(response)
+                response.status_code = 200
+                return response
+            else:
+                # Order not found
+                response = responseJson(404,"No orders found")
+                return response
+@query(database)
+def createOrder(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
+    try:
+    # Insert order
+        cursor.execute("INSERT INTO orders (user_id, product_id, quantity, order_status, order_date, total) VALUES (?, ?, ?, ?, ?, ?)", (data["uderId"], data["productId"], data["quantity"], data["orderStatus"], data["orderDate"], data["total"]) )
+        connection.commit()
+        return True
+    except Exception as e:
+        print(e)
+        connection.rollback()
+        return False
+    
+@query(database)
+def getOrders(cursor:sqlite3.Cursor,connection:sqlite3.Connection):
+    # Retrieve order(will be None in case it's not found)
+    try:
+
+        data = cursor.execute("SELECT * FROM orders;")
+        row = data.fetchall()
+        if not row:
+            return None
+        
+        # Add keys to the values returned 
+        orders = {}
+        for i,column in enumerate(data.description):
+            orders[column[0]] = row[i]
+
+                
+        return orders
+    except Exception as e:
+        print(e)
+        return None
+
+@query(database)
+def getOrderById(cursor:sqlite3.Cursor,connection:sqlite3.Connection, id:int):
+    try:
+        # Retrieve order(will be None in case it's not found)
+        data = cursor.execute("SELECT * FROM orders WHERE id = ?;", (id,))
+        row = data.fetchone()
+        if not row:
+            return None
+        
+        # Add keys to the values returned 
+        orders = {}
+        for i,column in enumerate(data.description):
+            orders[column[0]] = row[i]
+
+                
+        return orders
+    except Exception as e:
+        print(e)
+        return None
+
+@query(database)
+def updateOrder(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
+    try:
+
+        # Checks wheter the order exists
+        cursor.execute("SELECT * FROM orders WHERE id = ?", (data["orderId"],))
+        order = cursor.fetchone()
+        if not order:
+            return False
+        # Update order
+        cursor.execute("UPDATE orders SET user_id = ?, product_id = ?, quantity = ?, order_status = ?, order_date = ?, total = ? WHERE id = ?",
+                        (data["uderId"], data["productId"], data["quantity"], data["orderStatus"], data["orderDate"], data["total"], data["orderId"]))
+        connection.commit()
+        return True
+    except Exception as e:
+        print(e)
+        connection.rollback()
+        return False
+# End of order endpoints
+
+# Product endpoints
+@app.route("/products", methods=["GET", "POST", "PUT", "DELETE"])
+def products():
+    if request.method == "POST":
+        # Create a new order
+        jsonData = request.get_json()
+        print(request.get_json())
+        if validateData(["name", "description", "price", "image"], jsonData) == False:
+            response = responseJson(400,"Incorrect parameters sent")
+            return response
+        if createProduct(jsonData):
+            return "",200
+        else:
+            response = responseJson(400,"Could not create product ")
+            return response
+        
+
+    elif request.method == "PUT":   
+        # Edit an existing order
+        if updateOrder(request.get_json()):
+            return "",200
+        else:
+            response = responseJson(404,"Product not found")
+            return response
+
+
+
+    elif request.method == "GET":
+        if request.args.get("id"):
+
+            response = getProductById(request.args.get("id"))
+
+            if response != None:
+                response = jsonify(response)  
+                return response  
+            else:
+                # Product not found
+                response = responseJson(404,"Product not found")
+                return response
+        else:
+            response = getProducts()
+            if response != None:
+                response = jsonify(response)
+                response.status_code = 200
+                return response
+            else:
+                # Product not found
+                response = responseJson(404,"No Products found")
+                return response
+            
+    elif request.method == "DELETE":
+        if deleteProduct(request.get_json()):
+            return "",200
+        else:
+            response = responseJson(404,"Product not found")
+            return response
+
+@query(database)
+def createProduct(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
+    try:
+
+        print(data)
+    # Insert product
+        cursor.execute("INSERT INTO products (name, description, price, image) VALUES (?, ?, ?, ?)", (data["name"], data["description"], data["price"], data["image"]) )
+        connection.commit()
+        return True
+    except Exception as e:
+        print(e)
+        connection.rollback()
+        return False
+
+@query(database)
+def getProducts(cursor:sqlite3.Cursor,connection:sqlite3.Connection):
+    # Retrieve product(will be None in case it's not found)
+    data = cursor.execute("SELECT * FROM products;")
+    row = data.fetchall()
+    if not row:
+        return None
+    products = []
+    # Add keys to the values returned 
+    for product in row:
+        product = {
+            "id": product[0],
+            "name": product[1],
+            "description": product[2],
+            "price": product[3],
+            "image": product[4]
+        }
+        products.append(product)
+    return products
+
+@query(database)
+def getProductById(cursor:sqlite3.Cursor,connection:sqlite3.Connection, id:int):
+    try:
+
+        # Retrieve product(will be None in case it's not found)
+        data = cursor.execute("SELECT * FROM products WHERE id = ?;", (id,))
+        row = data.fetchone()
+        if not row:
+            return None
+
+        # Add keys to the values returned 
+        product = {}
+        for i,column in enumerate(data.description):
+            product[column[0]] = row[i]
+
+        return product
+    
+    except Exception as e:
+        print(e)
+        return None
+
+@query(database)
+def updateProduct(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
+    try:
+
+        # Checks wheter the product exists
+        cursor.execute("SELECT * FROM products WHERE id = ?", (data["id"],))
+        product = cursor.fetchone()
+        if not product:
+            return False
+        # Update product
+        cursor.execute("UPDATE products SET name = ?, description = ?, price = ?, image = ? WHERE id = ?",
+                        (data["name"], data["description"], data["price"], data["image"], data["id"]))
+        connection.commit()
+        return True
+    except Exception as e:
+        print(e)
+        connection.rollback()
+        return False
+    
+@query(database)
+def deleteProduct(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
+    try:
+        cursor.execute("SELECT * FROM products WHERE id = ?", (data["id"],))
+        product = cursor.fetchone()
+        if not product:
+            return False
+        # Delete product
+        cursor.execute("DELETE FROM products WHERE id = ?", (data["id"],))
+        connection.commit()
+        return True
+    except Exception as e:
+        print(e)
+        connection.rollback()
+        return False
+# End of product endpoints

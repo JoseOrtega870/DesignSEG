@@ -3,7 +3,18 @@
 
 interface UserCreation 
 {
+    username: string 
+    password: string
+    role: string
+    firstname: string
+    middlename: string
+    lastname: string
+    points: number  // DEFAULT 0
+}
+interface UserPut
+{
     currentUserId: number
+    userId: number
     username: string 
     password: string
     role: string
@@ -40,6 +51,7 @@ interface GetUser
 interface PostProposal 
 {
     title: string
+    category: string
     description: string
     currentSituation: string
     area: string
@@ -53,6 +65,7 @@ interface PutProposal
     currentUserId: number
     proposalId: number
     title: string
+    category: string
     description: string
     currentSituation: string
     area: string
@@ -97,4 +110,19 @@ interface PutPedido
     idUsuario: number
     cantidad: number
     totalPuntos: decimal
+}
+interface PostProduct 
+{
+    name: string
+    description: string
+    price: decimal
+    image: string
+}
+interface PutProduct 
+{
+    id: number
+    name: string
+    description: string
+    price: decimal
+    image: string
 }
