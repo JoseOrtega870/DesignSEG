@@ -5,8 +5,13 @@ import os
 
 ENV_NAME = 'SEGAutomotiveEnv'
 
-def create_virtualenv(env_name):
-    subprocess.check_call([sys.executable, "-m", "venv", env_name])
+# def download_packages(packages, download_dir):
+#     subprocess.check_call([sys.executable, "-m", "pip", "download", "-d", download_dir] + packages)
+
+# # Ejemplo de uso:
+# packages = ['flask', 'flask_cors', 'bcrypt', 'gunicorn']
+# download_dir = 'dependencies'
+# download_packages(packages, download_dir)
 
 def create_virtualenv(env_name):
     subprocess.check_call([sys.executable, "-m", "venv", env_name])
@@ -24,6 +29,7 @@ requirements_content = '''
 flask
 flask_cors
 bcrypt
+gunicorn
 '''
 with open('./dependencies/requirements.txt', 'w') as f:
     f.write(requirements_content)
@@ -31,20 +37,24 @@ with open('./dependencies/requirements.txt', 'w') as f:
 package_dir = 'dependencies'
 
 
-def run_flask_app(env_name, app_file):
-    # Detecta la plataforma (Windows o Unix)
-    if os.name == 'nt':
-        python_path = os.path.join(env_name, 'Scripts', 'python.exe')
-    else:
-        python_path = os.path.join(env_name, 'bin', 'python')
+def activate_virtualenv(env_name):
+    # Step 2: Define the activation command based on the OS
+    if os.name == 'nt':  # For Windows
+        activation_script = os.path.join(env_name, 'Scripts', 'gunicorn')
+        command = f'{activation_script} -w 4 app:app'
+    else:  # For macOS/Linux
+        activation_script = os.path.join(env_name, 'bin', 'gunicorn')
     
-    # Ejecuta la aplicación Flask
-    subprocess.check_call([python_path, app_file])
+        command = f'{activation_script} -w 4 -b 127.0.0.1:5000 app:app'
+        print(command)
+    
+    # Step 3: Run the activation and installation command
+    subprocess.run(command, shell=True)
 
-app_file = 'app.py'
+app_file = 'gunicorn -w 4 app:app'
 
 create_virtualenv(ENV_NAME)
 
 install_packages_from_dir(ENV_NAME, package_dir)
 
-run_flask_app(ENV_NAME, app_file)
+activate_virtualenv(ENV_NAME)
