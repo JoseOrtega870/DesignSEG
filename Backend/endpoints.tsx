@@ -3,7 +3,6 @@
 
 interface UserCreation 
 {
-    currentUserId: number
     username: string 
     password: string
     role: string
@@ -11,6 +10,20 @@ interface UserCreation
     middlename: string
     lastname: string
     points: number  // DEFAULT 0
+    email: string
+}
+interface UserPut
+{
+    currentUserId: number
+    userId: number
+    username: string 
+    password: string
+    role: string
+    firstname: string
+    middlename: string
+    lastname: string
+    points: number  // DEFAULT 0
+    email: string
 }
 
 interface UserDelete
@@ -46,13 +59,16 @@ interface PostProposal
     status: string
     type: string
     feedback: string
+    creationDate: string
     usersId: Array<number>
+    category: string
 }
 interface PutProposal 
 {
     currentUserId: number
     proposalId: number
     title: string
+    category: string
     description: string
     currentSituation: string
     area: string
@@ -97,4 +113,19 @@ interface PutPedido
     idUsuario: number
     cantidad: number
     totalPuntos: decimal
+}
+interface PostProduct 
+{
+    name: string
+    description: string
+    price: decimal
+    image: string
+}
+interface PutProduct 
+{
+    id: number
+    name: string
+    description: string
+    price: decimal
+    image: string
 }
