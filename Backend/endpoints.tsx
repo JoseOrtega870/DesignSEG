@@ -10,6 +10,7 @@ interface UserCreation
     middlename: string
     lastname: string
     points: number  // DEFAULT 0
+    email: string
 }
 interface UserPut
 {
@@ -22,6 +23,7 @@ interface UserPut
     middlename: string
     lastname: string
     points: number  // DEFAULT 0
+    email: string
 }
 
 interface UserDelete
@@ -51,14 +53,15 @@ interface GetUser
 interface PostProposal 
 {
     title: string
-    category: string
     description: string
     currentSituation: string
     area: string
     status: string
     type: string
     feedback: string
+    creationDate: string
     usersId: Array<number>
+    category: string
 }
 interface PutProposal 
 {
