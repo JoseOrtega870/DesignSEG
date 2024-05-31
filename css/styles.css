@@ -27,7 +27,8 @@ body {
   padding: 10px;
 }
 .form-container input[type="text"],
-.form-container input[type="password"] {
+.form-container input[type="password"],
+.form-container input[type="email"] {
   font-weight: 600;  
   border-radius: 5px;
   border: 1px solid #CCCCCC;

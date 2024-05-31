@@ -17,13 +17,15 @@
         <div class="row">
             <div class="col-md-4 form-container text-center">
                 <h1>Registrate</h1>
-                <form>
+
+                <form id="signupForm">
                     <div class="mb-3">
                         <input type="text" class="form-control" id="noEmpleado" placeholder="No. de Empleado">
+                        <input type="email" class="form-control" id="email" placeholder="Email">
                     </div>
                     <div class="mb-3">
                         <input type="text" class="form-control" id="nombre" placeholder="Nombre(s)">
-                        <input type="text" class="form-control" id="apellidoPaterno" placeholder="Apellido(s)">
+                        <input type="text" class="form-control" id="apellidos" placeholder="Apellido(s)">
                     </div>
                     <div class="mb-3">
                         <input type="password" class="form-control" id="contraseña" placeholder="Contraseña">
@@ -35,8 +37,89 @@
                     <button type="submit" class="btn">Registro</button>
                 </form>
                 <p>¿Ya tienes cuenta? <a href="login.html">Iniciar Sesion</a></p>
+
             </div>
         </div>
     </div>
 </body>
+<script>
+    document.getElementById('signupForm').addEventListener('submit', function (event) {
+        event.preventDefault(); 
+
+        const noEmpleado = document.getElementById('noEmpleado').value;
+        const email = document.getElementById('email').value;
+        const nombre = document.getElementById('nombre').value;
+        const apellidoPaterno = document.getElementById('apellidos').value;
+        const contrasena = document.getElementById('contraseña').value;
+        const confirmacionContraseña = document.getElementById('repetirContraseña').value;
+
+        if (contrasena.length === 0 || confirmacionContraseña.length === 0 || noEmpleado.length === 0 || nombre.length === 0 || apellidoPaterno.length === 0 || email.length === 0) {
+            alert('Porfavor llene todos los campos.');
+            return;
+        }
+
+        if (contrasena !== confirmacionContraseña) {
+            alert('Las contrasenas no coinciden, Porfavor intente de nuevo.');
+            return;
+        }
+
+        // if (contrasena.length < 8) {
+        //     alert('La contrasena debe tener al menos 8 caracteres.');
+        //     return; 
+        // }
+
+        // if (!/[A-Z]/.test(contrasena)) {
+        //     alert('La contrasena debe contener al menos una letra mayúscula.');
+        //     return;
+        // }
+
+        // if (!/[a-z]/.test(contrasena)) {
+        //     alert('La contrasena debe contener al menos una letra minúscula.');
+        //     return;
+        // }
+
+        // if (!/[0-9]/.test(contrasena)) {
+        //     alert('La contrasena debe contener al menos un número (0-9).');
+        //     return;
+        // }
+
+        // if (!/[*@_]/.test(contrasena)) {
+        //     alert('La contrasena debe contener al menos un carácter especial (*@_).');
+        //     return;
+        // }
+
+        const formData = {
+            noEmpleado: noEmpleado,
+            email: email,
+            nombre: nombre,
+            apellidos: apellidoPaterno,
+            contrasena: contrasena
+        };
+
+
+        console.log(formData);
+
+        async function fetchData() {
+            const response = await fetch('http://127.0.0.1:5000/users', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => {
+                //Handle the response from the server
+                console.log(response);
+            })
+            .catch(error => {
+                //Handle any errors
+                console.error('Error:', error);
+            });
+
+        }
+        fetchData();
+
+    });
+</script>
+
 </html>
