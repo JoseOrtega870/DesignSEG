@@ -37,7 +37,7 @@ with open('./dependencies/requirements.txt', 'w') as f:
 package_dir = 'dependencies'
 
 
-def activate_virtualenv(env_name):
+def run_server(env_name):
     # Step 2: Define the activation command based on the OS
     if os.name == 'nt':  # For Windows
         activation_script = os.path.join(env_name, 'Scripts', 'gunicorn')
@@ -57,4 +57,4 @@ create_virtualenv(ENV_NAME)
 
 install_packages_from_dir(ENV_NAME, package_dir)
 
-activate_virtualenv(ENV_NAME)
+run_server(ENV_NAME)
