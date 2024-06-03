@@ -171,11 +171,17 @@ td a:hover {
 }
 
 .modal-body {
-    height: 500px;
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
     width: 500px;
 }
 
 section h4 {
     margin: 0;
     padding: 10px;
+}
+
+.cerrar-sesion {
+    margin-left: 10px;
+    color: #FFFFFF; 
 }

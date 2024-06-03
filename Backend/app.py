@@ -52,32 +52,28 @@ def responseJson(code:int, motive:str)->Response:
     return response
 
 @query(database)
-def checkAdmin(cursor:sqlite3.Cursor,connection:sqlite3.Connection,id:int)->bool:
+def checkAdmin(cursor:sqlite3.Cursor,connection:sqlite3.Connection,username:str)->bool:
     # Retrieve user(will be None in case it's not found)
-    data = cursor.execute("SELECT * FROM users WHERE id = ? AND role = 'admin' ", (id,))
+    data = cursor.execute("SELECT * FROM users WHERE username = ? AND role = 'admin' ", (username,))
     row = data.fetchone()
     if not row:
         return False
     return True
 
 # Creates tables needed for the database
-
-
-
 @query(database)
 def createTables(cursor:sqlite3.Cursor,connection:sqlite3.Connection):
-    cursor.execute("""CREATE TABLE IF NOT EXISTS Users(
-                id INTEGER PRIMARY KEY AUTOINCREMENT, 
-                username VARCHAR(50) NOT NULL, 
+    cursor.execute("""CREATE TABLE IF NOT EXISTS Users( 
+                username VARCHAR(50) PRIMARY KEY, 
                 password VARCHAR(50) NOT NULL,
                 role VARCHAR(10),
-                firstname VARCHAR(50) NOT NULL,
-                middlename VARCHAR(50) NOT NULL,
-                lastname VARCHAR(50) NOT NULL,
+                firstName VARCHAR(50) NOT NULL,
+                middleName VARCHAR(50) NOT NULL,
+                lastName VARCHAR(50) NOT NULL,
                 email VARCHAR(50) NOT NULL,
-                points INT NOT NULL DEFAULT 0
+                points INTEGER NOT NULL DEFAULT 0
                )""")
-    cursor.execute("""CREATE TABLE IF NOT EXISTS Product(
+    cursor.execute("""CREATE TABLE IF NOT EXISTS Products(
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name VARCHAR(50) NOT NULL,
                 description VARCHAR(50) NOT NULL,
@@ -86,14 +82,14 @@ def createTables(cursor:sqlite3.Cursor,connection:sqlite3.Connection):
                 )""")
     cursor.execute("""CREATE TABLE IF NOT EXISTS Orders(
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                userId INTEGER NOT NULL, 
+                user VARCHAR(50) NOT NULL, 
                 productId INTEGER NOT NULL,
                 quantity INTEGER NOT NULL,
                 orderStatus VARCHAR(50) NOT NULL,
                 orderDate DATE NOT NULL DEFAULT CURRENT_DATE,
                 total DECIMAL NOT NULL,
                 FOREIGN KEY (productId) REFERENCES product(id),
-                FOREIGN KEY (userId) REFERENCES users(id)
+                FOREIGN KEY (user) REFERENCES users(username)
                )""")
     cursor.execute("""CREATE TABLE IF NOT EXISTS Proposals(
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -103,49 +99,23 @@ def createTables(cursor:sqlite3.Cursor,connection:sqlite3.Connection):
                 area VARCHAR(50) NOT NULL,
                 status VARCHAR(50) NOT NULL,
                 type VARCHAR(50) NOT NULL,
-                feedback VARCHAR(50) NOT NULL,
+                feedback VARCHAR(50),
                 creationDate DATE NOT NULL DEFAULT CURRENT_DATE,
                 closeDate DATE DEFAULT NULL,
                 category VARCHAR(50) NOT NULL,
-                assignedPoints INTEGER NOT NULL DEFAULT 0,
-                formerEvaluatorId INTEGER,
-                currentEvaluatorId INTEGER,
-                FOREIGN KEY (formerEvaluatorId) REFERENCES users(id),
-                FOREIGN KEY (currentEvaluatorId) REFERENCES users(id)
+                assignedPoints INTEGER DEFAULT NULL,
+                formerEvaluatorUser VARCHAR(50),
+                currentEvaluatorUser VARCHAR(50),
+                FOREIGN KEY (formerEvaluatorUser) REFERENCES users(username),
+                FOREIGN KEY (currentEvaluatorUser) REFERENCES users(username)
                )""")
     cursor.execute("""CREATE TABLE IF NOT EXISTS UserProposal(
-                userId INT NOT NULL,
-                proposalId INT NOT NULL,
-                FOREIGN KEY (userId) REFERENCES users(id),
+                user VARCHAR(50) NOT NULL,
+                proposalId INTEGER NOT NULL,
+                FOREIGN KEY (user) REFERENCES users(username),
                 FOREIGN KEY (proposalId) REFERENCES proposals(id)
                )""")   
-    cursor.execute("""CREATE TABLE IF NOT EXISTS userProposals(
-                user_id INT NOT NULL,
-                proposal_id INT NOT NULL,
-                FOREIGN KEY (user_id) REFERENCES users(id),
-                FOREIGN KEY (proposal_id) REFERENCES proposals(id)
-               )""")   
-    cursor.execute("""CREATE TABLE IF NOT EXISTS products(
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                name VARCHAR(50) NOT NULL,
-                description VARCHAR(100) NOT NULL,
-                price DECIMAL(10,2) NOT NULL,
-                image VARCHAR(100) NOT NULL
-               )""")   
-    cursor.execute("""CREATE TABLE IF NOT EXISTS orders(
-                user_id INT NOT NULL,
-                product_id INT NOT NULL,
-                quantity INT NOT NULL,
-                order_status VARCHAR(50) NOT NULL,
-                order_date DATE NOT NULL DEFAULT CURRENT_DATE,
-                total DECIMAL(10,2) NOT NULL,
-                FOREIGN KEY (user_id) REFERENCES users(id),
-                FOREIGN KEY (product_id) REFERENCES products(id)
-               )""")   
     connection.commit()  
-
-createTables()
-
 
 @app.route('/')
 def index():
@@ -218,17 +188,17 @@ def users():
     elif request.method == "DELETE":
         # Delete an existing user
         jsonData = request.get_json()
-        if validateData(["currentUserId","userId"],jsonData) == False:
+        if validateData(["currentUser","deleteUser"],jsonData) == False:
             response = responseJson(400,"Incorrect parameters sent")
             return response
         
         # Checks if the current user is an admin
-        if not checkAdmin(jsonData["currentUserId"]):
+        if not checkAdmin(jsonData["currentUser"]):
             response = responseJson(401,"Unauthorized access")
             return response
 
         # Checks if the user exists and deletes it
-        if deleteUser(jsonData["userId"]):
+        if deleteUser(jsonData["deleteUser"]):
             return "",200
         else:
             response = responseJson(400,"User doesn't exist")
@@ -236,32 +206,47 @@ def users():
         
     elif request.method == "GET":
         # Get data for a given user
-        id = request.args.get("id")
-        if not id:
-            response = responseJson(400,"Incorrect parameters sent")
+        username = request.args.get("username")
+        role = request.args.get("role")
+        if username:
+            # Looking for a single user
+            user = getUsers(["username",username])
+            if user:
+                # Success
+                response = jsonify(user)
+                response.status_code = 200
+                return response
+            else:
+                # User not found
+                response = responseJson(404,"User doesn't exist")
+                return response
+        elif role:
+            # Looking for a particular role
+            users = getUsers(["role",role])
+            response = jsonify(users)
+            response.status_code = 200
             return response
-        
-        user = getUser(id)
-        if user != None:
-            # Success
-            response = jsonify(user)
+        elif not any(request.args.values()):
+            # Looking for all users
+            users = getUsers(["1",1])
+            response = jsonify(users)
             response.status_code = 200
             return response
         else:
-            # User not found
-            response = responseJson(404,"User doesn't exist")
+            # Incorrect parameters
+            response = responseJson(400,"Incorrect parameters sent")
             return response
         
     elif request.method == "PUT":
         # Edit existing user
         jsonData = request.get_json()
 
-        if validateData(["currentUserId","userId","username","password","role","firstname","middlename","lastname","email"],jsonData) == False:
+        if validateData(["currentUser","username","password","role","firstname","middlename","lastname","email"],jsonData) == False:
             response = responseJson(400,"Incorrect parameters sent")
             return response
 
         # Checks if the current user is an admin
-        if not checkAdmin(jsonData["currentUserId"]):
+        if not checkAdmin(jsonData["currentUser"]):
             response = responseJson(401,"Unauthorized access")
             return response
 
@@ -286,7 +271,7 @@ def insertUser(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
         data["points"] = 0
 
     # Insert user
-    cursor.execute("INSERT INTO users (username, password, role, firstname, middlename, lastname, email, points) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", 
+    cursor.execute("INSERT INTO users (username, password, role, firstName, middleName, lastName, email, points) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", 
                    (data["username"], data["password"], data["role"], data["firstname"], data["middlename"], data["lastname"], data["email"], data["points"]))
     
     # Commit the transaction
@@ -296,39 +281,47 @@ def insertUser(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
 
 # Function to delete user if it exists
 @query(database)
-def deleteUser(cursor:sqlite3.Cursor,connection:sqlite3.Connection,id:str):
+def deleteUser(cursor:sqlite3.Cursor,connection:sqlite3.Connection,username:str):
     # Checks wheter the user exists
-    cursor.execute("SELECT * FROM users WHERE id = ?", (id,))
+    cursor.execute("SELECT * FROM users WHERE username = ?", (username,))
     user = cursor.fetchone()
     if not user:
         return False
 
     # Borrar al usuario indicado
-    cursor.execute("DELETE FROM users WHERE id = ?", (id,))
+    cursor.execute("DELETE FROM users WHERE username = ?", (username,))
     connection.commit()
     return True
 
 # Function that returns user based on id
 @query(database)
-def getUser(cursor:sqlite3.Cursor,connection:sqlite3.Connection,id:str):
+def getUsers(cursor:sqlite3.Cursor,connection:sqlite3.Connection,condition):
     # Retrieve user(will be None in case it's not found)
-    data = cursor.execute("SELECT id,role,firstname,middlename,lastname,username,email,points FROM users WHERE id = ?", (id,))
-    row = data.fetchone()
-    if not row:
-        return None
-    
-    # Add keys to the values returned 
-    user = {}
-    for id,column in enumerate(data.description):
-        user[column[0]] = row[id]
-        
-    return user
+    data = cursor.execute("SELECT role,firstName,middleName,lastName,username,email,points FROM users WHERE " + condition[0] + " = ?", (condition[1],))
+    users = []
+    columns = data.description
+    for i in data.fetchall():
+        # Add keys to the values returned 
+        user = {}
+        for id,column in enumerate(columns):
+            user[column[0]] = i[id]
+
+        # Retrieve all proposals that have to do with the user
+        result = cursor.execute("SELECT proposalId FROM UserProposal WHERE user = ?",(user["username"],))
+        user["proposals"] = []
+        for proposal in result.fetchall():
+            user["proposals"].append(proposal)
+
+        users.append(user)
+    if condition[0] == "username" and users:
+        return users[0]
+    return users
 
 # Function to check whether the user exists and edits it
 @query(database)
 def editUser(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
     # Checks wheter the user exists
-    cursor.execute("SELECT * FROM users WHERE id = ?", (data["userId"],))
+    cursor.execute("SELECT * FROM users WHERE username = ?", (data["username"],))
     user = cursor.fetchone()
     if not user:
         return False
@@ -338,8 +331,8 @@ def editUser(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
         data["points"] = 0
 
     # Insert user
-    cursor.execute("UPDATE users SET username = ?, password = ?, role = ?, firstname = ?, middlename = ?, lastname = ?, points = ?, email = ? WHERE id = ?",
-                    (data["username"], data["password"], data["role"], data["firstname"], data["middlename"], data["lastname"], data["points"], data["email"],data["userId"]))
+    cursor.execute("UPDATE users SET password = ?, role = ?, firstname = ?, middlename = ?, lastname = ?, points = ?, email = ? WHERE username = ?",
+                    (data["password"], data["role"], data["firstname"], data["middlename"], data["lastname"], data["points"], data["email"],data["username"]))
     
     # Commit the transaction
     connection.commit()
@@ -363,14 +356,14 @@ def proposals():
     elif request.method == "PUT":
         # Edit an existing proposal
         jsonData = request.get_json()
-        if validateData(["currentUserId","proposalId","title","description","currentSituation","area","status","type","feedback","usersId","creationDate","closeDate"],jsonData) == False:
+        if validateData(["currentUser","proposalId","title","description","currentSituation","area","status","type","feedback","usersId","creationDate","closeDate"],jsonData) == False:
             response = responseJson(400,"Incorrect parameters sent")
             return response
         
         result = editProposal(jsonData)
         
         if result == 0:
-            response = responseJson(400,"User not found")
+            response = responseJson(404,"User not found")
             return response
         elif result == 1:
             response = responseJson(401,"User not authorized to edit")
@@ -411,12 +404,12 @@ def createProposal(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict
 
     # Insert into UserProposal
     for id in data["usersId"]:
-        data = cursor.execute("SELECT * FROM users WHERE id = ?", (id,))
+        data = cursor.execute("SELECT * FROM users WHERE username = ?", (id,))
         row = data.fetchone()
         if not row:
             connection.rollback()
             return False
-        cursor.execute("INSERT INTO UserProposal (userId, proposalId) VALUES (?, ?)",(id,proposalId))
+        cursor.execute("INSERT INTO UserProposal (user, proposalId) VALUES (?, ?)",(id,proposalId))
 
     # Commit the transaction
     connection.commit()
@@ -438,23 +431,23 @@ def editProposal(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
     cursor.execute("DELETE FROM UserProposal WHERE proposalId = ?",(data["proposalId"],))
     # Insert into UserProposal
     for id in data["usersId"]:
-        result = cursor.execute("SELECT * FROM users WHERE id = ?", (id,))
+        result = cursor.execute("SELECT * FROM users WHERE username = ?", (id,))
         row = result.fetchone()
         if not row:
             connection.rollback()
             return 0
-        cursor.execute("INSERT INTO UserProposal (userId, proposalId) VALUES (?, ?)",(id,data["proposalId"]))
+        cursor.execute("INSERT INTO UserProposal (user, proposalId) VALUES (?, ?)",(id,data["proposalId"]))
     
     # Checks whether the user is an admin
-    cursor.execute("SELECT role FROM users WHERE id = ?",(data["currentUserId"],))
+    cursor.execute("SELECT role FROM users WHERE username = ?",(data["currentUser"],))
     row = result.fetchone()
     if row:
         connection.commit()
         return 3
     # Checks whether the user editing is one of the people who suggested it
-    cursor.execute("SELECT userId FROM UserProposal WHERE proposalId = ?",(data["proposalId"],))
+    cursor.execute("SELECT user FROM UserProposal WHERE proposalId = ?",(data["proposalId"],))
     for i in cursor:
-        if i[0] == data["currentUserId"]:
+        if i[0] == data["currentUser"]:
             connection.commit()
             return 3   
          
@@ -476,12 +469,12 @@ def getProposal(cursor:sqlite3.Cursor,connection:sqlite3.Connection,id):
         proposal[column[0]] = row[i]
 
     # Append all the users involved
-    cursor.execute("SELECT userId FROM UserProposal WHERE proposalId = ?",(id,))
+    cursor.execute("SELECT user FROM UserProposal WHERE proposalId = ?",(id,))
     users = []
     for i in cursor:
         print(i)
         users.append(i[0])
-    proposal["usersId"] = users
+    proposal["users"] = users
             
     return proposal
 
