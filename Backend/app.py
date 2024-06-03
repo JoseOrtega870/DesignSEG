@@ -511,7 +511,7 @@ def orders():
     elif request.method == "POST":
         # Create a new order
         jsonData = request.get_json()
-        if validateData(["userId","productId","quantity","orderStatus","orderDate","total"],jsonData) == False:
+        if validateData(["username","productId","quantity","orderStatus","orderDate","total"],jsonData) == False:
             response = responseJson(400,"Incorrect parameters sent")
             return response
         
@@ -521,7 +521,7 @@ def orders():
 
     elif request.method == "PUT":
         # Edit an existing order
-        if validateData(["currentUserId","orderId","userId","orderStatus","orderDate","total","productId","quantity"],request.get_json()) == False:
+        if validateData(["currentUser","orderId","username","orderStatus","orderDate","total","productId","quantity"],request.get_json()) == False:
             response = responseJson(400,"Incorrect parameters sent")
             return response
         response = updateOrder(request.get_json())
@@ -531,7 +531,7 @@ def orders():
 def createOrder(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
     try:
     # Insert order
-        cursor.execute("SELECT * FROM users WHERE id = ?", (data["userId"],))
+        cursor.execute("SELECT * FROM users WHERE username = ?", (data["username"],))
         user = cursor.fetchone()
         if not user:
             return { "status": 404, "result": "User not Found"}
@@ -545,8 +545,8 @@ def createOrder(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
             return { "status": 400, "result": "Not enough points"}
 
         # Insert order and update user points
-        cursor.execute("INSERT INTO orders (userId, productId, quantity, orderStatus, orderDate, total) VALUES (?, ?, ?, ?, ?, ?)", (data["userId"], data["productId"], data["quantity"], data["orderStatus"], data["orderDate"], data["total"]) )
-        cursor.execute("UPDATE users SET points = points - ? WHERE id = ?", (data["total"], data["userId"]))
+        cursor.execute("INSERT INTO orders (username, productId, quantity, orderStatus, orderDate, total) VALUES (?, ?, ?, ?, ?, ?)", (data["username"], data["productId"], data["quantity"], data["orderStatus"], data["orderDate"], data["total"]) )
+        cursor.execute("UPDATE users SET points = points - ? WHERE username = ?", (data["total"], data["username"]))
         connection.commit()
         return { "status": 200, "result": "Order created"}
     except Exception as e:
@@ -625,13 +625,13 @@ def updateOrder(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
     try:
 
         # Checks wheter the order exists
-        cursor.execute("SELECT * FROM orders WHERE id = ?;", (data["userId"],))
+        cursor.execute("SELECT * FROM orders WHERE id = ?;", (data["orderId"],))
         order = cursor.fetchone()
         if not order:
             return {"status": 400, "result": "Order Not Found"}
         
         # Checks whether the user exists and is an admin and has order edit privileges
-        cursor.execute("SELECT role FROM users WHERE id = ?", (data["currentUserId"],))
+        cursor.execute("SELECT role FROM users WHERE username = ?", (data["currentUser"],))
         user = cursor.fetchone()
         print(user[0])
         if not user:
@@ -647,8 +647,8 @@ def updateOrder(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
 
 
         # Update order
-        cursor.execute("UPDATE orders SET userId = ?, productId = ?, quantity = ?, orderStatus = ?, orderDate = ?, total = ? WHERE id = ?",
-                        (data["userId"], data["productId"], data["quantity"], data["orderStatus"], data["orderDate"], data["total"], data["orderId"]))
+        cursor.execute("UPDATE orders SET username = ?, productId = ?, quantity = ?, orderStatus = ?, orderDate = ?, total = ? WHERE id = ?",
+                        (data["username"], data["productId"], data["quantity"], data["orderStatus"], data["orderDate"], data["total"], data["orderId"]))
         connection.commit()
         return {"status": 200, "result": "Order updated"}
     except Exception as e:
