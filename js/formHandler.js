@@ -1,6 +1,7 @@
-function handleFormSubmission(event) {
+document.getElementById('improvementForm').addEventListener('submit', function(event) {
     event.preventDefault();
 
+    // Obtener los valores del formulario
     const titulo = document.getElementById('titulo').value;
     const descripcion = document.getElementById('descripcion').value;
     const sugerencia = document.getElementById('sugerencia').value;
@@ -9,23 +10,20 @@ function handleFormSubmission(event) {
     const empleadosInput = document.getElementById('empleados').value;
     const empleadosArray = empleadosInput.split(',').map(Number);
 
-    const status = 'Evaluando VSE';
-    const type = (categoria === 'seguridad' || categoria === '5s') ? 'No Contable' : 'Contable';
-    const feedback = '';
-    const usersId = empleados;
-
+    // Crear el objeto de datos a enviar al servidor
     const data = {
         title: titulo,
         category: categoria,
         description: sugerencia,
         currentSituation: descripcion,
         area: area,
-        status: status,
-        type: type,
-        feedback: feedback,
-        usersId: usersId
+        status: 'Evaluando VSE',
+        type: (categoria === 'seguridad' || categoria === '5s') ? 'No Contable' : 'Contable',
+        feedback: '',
+        usersId: empleadosArray
     };
 
+    // Enviar los datos al servidor
     fetch('/proposals', {
         method: 'POST',
         headers: {
@@ -33,16 +31,33 @@ function handleFormSubmission(event) {
         },
         body: JSON.stringify(data)
     })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Success:', data);
-        // Optionally, close the modal and reset the form
-        // $('#nueva-mejora').modal('hide');
-        // document.getElementById('improvementForm').reset();
+    .then(response => {
+        if (response.ok) {
+            // Si la respuesta es exitosa, mostrar mensaje de éxito
+            showMessage('Propuesta registrada exitosamente', 'success');
+            // Opcionalmente, puedes cerrar el modal y reiniciar el formulario
+            // $('#nueva-mejora').modal('hide');
+            // document.getElementById('improvementForm').reset();
+        } else {
+            // Si la respuesta no es exitosa, mostrar mensaje de error
+            showMessage('No se pudo registrar la propuesta. Inténtalo de nuevo más tarde', 'error');
+        }
     })
-    .catch((error) => {
+    .catch(error => {
         console.error('Error:', error);
+        // Si hay un error, mostrar mensaje de error
+        showMessage('No se pudo registrar la propuesta. Inténtalo de nuevo más tarde', 'error');
     });
-}
+});
 
-document.getElementById('improvementForm').addEventListener('submit', handleFormSubmission);
+function showMessage(message, type) {
+    const messageElement = document.getElementById('message');
+    messageElement.textContent = message;
+    messageElement.className = `alert alert-${type}`;
+    messageElement.style.display = 'block';
+
+    // Después de unos segundos, ocultar el mensaje automáticamente
+    setTimeout(function() {
+        messageElement.style.display = 'none';
+    }, 5000); // Oculta el mensaje después de 5 segundos (5000 milisegundos)
+}

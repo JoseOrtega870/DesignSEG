@@ -180,3 +180,8 @@ section h4 {
     margin: 0;
     padding: 10px;
 }
+
+.cerrar-sesion {
+    margin-left: 10px;
+    color: #FFFFFF; 
+}
