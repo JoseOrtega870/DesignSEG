@@ -1,6 +1,6 @@
 # Sistema PLIM SEG Automotive 
 
-Se desarrollará una página web donde los empleados de SEG Automotive puedan hacer propuestas de mejora dentro de las diferentes áreas de la organización. El área de mejora continua y los ingenieros VSC son los encargados de evaluar las propuestas de mejora y posteriormente revisar los resultados del sistema con:
+Se desarrolla una página web donde los empleados de SEG Automotive puedan hacer propuestas de mejora dentro de las diferentes áreas de la organización. El área de mejora continua y los ingenieros VSC son los encargados de evaluar las propuestas de mejora y posteriormente revisar los resultados del sistema con:
 * Gráficos y estadísticas de las propuestas, puntos, canjes de puntos, y estatus de propuestas
 * Datos en tiempo real desde la base de datos
 * Plataforma con inicio de sesión y permisos personalizados
