@@ -1,7 +1,22 @@
-https://github.com/Ort22/DesignSEG
+# Sistema PLIM SEG Automotive 
 
+Se desarrollará una página web donde los empleados de SEG Automotive puedan hacer propuestas de mejora dentro de las diferentes áreas de la organización. El área de mejora continua y los ingenieros VSC son los encargados de evaluar las propuestas de mejora y posteriormente revisar los resultados del sistema con:
+* Gráficos y estadísticas de las propuestas, puntos, canjes de puntos, y estatus de propuestas
+* Datos en tiempo real desde la base de datos
+* Plataforma con inicio de sesión y permisos personalizados
+Para impulsar la participación de los usuarios, se agrega una tienda de recompensas donde los usuarios podrán intercambiar los puntos que son asignados en sus propuestas registradas por productos y recompensas que registre el área de mejora continua.
 
- # Sistema PLIM SEG Automotive 
+# Funcionalidades que integra el proyecto
+
+Se encuentran los requerimientos y funcionalidades que abarca el proyecto se encuentran en el siguiente link: 
+https://docs.google.com/document/d/1HUJdTpBp63LkMxctWFp1x6mZQeYSsSuMbTd1YPV7Wyo/edit?usp=sharing 
+
+# Instrucciones de ejecución
+1.- Descargar como zip el proyecto
+2.- Ubicarse en la carpeta Backend dentro de DesignSEG
+        cd DesignSEG/Backend
+3.- Ejecutar el archivo startApp.py 
+       python startApp.py
 
 ## Servicios web
 
