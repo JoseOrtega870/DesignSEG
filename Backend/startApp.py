@@ -11,7 +11,7 @@ def download_packages(packages, download_dir):
 
 packages = ['flask', 'flask_cors', 'bcrypt', 'waitress']
 download_dir = 'dependencies'
-download_packages(packages, download_dir)
+#download_packages(packages, download_dir)
 
 def create_virtualenv(env_name):
     subprocess.check_call([sys.executable, "-m", "venv", env_name])
@@ -41,7 +41,7 @@ def run_server(env_name):
     # Step 2: Define the activation command based on the OS
     if os.name == 'nt':  # For Windows
         activation_script = os.path.join(env_name, 'Scripts', 'waitress-serve')
-        command = f'{activation_script} --host 127.0.0.1 app:app'
+        command = f'{activation_script} --host 127.0.0.1 main:mainapp'
     else:  # For macOS/Linux
         activation_script = os.path.join(env_name, 'bin', 'waitress-serve')
     
