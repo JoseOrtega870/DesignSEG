@@ -7,6 +7,7 @@ Se desarrolla una página web donde los empleados de SEG Automotive puedan hacer
 
 Para impulsar la participación de los usuarios, se agrega una tienda de recompensas donde los usuarios podrán intercambiar los puntos que son asignados en sus propuestas registradas por productos y recompensas que registre el área de mejora continua.
 
+## Tabla de contenidos
  * [Funcionalidades que integra el proyecto](#funcionalidades-que-integra-el-proyecto)
  * [Instrucciones de ejecución](#instrucciones-de-ejecuci-n)
  * [Servicios web](#servicios-web)
