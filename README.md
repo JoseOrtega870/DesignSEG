@@ -7,20 +7,21 @@ Se desarrolla una página web donde los empleados de SEG Automotive puedan hacer
 
 Para impulsar la participación de los usuarios, se agrega una tienda de recompensas donde los usuarios podrán intercambiar los puntos que son asignados en sus propuestas registradas por productos y recompensas que registre el área de mejora continua.
 
-## Contenidos
+- [Sistema PLIM SEG Automotive](#sistema-plim-seg-automotive)
+  * [Funcionalidades que integra el proyecto](#funcionalidades-que-integra-el-proyecto)
+  * [Instrucciones de ejecución](#instrucciones-de-ejecuci-n)
+  * [Servicios web](#servicios-web)
+    + [Endpoint para usuarios](#endpoint-para-usuarios)
+    + [Endpoint para login](#endpoint-para-login)
+    + [Endpoint para mmanejo de propuestas](#endpoint-para-mmanejo-de-propuestas)
+    + [Endpoint para pedidos](#endpoint-para-pedidos)
+  * [Posibles respuestas de error](#posibles-respuestas-de-error)
 
-1. [Funcionalidades que integra el proyecto] (#id1)
-2. [Instrucciones de ejecución] (#id1)
-3. [Servicios web] (#id1)
-4. [Posibles respuestas de error] (#id1)
-
-<div id='id1' />
 ## Funcionalidades que integra el proyecto
 
 Se encuentran los requerimientos y funcionalidades que abarca el proyecto se encuentran en el siguiente link: 
 https://docs.google.com/document/d/1HUJdTpBp63LkMxctWFp1x6mZQeYSsSuMbTd1YPV7Wyo/edit?usp=sharing 
 
-<div id='id2' />
 ## Instrucciones de ejecución
 1.- Descargar como zip el proyecto
 
@@ -30,7 +31,6 @@ https://docs.google.com/document/d/1HUJdTpBp63LkMxctWFp1x6mZQeYSsSuMbTd1YPV7Wyo/
 3.- Ejecutar el archivo startApp.py 
        python startApp.py
        
-<div id='id3' />
 ## Servicios web
 
 El siguiente software cuenta con los archivos html pertenecientes al frontEnd asi como el BackEnd
@@ -154,7 +154,6 @@ Administrar pedidos para el canje de puntos
         * GET _< server >/orders/< id >_
             * Obtiene un pedido por ID
 
-<div id='id4' />
 ## Posibles respuestas de error
 
 ```401 Unauthorized ```  - Si el usuario no tiene los permisos o el rol para realizar dichos cambios
