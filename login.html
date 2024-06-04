@@ -53,28 +53,38 @@
             const username = document.getElementById('usuario').value;
             const password = document.getElementById('contrasena').value;
 
-            console.log(username, password);
+            // console.log(username, password);
 
-        //     fetch('/login', {
-        //         method: 'POST',
-        //         headers: {
-        //             'Content-Type': 'application/json'
-        //         },
-        //         body: JSON.stringify({
-        //             username: username,
-        //             password: password
-        //         })
-        //     })
-        //         .then(response => {
-        //             //Handle the response from the server
-        //             console.log(response);
-        //         })
-        //         .catch(error => {
-        //             //Handle any errors
-        //             console.error('Error:', error);
-        //         });
-        
-            });
+            formData = {
+                usuario: username,
+                contrasena: password
+            };
+
+            async function fetchData() {
+                const response = await fetch('http://127.0.0.1:8080/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        password: password   
+                    })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success:', data);
+                    })
+                    .catch(error => {
+                        //Handle any errors
+                        console.error('Error:', error);
+                    });
+
+            }
+
+            fetchData();
+
+        });
     </script>
 </body>
 

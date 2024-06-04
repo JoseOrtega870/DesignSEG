@@ -100,16 +100,24 @@
         console.log(formData);
 
         async function fetchData() {
-            const response = await fetch('http://127.0.0.1:4000/users', {
+            const response = await fetch('http://127.0.0.1:8080/users', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(formData)
+                body: JSON.stringify({
+                    noEmpleado: noEmpleado,
+                    email: email,
+                    firstname: nombre,
+                    middlename: apellidoPaterno,
+                    lastname: apellidoPaterno,
+                    contrasena: contrasena
+                })
             })
-            .then(response => {
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
                 //Handle the response from the server
-                console.log(response);
             })
             .catch(error => {
                 //Handle any errors
