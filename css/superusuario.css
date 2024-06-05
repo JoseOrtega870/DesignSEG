@@ -103,7 +103,7 @@ header .botones .perfil img {
 }
 
 .contenedor-botones {
-    background: #FFFFFF;
+    /*background: #FFFFFF;
     margin-top: 0; /* Eliminar el margen superior para pegar la sección */
     margin-left: -50px;
     margin-right: -50px;
@@ -145,7 +145,7 @@ header .botones .perfil img {
     color: #FFFFFF;
     border-bottom: 20px;
     text-decoration: underline;
-    padding: 10px;
+    padding: 20px;
     border-style: none;
     width: fit-content;
 }
@@ -156,19 +156,20 @@ td a:hover {
 }
 
 .boton {
-    background-color: #012A86;
-    color: #FFFFFF;
+    background-color: #FFFFFF;
+    color: #012A86;
     margin-bottom: 10px;
     text-decoration: none;
     border: none;
     outline: none;
     font-size: 15px;
+    font-weight: 500;
     width: fit-content;
-    padding: 10px;
+    padding: 20px;
 }
 
 .boton:hover {
-    background-color: #019160;
+    background-color: #c2c2c2;
 }
 
 .contenido-principal col-2{

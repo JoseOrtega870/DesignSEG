@@ -1,3 +1,4 @@
+//get mejoras 
 
 async function fetchAreas(){
     const url = 'http://127.0.0.1:8080/areas';
@@ -29,7 +30,7 @@ document.getElementById('improvementForm').addEventListener('submit', function(e
     const area = document.getElementById('area').value;
     const categoria = document.getElementById('categoria').value;
     const empleadosInput = document.getElementById('empleados').value;
-    const empleadosArray = empleadosInput.split(',').map(Number);
+    const empleadosArray = empleadosInput;
 
     const data = {
         title: titulo,
