@@ -102,6 +102,18 @@ header .botones .perfil img {
 
 }
 
+.contenedor-botones {
+    background: #FFFFFF;
+    margin-top: 0; /* Eliminar el margen superior para pegar la sección */
+    margin-left: -50px;
+    margin-right: -50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 10px; /* Añadir padding para el espacio superior e inferior */
+}
+
+
 .botontabla:hover {
     background-color: #012A86;
 }

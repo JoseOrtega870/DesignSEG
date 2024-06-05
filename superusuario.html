@@ -35,11 +35,11 @@
     <div class="container">
         <section class="contenedor-titulo row d-flex justify-content-evenly align-items-center">
             <div class="col">
-                <h4 class="text-center">REGISTRO</h4>
+                <h4 class="text-center">REGISTRO DE USUARIOS</h4>
             </div>
         </section>
 
-        <main class="contenido-principal row d-flex justify-content-evenly align-items-center">
+        <main class="contenido-principal row d-flex justify-content-evenly align-items-center mb-0">
             <div class="col-auto contenido-principal">
                 <table class="table">
                     <thead>
@@ -49,7 +49,7 @@
                             <th>Apellido Materno</th>
                             <th>Nombre(s)</th>
                             <th>Área</th>
-                            <th>Contraseña</th>
+                            <th>Rol</th>
                         </tr>   
                     </thead>
                     <tbody class="text-center">
@@ -96,23 +96,29 @@
                     </tbody>
                 </table>
 
-            <div class="container mt-3">
-                <div class="row">
-                    <div class="col-4">
-                        <button class="boton d-grid gap-2 w-100">Nuevo Registro</button>
+            </div>
+        </main>
+        <section class="contenedor-botones mt-4">
+            <div class="container">
+                <div class="row d-flex justify-content-evenly align-items-center">
+                    <div class="col-auto">
+                        <button class="boton w-100">Nuevo Registro</button>
                     </div>
-                    <div class="col-4">
-                        <button class="boton d-grid gap-2 w-100">Eliminar Registro</button>
+                    <div class="col-auto">
+                        <button class="boton w-100">Eliminar Registro</button>
                     </div>
-                    <div class="col-4">
-                        <button class="boton d-grid gap-2 w-100">Editar Registro</button>
+                    <div class="col-auto">
+                        <button class="boton w-100">Editar Registro</button>
+                    </div>
+                    <div class="col-auto">
+                        <button class="boton w-100">Editar Permisos</button>
+                    </div>
+                    <div class="col-auto">
+                        <button class="boton w-100">Registrar Área</button>
                     </div>
                 </div>
             </div>
-
-            </div>
-        </main>
+        </section>
     </div>
-    <script src="js/ocultarcontenido.js"></script>
 </body>
 </html>
