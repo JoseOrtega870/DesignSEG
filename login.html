@@ -74,6 +74,12 @@
                     .then(response => response.json())
                     .then(data => {
                         console.log('Success:', data);
+                        if(data['success'] == true){
+                            sessionStorage.setItem('username', username);
+                            location.href = "empleados.html";
+                        } else if(data['success'] == false){
+                            //Add logic to display "incorrect username or password"
+                        }
                     })
                     .catch(error => {
                         //Handle any errors
