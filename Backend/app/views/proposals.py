@@ -4,7 +4,7 @@ from app.utils import *
 bp = Blueprint('proposals',__name__, url_prefix='/proposals')
 
 
-@bp.route('/', methods=["POST","PUT","GET"])
+@bp.route('', methods=["POST","PUT","GET"])
 def proposals():
     if request.method == "POST":
         # Create a new proposal

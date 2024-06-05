@@ -3,7 +3,7 @@ from app.utils import *
 
 bp = Blueprint('users',__name__, url_prefix='/users')
 
-@bp.route('/', methods=["POST","DELETE","GET","PUT"])
+@bp.route('', methods=["POST","DELETE","GET","PUT"])
 def users():
     if request.method == "POST":
         # Signup a new user
