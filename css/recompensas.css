@@ -139,6 +139,33 @@ header .botones .perfil img {
     background-color: #019160;
 }
 
+.carrito-img {
+    width: 50px;  
+    height: auto; 
+}
+
+.carrito-img {
+    width: 50px;  
+    height: auto; 
+}
+
+.contenedor-titulo .col {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.botones-container {
+    display: flex;
+    gap: 10px; 
+}
+
+.contenedor-titulo h4 {
+    margin-bottom: 0; 
+    flex-grow: 1; 
+    text-align: center; 
+}
+
 .card {
     border-radius: 0;
     border-style: none;
