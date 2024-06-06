@@ -3,7 +3,7 @@ import bcrypt
 from flask import Response,jsonify
 
 import smtplib, ssl
-from emails import *
+from .emails import *
 
 PORT = 587
 

@@ -1,139 +1,64 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/recompensas.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-    <title>Recompensas</title>
-</head>
-<body>
-    <header>
-        <div class="fixed-top">
-            <div class="container-fluid">
-                <div class="row justify-content-evenly align-items-center">
-                    <div class="col-auto d-flex justify-content-center align-items-center order-1">
-                        <a href="empleados.html" class="barra">Inicio</a>
-                        <a href="#" class="barra">Recompensas</a>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/recompensas.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+        <title>Recompensas</title>
+    </head>
+    <body>
+        <header>
+            <div class="fixed-top">
+                <div class="container-fluid">
+                    <div class="row justify-content-evenly align-items-center">
+                        <div class="botones col-auto d-flex justify-content-center align-items-center order-1" id = "containerLeft">
+                            <a href="#" class="botones perfil">Inicio</a>
+                            <a href="#" class="botones perfil">Recompensas</a>
+                        </div>
+
+                        <div class="col-auto text-center order-2">
+                            <img src="img/Seg-1.png" alt="Seg Automotive">
+                        </div>
+
+                        <nav class="botones col-auto text-end d-flex align-items-center justify-content-end order-3">
+                            <div id = "containerRight"></div>
+
+                            <a href="#" class=" botones perfil">
+                                <img src="img/persona2.jpg" alt=""> <span id = "nombre">Carlos</span> 
+                            </a>
+                            <a href="recompensas.html" class="botones puntos"><span id = "puntos">100 pts </span></a>
+                            <a href="login.html" class="botones cerrar-sesion" id="cerrarSesion">Cerrar Sesión</a>
+                        </nav>
                     </div>
-
-                    <div class="col-auto text-center order-2">
-                        <img src="img/Seg-1.png" alt="Seg Automotive">
-                    </div>
-
-                    <nav class="botones col-auto text-end d-flex align-items-center justify-content-end order-3">
-                        <a href="#" class=" botones perfil">
-                            <img src="img/persona2.jpg" alt=""> Carlos
-                        </a>
-
-                        <a href="#" class="botones puntos">100 pts</a>
-                    </nav>
                 </div>
             </div>
-        </div>
-    </header>
-    <main>
-        <div class="container">
-            <section class="contenedor-titulo row d-flex justify-content-evenly align-items-center">
-                <div class="col">
-                    <h4 class="text-center">RECOMPENSAS</h4>
-                </div>
-            </section>
+        </header>
+        <main>
+            <div class="container">
+                <section class="contenedor-titulo row d-flex justify-content-evenly align-items-center">
+                    <div class="col d-flex align-items-center justify-content-between">
+                        <div class="botones-container">
+                            <button id="boton_editar" class="btn btn-primary">Editar Tienda</button>
+                        </div>
+                        <h4 class="text-center mb-0">RECOMPENSAS</h4>
+                        <img src="img/carrito.png" class="img-fluid carrito-img" alt="">
+                    </div>
+                </section>                                             
 
-            <section class="products contenido-principal row d-flex justify-content-evenly align-items-center">
-                <div class="container">
-                    <div class=" products row d-flex justify-content-evenly align-items-center">
-                        <div class="columna col-3 p-0">
-                            <div class="card">
-                                <img src="img/product1.png" alt="Product 1">
-                                <h3>Product 1</h3>
-                                <p> Description of Product 1</p>
-                                <p class="precio d-grid gap-2 col-6 mx-auto"> $100.00</p>
-                                <button class="boton">Agregar al Carrito</button>
-                            </div>
-                        </div>
-                        <div class="columna col-3 p-0">
-                            <div class="card">
-                                <img src="img/product1.png" alt="Product 2">
-                                <h3>Product 2</h3>
-                                <p> Description of Product 2</p>
-                                <p class="precio d-grid gap-2 col-6 mx-auto"> $100.00</p>
-                                <button class="boton">Agregar al Carrito</button>
-                            </div>
-                        </div>
-                        <div class="columna col-3 p-0">
-                            <div class="card">
-                                <img src="img/product1.png" alt="Product 3">
-                                <h3>Product 3</h3>
-                                <p> Description of Product 3</p>
-                                <p class="precio d-grid gap-2 col-6 mx-auto"> $100.00</p>
-                                <button class="boton">Agregar al Carrito</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row d-flex justify-content-evenly align-items-center">
-                        <div class="col-3 p-0">
-                            <div class="card">
-                                <img src="img/product1.png" alt="Product 4">
-                                <h3>Product 4</h3>
-                                <p> Description of Product 4</p>
-                                <p class="precio d-grid gap-2 col-6 mx-auto"> $100.00</p>
-                                <button class="boton">Agregar al Carrito</button>
-                            </div>
-                        </div>
-                        <div class="col-3 p-0">
-                            <div class="card">
-                                <img src="img/product1.png" alt="Product 5">
-                                <h3>Product 5</h3>
-                                <p> Description of Product 5</p>
-                                <p class="precio d-grid gap-2 col-6 mx-auto"> $100.00</p>
-                                <button class="boton">Agregar al Carrito</button>
-                            </div>
-                        </div>
-                        <div class="col-3 p-0">
-                            <div class="card">
-                                <img src="img/product1.png" alt="Product 6">
-                                <h3>Product 6</h3>
-                                <p> Description of Product 6</p>
-                                <p class="precio d-grid gap-2 col-6 mx-auto"> $100.00</p>
-                                <button class="boton">Agregar al Carrito</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row d-flex justify-content-evenly align-items-center">
-                        <div class="col-3 p-0">
-                            <div class="card">
-                                <img src="img/product1.png" alt="Product 7">
-                                <h3>Product 7</h3>
-                                <p> Description of Product 7</p>
-                                <p class="precio d-grid gap-2 col-6 mx-auto"> $100.00</p>
-                                <button class="boton">Agregar al Carrito</button>
-                            </div>
-                        </div>
-                        <div class="col-3 p-0">
-                            <div class="card">
-                                <img src="img/product1.png" alt="Product 8">
-                                <h3>Product 8</h3>
-                                <p> Description of Product 8</p>
-                                <p class="precio d-grid gap-2 col-6 mx-auto"> $100.00</p>
-                                <button class="boton">Agregar al Carrito</button>
-                            </div>
-                        </div>
-                        <div class="col-3 p-0">
-                            <div class="card">
-                                <img src="img/product1.png" alt="Product 9">
-                                <h3>Product 9</h3>
-                                <p> Description of Product 9</p>
-                                <p class="precio d-grid gap-2 col-6 mx-auto"> $100.00</p>
-                                <button class="boton">Agregar al Carrito</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>    
-            </section>
-        </div>
-    </main>
+                <section class="products contenido-principal row d-flex justify-content-evenly align-items-center">
+                   <div class="container">
+                        <div class="products row d-flex justify-content-evenly align-items-center", id="products"></div>
+                        
+                    </div>  
+                </section>
+            </div>
+        </main>
+        <script src="js/navbar.js"></script>
+        <script src="js/bootstrap.bundle.min.js"></script>
+        <script src="js/recompensas.js"></script>
+    </body>
 </html>

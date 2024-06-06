@@ -75,7 +75,7 @@ def users():
         # Edit existing user
         jsonData = request.get_json()
 
-        if validateData(["currentUser","username","password","role","firstname","middlename","lastname","email","area"],jsonData) == False:
+        if validateData(["currentUser","username","role","firstname","middlename","lastname","email","area"],jsonData) == False:
             response = responseJson(400,"Incorrect parameters sent")
             return response
 
@@ -84,7 +84,6 @@ def users():
             response = responseJson(401,"Unauthorized access")
             return response
 
-        jsonData["password"] = hashPassword(jsonData["password"])
         if editUser(jsonData):
             return "",200
         else:
@@ -155,14 +154,20 @@ def getUsers(cursor:sqlite3.Cursor,connection:sqlite3.Connection,condition):
 @query(database)
 def editUser(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
     # Checks whether the user exists
-    cursor.execute("SELECT * FROM users WHERE username = ?", (data["username"],))
+    cursor.execute("SELECT password FROM users WHERE username = ?", (data["username"],))
     user = cursor.fetchone()
     if not user:
         return False
 
-    #Check if points where passed, if not default to 0
+    # Check if points where passed, if not default to 0
     if "points" not in data:
         data["points"] = 0
+
+    # Check if password is passed, if not make it the past one
+    if "password" in data:
+        data["password"] = hashPassword(data["password"])
+    else:
+        data["password"] = user[0]
 
     # Insert user
     cursor.execute("UPDATE users SET password = ?, role = ?, firstname = ?, middlename = ?, lastname = ?, points = ?, email = ?, area = ? WHERE username = ?",
