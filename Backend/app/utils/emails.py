@@ -16,17 +16,7 @@ def set_message(subject : str, receiver : str)-> MIMEMultipart:
 
 def proposal_status_change( email_content : dict, receiver : str ) -> MIMEMultipart: 
 
-    """
-        Returns a proposal status change email.
-        email_content: {
-            "name": Proposal user full name,
-            "id": Proposal id,
-            "title": Proposal title,
-            "creationDate: Proposal creation date,
-            "oldStatus": Previous proposal status,
-            "status" : New Status
-        }
-    """
+
     message = set_message("Estado de Propuesta de Mejora Actualizado", receiver)
     content = f"""
         <html>
@@ -76,18 +66,6 @@ def proposal_status_change( email_content : dict, receiver : str ) -> MIMEMultip
 
 def VSE_new_order( email_content : dict, receiver : str ) -> MIMEMultipart: 
 
-    """
-        Returns a VSE new order email.
-        email_content: {
-            "name": VSE name,
-            "id": Order id
-            "user_name": Name of the user who placed the order,
-            "orderDate: Order creation date,
-            "products": Array of order products [ { "product": Product name , "quantity": Quantity } ],
-            "points" : Order points cost
-        }
-    """
-
     message = set_message("Nuevo Pedido Realizado en la Tienda", receiver)
 
     products_div_content = ""
@@ -132,19 +110,6 @@ def VSE_new_order( email_content : dict, receiver : str ) -> MIMEMultipart:
     return message
 
 def VSE_new_proposal( email_content : dict, receiver : str ) -> MIMEMultipart: 
-    """
-        Returns a VSE new proposal email.
-        email_content: {
-            "name": VSE name,
-            "id": Proposal id
-            "title": Proposal title,
-            "description: Proposal description,
-            "area": Proposal area,
-            "category" : Proposal category,
-            "creationDate": Proposal creation date,
-            "proposalUsers": Array of names of the users who created the proposal
-        }
-    """
 
     message = set_message("Nueva Propuesta de Mejora Registrada", receiver)
     
@@ -201,14 +166,6 @@ def VSE_new_proposal( email_content : dict, receiver : str ) -> MIMEMultipart:
     return message
 
 def user_signup_confirmation( email_content : dict, receiver : str ) -> MIMEMultipart: 
-    """
-        Returns a user signup confirmation email.
-        email_content: {
-            "name": User name,
-            "email": Proposal id
-            "username": Employee number
-        }
-    """
 
     message = set_message("Confirmación de Registro en el Sistema PLIM", receiver)
 
@@ -248,12 +205,6 @@ def user_signup_confirmation( email_content : dict, receiver : str ) -> MIMEMult
     return message
 
 def password_reset_confirmation( email_content : dict, receiver : str ) -> MIMEMultipart: 
-    """
-        Returns a password reset confirmation email.
-        email_content: {
-            "name": User name
-        }
-    """
 
     message = set_message("Confirmación de Cambio de Contraseña", receiver)
 
@@ -289,15 +240,6 @@ def password_reset_confirmation( email_content : dict, receiver : str ) -> MIMEM
     return message
 
 def user_data_change_confirmation( email_content : dict, receiver : str ) -> MIMEMultipart: 
-    """
-        Returns a user data change confirmation email.
-        email_content: {
-            "name": User name,
-            "previousName": Previous user name,
-            "email": New user email,
-            "previousEmail": Previous user email
-        }
-    """
 
     message = set_message("Confirmación de Cambio en sus Datos Personales", receiver)
 
@@ -343,18 +285,6 @@ def user_data_change_confirmation( email_content : dict, receiver : str ) -> MIM
     return message
 
 def user_order_confirmation( email_content : dict, receiver : str ) -> MIMEMultipart: 
-
-    """
-        Returns a User order confirmation email.
-        email_content: {
-            "name": User name,
-            "id": Order id
-            "user_name": Name of the user who placed the order,
-            "orderDate: Order creation date,
-            "products": Array of order products [ { "product": Product name , "quantity": Quantity } ],
-            "points" : Order points cost
-        }
-    """
 
     message = set_message("Confirmación de Registro de su Pedido en la Tienda PLIM", receiver)
 
