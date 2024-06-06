@@ -30,8 +30,7 @@
                         <a href="#" class=" botones perfil">
                             <img src="img/persona2.jpg" alt=""> <span id = "nombre">Carlos</span> 
                         </a>
-                        <!-- Poner href hacia pantalla de tienda  -->
-                        <a href="#" class="botones puntos"><span id = "puntos">100 pts </span></a>
+                        <a href="recompensas.html" class="botones puntos"><span id = "puntos">100 pts </span></a>
                         <a href="login.html" class="botones cerrar-sesion" id="cerrarSesion">Cerrar Sesión</a>
                     </nav>
                 </div>
@@ -171,14 +170,6 @@
             </div>
         </div>
     </div>
-
-    <script>
-        document.querySelector('#cerrarSesion').addEventListener('click', function(event) {
-            event.prevent();
-            localStorage.removeItem('authToken');
-            window.location.href='login.html';
-        });
-    </script>
     
     <script src="js/home.js"></script>
     <script src="js/navbar.js"></script>

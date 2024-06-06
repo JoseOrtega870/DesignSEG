@@ -38,7 +38,6 @@ def products():
     elif request.method == "POST":
         # Create a new order
         jsonData = request.get_json()
-        print(request.get_json())
         if validateData(["name", "description", "price", "image"], jsonData) == False:
             response = responseJson(400,"Incorrect parameters sent")
             return response
