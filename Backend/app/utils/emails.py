@@ -178,7 +178,7 @@ def VSE_new_proposal( email_content : dict, receiver : str ) -> MIMEMultipart:
                         <span {FONT_BOLD}>Fecha de registro:</span> {email_content["creationDate"]}
                     </p>
                     <div>
-                        <p>Usuarios que registraron la propuesta:</p> 
+                        <p {FONT_BOLD}>Usuarios que registraron la propuesta:</p> 
                         { user_list }
                     </div>
 
@@ -342,7 +342,6 @@ def user_data_change_confirmation( email_content : dict, receiver : str ) -> MIM
     message.attach(html)
     return message
 
-
 def user_order_confirmation( email_content : dict, receiver : str ) -> MIMEMultipart: 
 
     """
@@ -389,6 +388,245 @@ def user_order_confirmation( email_content : dict, receiver : str ) -> MIMEMulti
                     <p>Puede acceder a los detalles completos de su pedido a través de la plataforma PLIM en las computadoras de kiosko ubicado en las instalaciones.</p>
 
                     <p>Gracias por su colaboración y dedicación para garantizar un proceso de gestión de pedidos eficiente y eficaz.</p>
+
+                </div>
+
+                <h2 {FONT_BOLD}>Saludos cordiales.</h2>
+
+                <p {END_STYLE}>Este correo es generado automáticamente. Por favor, no responda a este mensaje.</p>
+            </body>
+        </html>
+    """
+    html = MIMEText(content, "html")
+    message.attach(html)
+    return message
+
+def user_order_status_changed( email_content : dict, receiver : str ) -> MIMEMultipart: 
+
+    """
+        Returns a User order confirmation email.
+        email_content: {
+            "name": User name,
+            "id": Order id
+            "user_name": Name of the user who placed the order,
+            "orderDate: Order creation date,
+            "products": Array of order products [ { "product": Product name , "quantity": Quantity } ],
+            "previousStatus": Previous order status,
+            "newStatus": New order status
+        }
+    """
+
+    message = set_message("Actualización del Estado de su Pedido en la Tienda PLIM", receiver)
+
+    products_div_content = ""
+    for product in email_content["products"]:
+        products_div_content += f"<p> <span {FONT_BOLD}>{product['product']}:</span> {product['quantity']}</p> \n"
+
+    content = f"""
+        <html>
+            <body>
+                <h1 {FONT_BOLD}>Estimado/a {email_content["name"]}</h1>
+
+                <div> 
+                    <p>Le informamos que el estado de su pedido en la tienda PLIM ha sido actualizado. A continuación, encontrará los detalles de su pedido:</p>
+
+                    <p>
+                        <span {FONT_BOLD}>ID de la Orden:</span> {email_content["id"]}
+                    </p>
+                    <p>
+                        <span {FONT_BOLD}>Fecha del pedido:</span> {email_content["orderDate"]}
+                    </p>
+                    <p>
+                        <span {FONT_BOLD}>Estatus anterior:</span> {email_content["previousStatus"]}
+                    </p>
+                    <p>
+                        <span {FONT_BOLD}>Estatus nuevo:</span> {email_content["newStatus"]}
+                    </p>
+
+                    <div>
+                        { products_div_content }
+                    </div>
+
+                    { "<p>Comentarios:<p/>" if email_content["newStatus"] != "" else "" }
+                    { 
+                        "<p>Favor de ponerse en contacto con el departamento de mejora continua para organizar la entrega</p>"  if email_content["newStatus"] != "" else "<p>Favor de ponerse en contacto con el departamento de mejora continua para más detalles</p>" 
+                    }
+
+                    <p>Puede acceder a los detalles completos de su pedido a través de la plataforma PLIM en las computadoras de kiosko ubicado en las instalaciones.</p>
+
+                    <p>Le agradecemos por su paciencia y comprensión. Si tiene alguna pregunta o necesita más información, no dude en ponerse en contacto con nuestro equipo de soporte.</p>
+
+                    <p>Gracias por su participación en el sistema PLIM.</p>
+
+
+                </div>
+
+                <h2 {FONT_BOLD}>Saludos cordiales.</h2>
+
+                <p {END_STYLE}>Este correo es generado automáticamente. Por favor, no responda a este mensaje.</p>
+            </body>
+        </html>
+    """
+    html = MIMEText(content, "html")
+    message.attach(html)
+    return message
+
+def champion_has_a_new_proposal( email_content : dict, receiver : str ) -> MIMEMultipart: 
+
+    """
+        Returns a champion has a new proposal email.
+        email_content: {
+            "name": Champion name,
+            "id": Proposal id
+            "title": Proposal title,
+            "creationDate: Proposal creation date,
+            "proposalUsers": List of users who created the proposal,
+
+        }
+    """
+
+    message = set_message("Nueva Propuesta de Mejora Asignada para Evaluación", receiver)
+
+    user_list = ""
+    for user in email_content["proposalUsers"]:
+        user_list += "<p>" + user + "</p> \n"
+        
+    content = f"""
+        <html>
+            <body>
+                <h1 {FONT_BOLD}>Estimado/a {email_content["name"]}</h1>
+
+                <div> 
+                    <p>Le informamos que se le ha asignado una nueva propuesta de mejora para su evaluación en el sistema PLIM. A continuación, encontrará los detalles de la propuesta asignada:</p>
+
+                    <p>
+                        <span {FONT_BOLD}>ID de la Propuesta:</span> {email_content["id"]}
+                    </p>
+                    <p>
+                        <span {FONT_BOLD}>Título:</span> {email_content["title"]}
+                    </p>
+                    <p>
+                        <span {FONT_BOLD}>Fecha de registro:</span> {email_content["creationDate"]}
+                    </p>
+
+                    <div>
+                        <p {FONT_BOLD}>Usuarios que registraron la propuesta:</p> 
+                        { user_list }
+                    </div>
+
+                    <p>Le solicitamos que revise esta propuesta a la mayor brevedad posible y tome las acciones correspondientes según su criterio. Puede acceder a la propuesta y realizar la evaluación a través de la plataforma PLIM en las computadoras de kiosko ubicado en las instalaciones.</p>
+
+                    <p>Le agradecemos por su paciencia y comprensión. Si tiene alguna pregunta o necesita más información, no dude en ponerse en contacto con nuestro equipo de soporte.</p>
+
+                    <p>Gracias por su participación en el sistema PLIM.</p>
+
+                </div>
+
+                <h2 {FONT_BOLD}>Saludos cordiales.</h2>
+
+                <p {END_STYLE}>Este correo es generado automáticamente. Por favor, no responda a este mensaje.</p>
+            </body>
+        </html>
+    """
+    html = MIMEText(content, "html")
+    message.attach(html)
+    return message
+
+def user_has_a_new_message( email_content : dict, receiver : str ) -> MIMEMultipart: 
+
+    """
+        Returns a User has a new message confirmation email.
+        email_content: {
+            "name": User name,
+            "id": Message id
+            "title": Message title,
+            "creationDate: Message creation date,
+            "message": Message
+        }
+    """
+
+    message = set_message("Nuevo Mensaje de Evaluación sobre su Propuesta de Mejora", receiver)
+
+    content = f"""
+        <html>
+            <body>
+                <h1 {FONT_BOLD}>Estimado/a {email_content["name"]}</h1>
+
+                <div> 
+                    <p>Le informamos que se le ha asignado una nueva propuesta de mejora para su evaluación en el sistema PLIM. A continuación, encontrará los detalles de la propuesta asignada:</p>
+
+                    <p>
+                        <span {FONT_BOLD}>ID de la Propuesta:</span> {email_content["id"]}
+                    </p>
+                    <p>
+                        <span {FONT_BOLD}>Título:</span> {email_content["title"]}
+                    </p>
+                    <p>
+                        <span {FONT_BOLD}>Fecha de registro:</span> {email_content["creationDate"]}
+                    </p>
+
+                    <div>
+                        <h3 {FONT_BOLD}>Mensaje del evaluador:</h3> 
+                        <p>{email_content["message"]}</p>
+                    </div>
+
+                    <p>Le recomendamos revisar este mensaje y proporcionar cualquier información adicional que pueda ser requerida para la evaluación de su propuesta. Puede acceder a los detalles completos de su propuesta y responder al mensaje del evaluador a traves de la plataforma PLIM en las computadoras de kiosko ubicado en las instalaciones.</p>
+
+                    <p>Gracias por su participación y contribuciones al sistema PLIM. Si tiene alguna pregunta o necesita más información, no dude en ponerse en contacto con el equipo VSE</p>
+
+                </div>
+
+                <h2 {FONT_BOLD}>Saludos cordiales.</h2>
+
+                <p {END_STYLE}>Este correo es generado automáticamente. Por favor, no responda a este mensaje.</p>
+            </body>
+        </html>
+    """
+    html = MIMEText(content, "html")
+    message.attach(html)
+    return message
+
+def VSE_or_CHAMPION_has_a_new_message( email_content : dict, receiver : str ) -> MIMEMultipart: 
+
+    """
+        Returns a VSE/Champion has a new message confirmation email.
+        email_content: {
+            "name": VSE/Champion name,
+            "id": Message id
+            "title": Message title,
+            "creationDate: Message creation date,
+            "message": Message
+        }
+    """
+
+    message = set_message("Nuevo Mensaje de Usuario sobre Propuesta de Mejora registrada", receiver)
+
+    content = f"""
+        <html>
+            <body>
+                <h1 {FONT_BOLD}>Estimado/a {email_content["name"]}</h1>
+
+                <div> 
+                    <p>Le informamos que ha recibido un nuevo mensaje del asociado sobre su propuesta de mejora registrada en el sistema PLIM pendiente de evaluación. A continuación, encontrará los detalles de su propuesta:</p>
+
+                    <p>
+                        <span {FONT_BOLD}>ID de la Propuesta:</span> {email_content["id"]}
+                    </p>
+                    <p>
+                        <span {FONT_BOLD}>Título:</span> {email_content["title"]}
+                    </p>
+                    <p>
+                        <span {FONT_BOLD}>Fecha de registro:</span> {email_content["creationDate"]}
+                    </p>
+
+                    <div>
+                        <h3 {FONT_BOLD}>Mensaje del evaluador:</h3> 
+                        <p>{email_content["message"]}</p>
+                    </div>
+
+                    <p>Le recomendamos revisar este mensaje y proporcionar cualquier información adicional que pueda ser requerida para la evaluación de su propuesta. Puede acceder a los detalles completos de su propuesta y responder al mensaje a traves de la plataforma PLIM en las computadoras de kiosko ubicado en las instalaciones.</p>
+
+                    <p>Gracias por su participación y contribuciones al sistema PLIM </p>
 
                 </div>
 

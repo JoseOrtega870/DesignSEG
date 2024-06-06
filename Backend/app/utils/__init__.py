@@ -36,14 +36,20 @@ def send_email( receiver : str, email_content: dict, email_type : str ):
             message = user_data_change_confirmation(email_content, receiver)
         case "user_order_confirmation":
             message = user_order_confirmation(email_content, receiver)
+        case "champion_has_a_new_proposal":
+            message = champion_has_a_new_proposal(email_content, receiver)
+        case "user_has_a_new_message":
+            message = user_has_a_new_message(email_content, receiver)
+        case "VSE_or_CHAMPION_has_a_new_message":
+            message = VSE_or_CHAMPION_has_a_new_message(email_content, receiver)
 
     with smtplib.SMTP(host=HOST, port=PORT) as email_server:
         # Login to email_server server
         email_server.starttls(context=CONTEXT)
-        email_server.login(sender, password)
+        email_server.login(SENDER, PASSWORD)
 
         # Send email
-        email_server.sendmail(sender, receiver, message.as_string())
+        email_server.sendmail(SENDER, receiver, message.as_string())
 
 
 # Function to decorate functions that requiere a connection to the database
