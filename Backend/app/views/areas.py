@@ -4,7 +4,7 @@ from app.utils import *
 bp = Blueprint('areas',__name__, url_prefix='/areas')
 
 
-@bp.route('/', methods=["POST","DELETE","GET","PUT"])
+@bp.route('', methods=["POST","DELETE","GET","PUT"])
 def areas():
     if request.method == "POST":
         # Signup a new area

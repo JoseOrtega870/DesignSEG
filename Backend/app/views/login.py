@@ -3,7 +3,7 @@ from app.utils import *
 
 bp = Blueprint('login',__name__, url_prefix='/login')
 
-@bp.route('/', methods=["POST"])
+@bp.route('', methods=["POST"])
 def login():
     if request.method == "POST":
         #Login

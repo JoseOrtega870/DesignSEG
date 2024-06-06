@@ -5,7 +5,7 @@ bp = Blueprint('orders',__name__, url_prefix='/orders')
 
 
 # Order endpoints
-@bp.route("/", methods=["GET", "POST", "PUT"]) 
+@bp.route("", methods=["GET", "POST", "PUT"]) 
 def orders():
     if request.method == "GET":
         if len(request.args) > 0:
