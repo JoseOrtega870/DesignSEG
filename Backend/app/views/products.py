@@ -5,7 +5,7 @@ bp = Blueprint('products',__name__, url_prefix='/products')
 
 
 # Product endpoints
-@bp.route("/", methods=["GET", "POST", "PUT", "DELETE"])
+@bp.route("", methods=["GET", "POST", "PUT", "DELETE"])
 def products():
     if request.method == "GET":
 
