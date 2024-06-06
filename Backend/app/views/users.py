@@ -42,7 +42,7 @@ def users():
         # Get data for a given user
         username = request.args.get("username")
         role = request.args.get("role")
-        if username:
+        if username != None:
             # Looking for a single user
             user = getUsers(["username",username])
             if user:
@@ -54,7 +54,7 @@ def users():
                 # User not found
                 response = responseJson(404,"User doesn't exist")
                 return response
-        elif role:
+        elif role != None:
             # Looking for a particular role
             users = getUsers(["role",role])
             response = jsonify(users)
@@ -144,7 +144,7 @@ def getUsers(cursor:sqlite3.Cursor,connection:sqlite3.Connection,condition):
         result = cursor.execute("SELECT proposalId FROM UserProposal WHERE user = ?",(user["username"],))
         user["proposals"] = []
         for proposal in result.fetchall():
-            user["proposals"].append(proposal)
+            user["proposals"].append(proposal[0])
 
         users.append(user)
     if condition[0] == "username" and users:

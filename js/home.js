@@ -14,9 +14,6 @@ async function fetchAreas(){
             optionElement.textContent = item.name;
             select.appendChild(optionElement);
         }
-        console.log('ok');
-        }else{
-        console.log('oknt');
     }
 }
 fetchAreas();
@@ -30,7 +27,7 @@ document.getElementById('improvementForm').addEventListener('submit', function(e
     const area = document.getElementById('area').value;
     const categoria = document.getElementById('categoria').value;
     const empleadosInput = document.getElementById('empleados').value;
-    const empleadosArray = empleadosInput;
+    const empleadosArray = empleadosInput.split(',');
 
     const data = {
         title: titulo,
@@ -54,13 +51,10 @@ document.getElementById('improvementForm').addEventListener('submit', function(e
         })
             .then(response => {
             if(response.ok){
-                console.log('ok');
                 showMessage('Propuesta registrada exitosamente', 'success');
             } else{
-                    console.log('oknt');
-                    console.log( JSON.stringify(data));
-                    showMessage('No se pudo registrar la propuesta. Inténtalo de nuevo más tarde.', 'error');
-                }
+                showMessage('No se pudo registrar la propuesta. Inténtalo de nuevo más tarde.', 'error');
+            }
             })
             .catch(error => {
                 console.error('Error:', error);
