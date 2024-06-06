@@ -25,6 +25,8 @@
 
                 <img src="img/Logo.svg" alt="logo">
 
+                <div id="errorAlert" class="alert alert-danger" role="alert" style="display: none;"> </div>
+
                 <form id="loginForm">
 
                     <div class="mb-3">
@@ -68,7 +70,7 @@
                     },
                     body: JSON.stringify({
                         username: username,
-                        password: password   
+                        password: password
                     })
                 })
                     .then(response => response.json())
@@ -83,6 +85,41 @@
             }
 
             fetchData();
+
+
+            // Perform validation and populate the error messages in an array
+            const errors = [];
+
+            if (!username) {
+                errors.push('Please enter a username.');
+            }
+
+            if (!password) {
+                errors.push('Please enter a password.');
+            }
+
+            // Display the alert if there are any errors
+            if (errors.length > 0) {
+                const errorAlert = document.getElementById('errorAlert');
+                errorAlert.innerHTML = '';
+
+                errors.forEach(function (error) {
+                    const errorElement = document.createElement('p');
+                    errorElement.textContent = error;
+                    errorAlert.appendChild(errorElement);
+                });
+
+                errorAlert.style.display = 'block';
+                
+            } else {
+                // Submit the form if there are no errors
+                formData = {
+                    usuario: username,
+                    contrasena: password
+                };
+
+                fetchData();
+            }
 
         });
     </script>
