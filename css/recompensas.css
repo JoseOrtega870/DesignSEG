@@ -139,6 +139,28 @@ header .botones .perfil img {
     background-color: #019160;
 }
 
+.carrito-img {
+    width: 50px;  
+    height: auto; 
+}
+
+.contenedor-titulo .col {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.botones-container {
+    display: flex;
+    gap: 10px; 
+}
+
+.contenedor-titulo h4 {
+    margin-bottom: 0; 
+    flex-grow: 1; 
+    text-align: center; 
+}
+
 .card {
     border-radius: 0;
     border-style: none;
@@ -146,7 +168,26 @@ header .botones .perfil img {
     background-color: #f5f5f5;
 }
 
+.cart-alert {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    max-width: 250px;
+    padding: 10px;
+    background-color: rgba(0, 123, 255, 0.9);
+    color: white;
+    border-radius: 5px;
+    z-index: 1050;
+    font-size: 14px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
 section h4 {
     margin: 0;
     padding: 10px;
+}
+
+.cerrar-sesion {
+    margin-left: 10px;
+    color: #FFFFFF; 
 }
