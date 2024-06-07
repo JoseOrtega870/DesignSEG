@@ -2,8 +2,49 @@ import sqlite3
 import bcrypt
 from flask import Response,jsonify
 
+import smtplib, ssl
+from .emails import *
+
+PORT = 587
+
+CONTEXT = ssl.create_default_context()
+
+SENDER = "correo"
+
+PASSWORD = "password"
+
+HOST = "smtp-mail.outlook.com"
 
 database = 'database.db'
+
+def send_email( receiver : str, email_content: dict, email_type : str ): 
+    message = None
+
+    # Set email content
+    match email_type: 
+        case "proposal_status_change":
+            message = proposal_status_change(email_content, receiver)
+        case "VSE_new_order":
+            message = VSE_new_order(email_content, receiver)
+        case "VSE_new_proposal":
+            message = VSE_new_proposal(email_content, receiver)
+        case "VSE_new_proposal":
+            message = VSE_new_proposal(email_content, receiver)
+        case "user_signup_confirmation":
+            message = user_signup_confirmation(email_content, receiver)
+        case "user_data_change_confirmation":
+            message = user_data_change_confirmation(email_content, receiver)
+        case "user_order_confirmation":
+            message = user_order_confirmation(email_content, receiver)
+
+    with smtplib.SMTP(host=HOST, port=PORT) as email_server:
+        # Login to email_server server
+        email_server.starttls(context=CONTEXT)
+        email_server.login(SENDER, PASSWORD)
+
+        # Send email
+        email_server.sendmail(SENDER, receiver, message.as_string())
+
 
 # Function to decorate functions that requiere a connection to the database
 def query(database:str): 

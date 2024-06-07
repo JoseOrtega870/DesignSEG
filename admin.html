@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/superusuario.css">
+    <link rel="stylesheet" href="css/admin.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
@@ -15,15 +15,24 @@
     <header>
         <div class="fixed-top">
             <div class="container-fluid">
-                <div class="row justify-content-evenly align-items-center">                   
+                <div class="row justify-content-evenly align-items-center">
+                    <div class="botones col-auto d-flex justify-content-center align-items-center order-1" id = "containerLeft">
+                        <a href="#" class="botones perfil">Inicio</a>
+                        <a href="#" class="botones perfil">Recompensas</a>
+                    </div>
+
                     <div class="col-auto text-center order-2">
                         <img src="img/Seg-1.png" alt="Seg Automotive">
                     </div>
 
                     <nav class="botones col-auto text-end d-flex align-items-center justify-content-end order-3">
+                        <div id = "containerRight"></div>
+
                         <a href="#" class=" botones perfil">
-                            <img src="img/persona2.jpg" alt=""> Carlos
+                            <img src="img/persona2.jpg" alt=""> <span id = "nombre">Carlos</span> 
                         </a>
+                        <a href="recompensas.html" class="botones puntos"><span id = "puntos">100 pts </span></a>
+                        <a href="login.html" class="botones cerrar-sesion" id="cerrarSesion">Cerrar Sesión</a>
                     </nav>
                 </div>
             </div>
@@ -49,6 +58,8 @@
                             <th>Área</th>
                             <th>Rol</th>
                             <th>Puntos</th>
+                            <th>Email</th>
+                            <th>Propuestas</th>
                         </tr>   
                     </thead>
                     <tbody id="users" class="text-center">
@@ -64,9 +75,6 @@
                 <div class="row d-flex justify-content-center align-items-center">
                     <div class="col-auto">
                         <button class="boton w-100 ">Registrar Usuario</button>
-                    </div>
-                    <div class="col-auto">
-                        <button class="boton w-100 " data-bs-toggle="modal" data-bs-target="#userModal">Editar Usuario</button>
                     </div>
                     <div class="col-auto">
                         <button type="button" class="boton w-100">Registrar Área</button>
@@ -86,35 +94,49 @@
                         <form id="userForm">
                             <div class="mb-3">
                                 <label for="employeeNumber" class="form-label">No. de Empleado</label>
-                                <input type="text" class="form-control" id="employeeNumber" >
+                                <input type="text" class="form-control" id="employeeNumber" required >
                             </div>
                             <div class="mb-3">
                                 <label for="firstName" class="form-label">Nombre(s)</label>
-                                <input type="text" class="form-control" id="firstName">
+                                <input type="text" class="form-control" id="firstName" required>
                             </div>
                             <div class="mb-3">
                                 <label for="lastName" class="form-label">Apellido Paterno</label>
-                                <input type="text" class="form-control" id="lastName">
+                                <input type="text" class="form-control" id="lastName" required>
                             </div>
                             <div class="mb-3">
                                 <label for="middleName" class="form-label">Apellido Materno</label>
-                                <input type="text" class="form-control" id="middleName">
+                                <input type="text" class="form-control" id="middleName" required>
                             </div>
                             <div class="mb-3">
                                 <label for="area" class="form-label">Área</label>
-                                <input type="text" class="form-control" id="area">
+                                <input type="text" class="form-control" id="area" required>
                             </div>
                             <div class="mb-3">
                                 <label for="role" class="form-label">Rol</label>
-                                <input type="text" class="form-control" id="role">
+                                <input type="text" class="form-control" id="role" required>
                             </div>
                             <div class="mb-3">
                                 <label for="points" class="form-label">Puntos</label>
-                                <input type="text" class="form-control" id="points">
-                            </div>7
+                                <input type="text" class="form-control" id="points" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="text" class="form-control" id="email" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="newPassword" class="form-label">Nueva Contraseña, opcional</label>
+                                <input type="password" class="form-control" id="newPassword" >
+                                <div id="passwordHelp" class="form-text">La contraseña debe tener mínimo 8 caracteres, mínimo un(a): mayúscula, minúscula, número, caracter especial (ej. %$#).</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="newPasswordConfirmation" class="form-label">Confirma Nueva Contraseña</label>
+                                <input type="password" class="form-control" id="newPasswordConfirmation" >
+                                <div id="passwordHelp" class="form-text">Las contraseñas deben coincidir.</div>
+                            </div>
+                            <div id="message" class="alert" role="alert" style="display: none;"></div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-primary">Cambiar Contraseña</button>
-                                <button type="button" class="btn btn-danger">Eliminar Usuario</button>                                
+                                <button id="deleteUser" type="button" class="btn btn-danger">Eliminar Usuario</button>                                
                                 <button type="submit" class="btn btn-success">Guardar Cambios</button>
                             </div>
                         </form>
@@ -124,6 +146,7 @@
         </div>
     </div>
     <script src="js/admin.js"></script>
+    <script src="js/navbar.js"></script>
     <script src="js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>

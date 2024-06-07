@@ -44,20 +44,29 @@ def proposals():
     elif request.method == "GET":   
         # Get data for a given user
         id = request.args.get("id")
-        if not id:
-            response = responseJson(400,"Incorrect parameters sent")
-            return response
-        
-        proposal = getProposal(id)
-        if proposal != None:
-            # Success
-            response = jsonify(proposal)
+        if id != None:
+            # Looking for a single user
+            proposal = getProposals(["id",id])
+            if proposal:
+                # Success
+                response = jsonify(proposal)
+                response.status_code = 200
+                return response
+            else:
+                # User not found
+                response = responseJson(404,"Proposal not found")
+                return response
+        elif not any(request.args.values()):
+            # Looking for all users
+            proposals = getProposals(["1",1])
+            response = jsonify(proposals)
             response.status_code = 200
             return response
         else:
-            # Proposal not found
-            response = responseJson(404,"Proposal not found")
+            # Incorrect parameters
+            response = responseJson(400,"Incorrect parameters sent")
             return response
+
 
 # Function to create a proposal, returns true if succesful and false if unsuccesful
 @query(database)
@@ -122,24 +131,25 @@ def editProposal(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
 
 # Function to retrieve a proposal, return None if it fails
 @query(database)
-def getProposal(cursor:sqlite3.Cursor,connection:sqlite3.Connection,id):
+def getProposals(cursor:sqlite3.Cursor,connection:sqlite3.Connection,condition):
     # Retrieve proposal(will be None in case it's not found)
-    data = cursor.execute("SELECT * FROM proposals WHERE id = ?", (id,))
-    row = data.fetchone()
-    if not row:
-        return None
-    
-    # Add keys to the values returned 
-    proposal = {}
-    for i,column in enumerate(data.description):
-        proposal[column[0]] = row[i]
+    data = cursor.execute("SELECT * FROM proposals WHERE " + condition[0] + " = ?", (condition[1],))
+    proposals = []
+    columns = data.description
+    for i in data.fetchall():
+        proposal = {}
+        for id,column in enumerate(columns):
+            proposal[column[0]] = i[id]
 
-    # Append all the users involved
-    cursor.execute("SELECT user FROM UserProposal WHERE proposalId = ?",(id,))
-    users = []
-    for i in cursor:
-        print(i)
-        users.append(i[0])
-    proposal["users"] = users
+        # Append all the users involved
+        cursor.execute("SELECT user FROM UserProposal WHERE proposalId = ?",(proposal["id"],))
+        users = [] 
+        for i in cursor:
+            users.append(i[0])
+        proposal["users"] = users
+        
+        proposals.append(proposal)
             
-    return proposal
+    if condition[0] == "id" and proposals:
+        return proposals[0]
+    return proposals

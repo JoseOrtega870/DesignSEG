@@ -72,6 +72,7 @@ header .botones .perfil img {
 	border-radius: 100px;
 	margin-right: 5px;
 }
+
 .scrollable-content {
     height: 400px;
     overflow-y: auto;
@@ -125,6 +126,7 @@ header .botones .perfil img {
     border-collapse: separate;
     border-spacing: 0 5px;    
     table-layout: fixed;
+    
 }
 
 .titulo th {
@@ -140,6 +142,7 @@ header .botones .perfil img {
     padding: 10px;
     border-style: none;
     font-size: 15px;
+    cursor:pointer;
 }
 
 .contenido-principal td a {
@@ -156,6 +159,7 @@ td a:hover {
     background-color: #012A86;
     width: max-content;
 }
+
 
 .boton {
     background-color: #FFFFFF;

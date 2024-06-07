@@ -1,10 +1,10 @@
 const buttons = [
-    {href:'#', text: 'Inicio'},
+    {href:'home.html', text: 'Inicio'},
     {href:'#', text: 'Recompensas'},
     {href:'#', text: 'Estadisticas'},
     {href:'#', text: 'Evaluar'},
     {href:'#', text: 'Pedidos'},
-    {href:'#', text: 'Usuarios'}
+    {href:'admin.html', text: 'Usuarios'}
 ]
 
 function createButton(buttonDetails,container) {
@@ -106,3 +106,9 @@ async function fetchUser(buttons){
     }
 }
 fetchUser(buttons);
+
+document.querySelector('#cerrarSesion').addEventListener('click', function(event) {
+    event.prevent();
+    sessionStorage.removeItem('username');
+    window.location.href='login.html';
+});
