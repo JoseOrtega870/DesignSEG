@@ -144,11 +144,6 @@ header .botones .perfil img {
     height: auto; 
 }
 
-.carrito-img {
-    width: 50px;  
-    height: auto; 
-}
-
 .contenedor-titulo .col {
     display: flex;
     align-items: center;
