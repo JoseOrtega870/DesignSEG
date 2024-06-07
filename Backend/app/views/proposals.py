@@ -130,8 +130,6 @@ def editProposal(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
             }
             send_email(row[1], email_content, "proposal_status_change")
 
-        # 
-
         connection.commit()
         return 3
     # Checks whether the user editing is one of the people who suggested it
