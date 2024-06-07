@@ -119,10 +119,9 @@ def editProposal(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
     cursor.execute("SELECT role, email, firstname FROM users WHERE username = ?",(data["currentUser"],))
     sender = result.fetchone()
 
-    cursor.execute("SELECT Users.email, Users.firstname FROM users, UserProposal WHERE Users.username = UserProposal.user AND UserProposal.proposalId = ?",(data["proposalId"],))
-    receivers = cursor.fetchone()
-    
     if sender[0] == "VSE" or sender[0] == "admin" or sender[0] == "Champion":
+        cursor.execute("SELECT Users.email, Users.firstname FROM users, UserProposal WHERE Users.username = UserProposal.user AND UserProposal.proposalId = ?",(data["proposalId"],))
+        receivers = cursor.fetchone()
         # If the status is different, send an email
         if proposal[5] != data["status"]:
             for receiver in receivers:
@@ -149,12 +148,25 @@ def editProposal(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
 
         connection.commit()
         return 3
+    
+    # Gets the current evaluator of the proposal
+    currentEvaluator = cursor.execute("SELECT email, firstname FROM users, proposals WHERE Users.username = Proposals.currentEvaluatorUser AND proposals.id = ?",(data["proposalId"],))
+    currentEvaluator = currentEvaluator.fetchone()
+
     # Checks whether the user editing is one of the people who suggested it
     cursor.execute("SELECT user FROM UserProposal WHERE proposalId = ?",(data["proposalId"],))
     for i in cursor:
         if i[0] == data["currentUser"]:
-
-            connection.commit()
+            if proposal[7] != data["feedback"]:
+                email_content = {
+                    "name": currentEvaluator[1],
+                    "id": proposal[0],
+                    "title": proposal[1],
+                    "creationDate": proposal[8],
+                    "message": data["feedback"]
+                }
+                send_email(currentEvaluator[0], email_content, "VSE_or_CHAMPION_has_a_new_message")
+                connection.commit()
 
             return 3   
          
