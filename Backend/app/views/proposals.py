@@ -95,6 +95,7 @@ def createProposal(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict
 def editProposal(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
     # Checks whether the proposal exists
     cursor.execute("SELECT * FROM proposals WHERE id = ?", (data["proposalId"],))
+
     proposal = cursor.fetchone()
     if not proposal:
         return 2
@@ -114,9 +115,21 @@ def editProposal(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
         cursor.execute("INSERT INTO UserProposal (user, proposalId) VALUES (?, ?)",(id,data["proposalId"]))
     
     # Checks whether the user is an admin
-    cursor.execute("SELECT role FROM users WHERE username = ?",(data["currentUser"],))
+    cursor.execute("SELECT role, email, firstname FROM users WHERE username = ?",(data["currentUser"],))
     row = result.fetchone()
     if row:
+        # If the status is different, send an email
+        if proposal[5] != data["status"]:
+            email_content = {
+                "name": row[2],
+                "id": proposal[0],
+                "title": proposal[1],
+                "creationDate": proposal[8],
+                "oldStatus": proposal[5],
+                "status": data["status"]
+            }
+            send_email(row[1], email_content, "proposal_status_change")
+
         connection.commit()
         return 3
     # Checks whether the user editing is one of the people who suggested it

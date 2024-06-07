@@ -45,7 +45,7 @@ def run_server(env_name):
     else:  # For macOS/Linux
         activation_script = os.path.join(env_name, 'bin', 'waitress-serve')
     
-        command = f'{activation_script} --host 127.0.0.1 app:app'
+        command = f'{activation_script} --host 127.0.0.1 main:mainapp'
         print(command)
     
     # Step 3: Run the activation and installation command

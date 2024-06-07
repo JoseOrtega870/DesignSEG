@@ -40,23 +40,48 @@
         <main>
             <div class="container">
                 <section class="contenedor-titulo row d-flex justify-content-evenly align-items-center">
-                    <div class="col">
-                        <h4 class="text-center">RECOMPENSAS</h4>
-                        <div class="text-end"><img src="img/carrito.png" class="img-fluid" alt=""></div>
+                    <div id="cart-alert" class="alert alert-success alert-dismissible fade show d-none" role="alert">
+                        <span id="cart-alert-message"></span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
-                </section>
+                    <div class="col d-flex align-items-center justify-content-between">
+                        <div class="botones-container">
+                            <button id="boton_editar" class="btn btn-primary">Editar Tienda</button>
+                        </div>
+                        <h4 class="text-center mb-0">RECOMPENSAS</h4>
+                        <img src="img/carrito.png" class="img-fluid carrito-img" alt="" id="cart">
+                    </div>
+                </section>                                             
 
                 <section class="products contenido-principal row d-flex justify-content-evenly align-items-center">
                    <div class="container">
                         <div class="products row d-flex justify-content-evenly align-items-center", id="products"></div>
                         
-                    </div>
-                    </div>    
+                    </div>  
                 </section>
+            </div>
+            <div class="modal fade" id="display-cart" tabindex="-1" aria-hidden="true" aria-labelledby="label-modal-1" data-bs-backdrop="static">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header border-bottom-0">
+                            <h5 class="modal-title mx-auto">Carrito</h5>
+                        </div>
+                        <div class="modal-body">
+                            <ul id="modal-cart-items" class="list-group">
+                                <!-- Cart items will be displayed here -->
+                            </ul>
+                            <p>Total: $<span id="modal-cart-total">0.00</span></p>
+                        </div>
+                        <div class="modal-footer mx-auto border-top-0 p-6">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" id="modal-checkout-btn">Checkout</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </main>
         <script src="js/navbar.js"></script>
         <script src="js/bootstrap.bundle.min.js"></script>
         <script src="js/recompensas.js"></script>
-    <body>
-    </html>
+    </body>
+</html>

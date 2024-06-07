@@ -18,24 +18,169 @@ HOST = "smtp-mail.outlook.com"
 database = 'database.db'
 
 def send_email( receiver : str, email_content: dict, email_type : str ): 
+
+    """
+    Sends an email with the given content and type.
+    Available email types:
+        - proposal_status_change: 
+            
+            email_content: {
+                "name": Proposal user full name,
+                "id": Proposal id,
+                "title": Proposal title,
+                "creationDate: Proposal creation date,
+                "oldStatus": Previous proposal status,
+                "status" : New Status
+            }
+
+        - VSE_new_order
+            Returns a VSE new order email.
+
+            email_content: { 
+                "name": VSE name,
+                "id": Order id
+                "user_name": Name of the user who placed the order,
+                "orderDate: Order creation date,
+                "products": Array of order products [ { "product": Product name , "quantity": Quantity } ],
+                "points" : Order points cost
+            }
+
+        - VSE_new_proposal
+            Returns a VSE new proposal email.
+
+            email_content: {
+                "name": VSE name,
+                "id": Proposal id
+                "title": Proposal title,
+                "description: Proposal description,
+                "area": Proposal area,
+                "category" : Proposal category,
+                "creationDate": Proposal creation date,
+                "proposalUsers": Array of names of the users who created the proposal
+            }
+
+        - user_signup_confirmation
+            Returns a user signup confirmation email.
+
+            email_content: {
+                "name": User name,
+                "email": Proposal id
+                "username": Employee number
+            }
+
+        - password_reset_confirmation
+            Returns a password reset confirmation email.
+
+            email_content: {
+                "name": User name
+            }
+
+        - user_data_change_confirmation
+            Returns a user data change confirmation email.
+
+            email_content: {
+                "name": User name,
+                "previousName": Previous user name,
+                "email": New user email,
+                "previousEmail": Previous user email
+            }
+
+        - user_order_confirmation
+            Returns a user data change confirmation email.
+
+            email_content: {
+                "name": User name,
+                "id": Order id
+                "user_name": Name of the user who placed the order,
+                "orderDate: Order creation date,
+                "products": Array of order products [ { "product": Product name , "quantity": Quantity } ],
+                "points" : Order points cost
+            }
+
+        - user_order_status_changed
+        Returns a User order confirmation email.
+
+        email_content: {
+            "name": User name,
+            "id": Order id
+            "user_name": Name of the user who placed the order,
+            "orderDate: Order creation date,
+            "products": Array of order products [ { "product": Product name , "quantity": Quantity } ],
+            "previousStatus": Previous order status,
+            "newStatus": New order status
+        }
+
+        - champion_has_a_new_proposal
+        Returns a champion has a new proposal email.
+
+        email_content: {
+            "name": Champion name,
+            "id": Proposal id
+            "title": Proposal title,
+            "creationDate: Proposal creation date,
+            "proposalUsers": List of users who created the proposal,
+
+        }
+
+        - user_has_a_new_message
+        Returns a User has a new message confirmation email.
+
+        email_content: {
+            "name": User name,
+            "id": Message id
+            "title": Message title,
+            "creationDate: Message creation date,
+            "message": Message
+        }
+        
+        - VSE_or_CHAMPION_has_a_new_message
+        Returns a VSE/Champion has a new message confirmation email.
+        
+        email_content: {
+            "name": VSE/Champion name,
+            "id": Message id
+            "title": Message title,
+            "creationDate: Message creation date,
+            "message": Message
+        }
+    
+    """
     message = None
 
     # Set email content
     match email_type: 
         case "proposal_status_change":
             message = proposal_status_change(email_content, receiver)
+
         case "VSE_new_order":
             message = VSE_new_order(email_content, receiver)
+
         case "VSE_new_proposal":
             message = VSE_new_proposal(email_content, receiver)
-        case "VSE_new_proposal":
-            message = VSE_new_proposal(email_content, receiver)
+
         case "user_signup_confirmation":
             message = user_signup_confirmation(email_content, receiver)
+
+        case "password_reset_confirmation":
+            message = password_reset_confirmation(email_content, receiver)
+
         case "user_data_change_confirmation":
             message = user_data_change_confirmation(email_content, receiver)
+
         case "user_order_confirmation":
             message = user_order_confirmation(email_content, receiver)
+
+        case "user_order_status_changed":
+            message = user_order_status_changed(email_content, receiver)
+
+        case "champion_has_a_new_proposal":
+            message = champion_has_a_new_proposal(email_content, receiver)
+
+        case "user_has_a_new_message":
+            message = user_has_a_new_message(email_content, receiver)
+
+        case "VSE_or_CHAMPION_has_a_new_message":
+            message = VSE_or_CHAMPION_has_a_new_message(email_content, receiver)
 
     with smtplib.SMTP(host=HOST, port=PORT) as email_server:
         # Login to email_server server
