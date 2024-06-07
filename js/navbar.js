@@ -15,97 +15,103 @@ function createButton(buttonDetails,container) {
     container.appendChild(a);
 }
 
-async function fetchUser(buttons){
+async function fetchUser(){
     const baseurl = 'http://127.0.0.1:8080/users?username=';
     const url = baseurl.concat(sessionStorage.getItem('username'))
     const response = await fetch(url);
 
     if (response.ok){
         const data = await response.json();
-        document.getElementById('nombre').textContent = data['firstName'];
-        document.getElementById('puntos').textContent = data['points'].toString().concat(' pts');
-
-        switch (data['role']) {
-            case 'admin':{
-                let container = document.getElementById('containerLeft');
-                while (container.firstChild) {
-                    container.removeChild(container.firstChild);
-                }
-
-                createButton(buttons[0],container);
-                createButton(buttons[1],container);
-                createButton(buttons[2],container);
-                createButton(buttons[3],container);
-
-
-                container = document.getElementById('containerRight');
-                while (container.firstChild) {
-                    container.removeChild(container.firstChild);
-                }
-
-                createButton(buttons[4],container);
-                createButton(buttons[5],container);
-
-                break;
-            }
-            case 'vse':{
-                let container = document.getElementById('containerLeft');
-                while (container.firstChild) {
-                    container.removeChild(container.firstChild);
-                }
-
-                createButton(buttons[0],container);
-                createButton(buttons[1],container);
-                createButton(buttons[2],container);
-                createButton(buttons[3],container);
-
-
-                container = document.getElementById('containerRight');
-                while (container.firstChild) {
-                    container.removeChild(container.firstChild);
-                }
-
-                createButton(buttons[4],container);
-
-
-                break;
-            }
-            case 'champion':{
-                let container = document.getElementById('containerLeft');
-                while (container.firstChild) {
-                    container.removeChild(container.firstChild);
-                }
-
-                createButton(buttons[0],container);
-                createButton(buttons[1],container);
-                createButton(buttons[3],container);
-
-                container = document.getElementById('containerRight');
-                while (container.firstChild) {
-                    container.removeChild(container.firstChild);
-                }
-                break;
-            }
-            default:{
-                let container = document.getElementById('containerLeft');
-                while (container.firstChild) {
-                    container.removeChild(container.firstChild);
-                }
-
-                createButton(buttons[0],container);
-                createButton(buttons[1],container);
-                container = document.getElementById('containerRight');
-                while (container.firstChild) {
-                    container.removeChild(container.firstChild);
-                }
-                break;
-            }
-        }
+        return data;
     } else {
-
+        return null;
     }
 }
-fetchUser(buttons);
+document.addEventListener('DOMContentLoaded',async function(){
+    const data = await fetchUser();
+    document.getElementById('nombre').textContent = data['firstName'];
+    document.getElementById('puntos').textContent = data['points'].toString().concat(' pts');
+
+    
+    
+    switch (data['role']) {
+        case 'admin':{
+            let container = document.getElementById('containerLeft');
+            while (container.firstChild) {
+                container.removeChild(container.firstChild);
+            }
+
+            createButton(buttons[0],container);
+            createButton(buttons[1],container);
+            createButton(buttons[2],container);
+            createButton(buttons[3],container);
+
+
+            container = document.getElementById('containerRight');
+            while (container.firstChild) {
+                container.removeChild(container.firstChild);
+            }
+
+            createButton(buttons[4],container);
+            createButton(buttons[5],container);
+
+            break;
+        }
+        case 'vse':{
+            let container = document.getElementById('containerLeft');
+            while (container.firstChild) {
+                container.removeChild(container.firstChild);
+            }
+
+            createButton(buttons[0],container);
+            createButton(buttons[1],container);
+            createButton(buttons[2],container);
+            createButton(buttons[3],container);
+
+
+            container = document.getElementById('containerRight');
+            while (container.firstChild) {
+                container.removeChild(container.firstChild);
+            }
+
+            createButton(buttons[4],container);
+
+
+            break;
+        }
+        case 'champion':{
+            let container = document.getElementById('containerLeft');
+            while (container.firstChild) {
+                container.removeChild(container.firstChild);
+            }
+
+            createButton(buttons[0],container);
+            createButton(buttons[1],container);
+            createButton(buttons[3],container);
+
+            container = document.getElementById('containerRight');
+            while (container.firstChild) {
+                container.removeChild(container.firstChild);
+            }
+            break;
+        }
+        default:{
+            let container = document.getElementById('containerLeft');
+            while (container.firstChild) {
+                container.removeChild(container.firstChild);
+            }
+
+            createButton(buttons[0],container);
+            createButton(buttons[1],container);
+            container = document.getElementById('containerRight');
+            while (container.firstChild) {
+                container.removeChild(container.firstChild);
+            }
+            break;
+        }
+    }
+} )
+
 
 document.querySelector('#cerrarSesion').addEventListener('click', function(event) {
     event.prevent();

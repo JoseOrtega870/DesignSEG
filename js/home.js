@@ -1,3 +1,4 @@
+//get mejoras 
 
 async function fetchAreas(){
     const url = 'http://127.0.0.1:8080/areas';
@@ -63,6 +64,18 @@ document.getElementById('improvementForm').addEventListener('submit', function(e
     };
 
     fetchData();
+
+    const formElements = document.getElementById('improvementForm').querySelectorAll('input, textarea');
+    for (const element of formElements) {
+        if (element.type === 'checkbox' || element.type === 'radio') {
+            element.checked = false;
+        } else if (element.type === 'select-one') {
+            element.selectedIndex = 0;
+        } else {
+            element.value = '';
+        }
+    }
+
     
 });
 
