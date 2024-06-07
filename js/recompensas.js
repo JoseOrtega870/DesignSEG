@@ -209,7 +209,8 @@ document.addEventListener('DOMContentLoaded',async function() {
             
             updateCartDisplay(modalCartTotalElement);
 
-            cartAlertMessageElement.textContent = `${product} has been added to the cart!`;
+            // Mostrar alerta cuando se agrega al carrito
+            cartAlertMessageElement.textContent = `${product} se ha añadido al carrito`;
             cartAlertElement.classList.remove('d-none');
             cartAlertElement.classList.add('show');
             setTimeout(() => {
