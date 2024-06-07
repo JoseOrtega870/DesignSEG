@@ -1,4 +1,23 @@
-document.addEventListener("DOMContentLoaded",function(){    
+document.addEventListener("DOMContentLoaded",function(){  
+    
+    var areas = [];
+    async function fetchAreas(){
+        const url = 'http://127.0.0.1:8080/areas';
+        const response = await fetch(url);
+    
+        if (response.ok){
+            const data = await response.json();
+            areas = data;
+            for (const item of data){
+                const select = document.getElementById('area');
+                const optionElement = document.createElement("option");
+                optionElement.value = item.name;
+                optionElement.textContent = item.name;
+                select.appendChild(optionElement);
+            }
+        }
+    }
+    fetchAreas();
 
     function openForm(data) {
         document.getElementById("employeeNumber").value = data[0];
@@ -6,14 +25,20 @@ document.addEventListener("DOMContentLoaded",function(){
         document.getElementById("lastName").value = data[1];
         document.getElementById("middleName").value = data[2];
         document.getElementById("firstName").value = data[3];
-        document.getElementById("area").value = data[4];
+        const selectElement = document.getElementById('area');
+        for (let i = 0; i < selectElement.options.length; i++) {
+        if (selectElement.options[i].textContent === data[4]) {
+            selectElement.options[i].selected = true;
+            break;
+        }
+        }
         document.getElementById("role").value = data[5];
         document.getElementById("points").value = data[6];
         document.getElementById("email").value = data[7];
         const userModal = new bootstrap.Modal(document.getElementById('userModal'));
         userModal.show();
+
     }
-    const areas = [];
     async function fetchUsers(){
         const response = await fetch('http://127.0.0.1:8080/users');
 
@@ -23,7 +48,6 @@ document.addEventListener("DOMContentLoaded",function(){
             for (const user of users) {
                 const areaResponse = await fetch(`http://127.0.0.1:8080/areas?id=${user.area}`);
                 const area = await areaResponse.json();
-                areas.push(area);
                 const areaName = area.name;
             
                 const processedUser = {
