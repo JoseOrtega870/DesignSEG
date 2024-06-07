@@ -25,14 +25,20 @@ document.addEventListener("DOMContentLoaded",function(){
         document.getElementById("lastName").value = data[1];
         document.getElementById("middleName").value = data[2];
         document.getElementById("firstName").value = data[3];
-        const selectElement = document.getElementById('area');
-        for (let i = 0; i < selectElement.options.length; i++) {
-        if (selectElement.options[i].textContent === data[4]) {
-            selectElement.options[i].selected = true;
+        const selectAreaElement = document.getElementById('area');
+        for (let i = 0; i < selectAreaElement.options.length; i++) {
+        if (selectAreaElement.options[i].textContent === data[4]) {
+            selectAreaElement.options[i].selected = true;
             break;
         }
         }
-        document.getElementById("role").value = data[5];
+        const selectRoleElement = document.getElementById('role');
+        for (let i = 0; i < selectRoleElement.options.length; i++) {
+        if (selectRoleElement.options[i].textContent === data[5]) {
+            selectRoleElement.options[i].selected = true;
+            break;
+        }
+        }
         document.getElementById("points").value = data[6];
         document.getElementById("email").value = data[7];
         const userModal = new bootstrap.Modal(document.getElementById('userModal'));
@@ -49,7 +55,7 @@ document.addEventListener("DOMContentLoaded",function(){
                 const areaResponse = await fetch(`http://127.0.0.1:8080/areas?id=${user.area}`);
                 const area = await areaResponse.json();
                 const areaName = area.name;
-            
+                
                 const processedUser = {
                   ...user,
                   areaName,
@@ -122,7 +128,7 @@ document.addEventListener("DOMContentLoaded",function(){
         const areaName = document.getElementById('area').value;
         const areaId = areas.find(area => area.name == areaName).id;
         const middleName = document.getElementById('middleName').value;
-        const role = document.getElementById('role').value;
+        const role = (document.getElementById('role').value == 'Usuario regular')?document.getElementById('role').value:'';
         const points = document.getElementById('points').value;
         const email = document.getElementById('email').value;
         const currentUser = sessionStorage.getItem('username');
