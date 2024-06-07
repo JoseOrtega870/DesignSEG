@@ -70,3 +70,8 @@ body {
     display: flex;
     justify-content: center;
 }
+
+.alert-danger {
+  background-color: #012A86;
+  color: white;
+}

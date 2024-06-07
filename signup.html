@@ -21,10 +21,13 @@
             <div class="col-md-4 form-container text-center">
                 <h1>Registrate</h1>
 
+                <div id="errorAlert" class="alert alert-danger" role="alert" style="display: none;"> </div>
+
                 <form id="signupForm">
                     <div class="mb-3">
                         <input type="text" class="form-control" id="noEmpleado" placeholder="No. de Empleado">
-                        <input type="email" class="form-control" id="email" placeholder="Email">
+                        <input type="text" class="form-control" id="areaTrabajo" placeholder="Área de Trabajo">
+
                     </div>
 
                     <div class="mb-3">
@@ -33,13 +36,18 @@
                     </div>
 
                     <div class="mb-3">
-                        <input type="password" class="form-control" id="contraseña" placeholder="Contraseña">
-                        <input type="password" class="form-control" id="repetirContraseña"
+                        <input type="password" class="form-control" id="contrasena" placeholder="Contraseña">
+                        <input type="password" class="form-control" id="repetirContrasena"
                             placeholder="Repetir Contraseña">
                     </div>
 
+                    <div>
+                        <input type="email" class="" id="email" placeholder="Email">
+                    </div>
+
                     <div class="mb-3">
-                        <p class="form-text list">* La contraseña debe contener:<br>- Mínimo 8 caracteres<br>- Una letra mayúscula<br>- Una letra minúscula<br>- Un número (0-9)<br>- Un caracter especial (*@_)</p>
+                        <p class="form-text list">* La contraseña debe contener:<br>- Mínimo 8 caracteres<br>- Una letra
+                            mayúscula<br>- Una letra minúscula<br>- Un número (0-9)<br>- Un caracter especial (*@_)</p>
                     </div>
 
                     <button type="submit" class="btn">Registro</button>
@@ -50,93 +58,10 @@
         </div>
     </div>
 </body>
-<script>
-    document.getElementById('signupForm').addEventListener('submit', function (event) {
-        event.preventDefault();
+<script src="js/bootstrap.bundle.js"></script>
 
-        const noEmpleado = document.getElementById('noEmpleado').value;
-        const email = document.getElementById('email').value;
-        const nombre = document.getElementById('nombre').value;
-        const apellidoPaterno = document.getElementById('apellidos').value;
-        const contrasena = document.getElementById('contraseña').value;
-        const confirmacionContraseña = document.getElementById('repetirContraseña').value;
-
-        if (contrasena.length === 0 || confirmacionContraseña.length === 0 || noEmpleado.length === 0 || nombre.length === 0 || apellidoPaterno.length === 0 || email.length === 0) {
-            alert('Porfavor llene todos los campos.');
-            return;
-        }
-
-        if (contrasena !== confirmacionContraseña) {
-            alert('Las contrasenas no coinciden, Porfavor intente de nuevo.');
-            return;
-        }
-
-        // if (contrasena.length < 8) {
-        //     alert('La contrasena debe tener al menos 8 caracteres.');
-        //     return; 
-        // }
-
-        // if (!/[A-Z]/.test(contrasena)) {
-        //     alert('La contrasena debe contener al menos una letra mayúscula.');
-        //     return;
-        // }
-
-        // if (!/[a-z]/.test(contrasena)) {
-        //     alert('La contrasena debe contener al menos una letra minúscula.');
-        //     return;
-        // }
-
-        // if (!/[0-9]/.test(contrasena)) {
-        //     alert('La contrasena debe contener al menos un número (0-9).');
-        //     return;
-        // }
-
-        // if (!/[*@_]/.test(contrasena)) {
-        //     alert('La contrasena debe contener al menos un carácter especial (*@_).');
-        //     return;
-        // }
-
-        const formData = {
-            noEmpleado: noEmpleado,
-            email: email,
-            nombre: nombre,
-            apellidos: apellidoPaterno,
-            contrasena: contrasena
-        };
-
-
-        console.log(formData);
-
-        async function fetchData() {
-            const response = await fetch('http://127.0.0.1:8080/users', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    noEmpleado: noEmpleado,
-                    email: email,
-                    firstname: nombre,
-                    middlename: apellidoPaterno,
-                    lastname: apellidoPaterno,
-                    contrasena: contrasena
-                })
-            })
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Success:', data);
-                    //Handle the response from the server
-                })
-                .catch(error => {
-                    //Handle any errors
-                    console.error('Error:', error);
-                });
-
-        }
-
-        fetchData();
-
-    });
+<script src="js/signUp.js">
+    
 </script>
 
 </html>
