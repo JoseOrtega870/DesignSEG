@@ -120,30 +120,32 @@ def editProposal(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
     sender = result.fetchone()
 
     cursor.execute("SELECT Users.email, Users.firstname FROM users, UserProposal WHERE Users.username = UserProposal.user AND UserProposal.proposalId = ?",(data["proposalId"],))
-    receiver = cursor.fetchone()
+    receivers = cursor.fetchone()
     
     if sender[0] == "VSE" or sender[0] == "admin" or sender[0] == "Champion":
         # If the status is different, send an email
         if proposal[5] != data["status"]:
-            email_content = {
-                "name": receiver[1],
-                "id": proposal[0],
-                "title": proposal[1],
-                "creationDate": proposal[8],
-                "oldStatus": proposal[5],
-                "status": data["status"]
-            }
-            send_email(receiver[0], email_content, "proposal_status_change")
+            for receiver in receivers:
+                email_content = {
+                    "name": receiver[1],
+                    "id": proposal[0],
+                    "title": proposal[1],
+                    "creationDate": proposal[8],
+                    "oldStatus": proposal[5],
+                    "status": data["status"]
+                }
+                send_email(receiver[0], email_content, "proposal_status_change")
         # If the feedback is different, send an email
         if proposal[7] != data["feedback"]:
-            email_content = {
-                "name": receiver[1],
-                "id": proposal[0],
-                "title": proposal[1],
-                "creationDate": proposal[8],
-                "message": data["feedback"]
-            }
-            send_email(receiver[0], email_content, "user_has_a_new_message")
+            for receiver in receivers:
+                email_content = {
+                    "name": receiver[1],
+                    "id": proposal[0],
+                    "title": proposal[1],
+                    "creationDate": proposal[8],
+                    "message": data["feedback"]
+                }
+                send_email(receiver[0], email_content, "user_has_a_new_message")
 
         connection.commit()
         return 3
