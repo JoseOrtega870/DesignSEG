@@ -263,7 +263,7 @@ def createTables(cursor:sqlite3.Cursor,connection:sqlite3.Connection):
                 image VARCHAR(100) NOT NULL
                 )""")
     cursor.execute("""CREATE TABLE IF NOT EXISTS Orders(
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                id VARCHAR(30) NOT NULL,
                 user VARCHAR(50) NOT NULL, 
                 productId INTEGER NOT NULL,
                 quantity INTEGER NOT NULL,
