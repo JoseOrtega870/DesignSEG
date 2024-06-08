@@ -298,9 +298,6 @@ def user_order_confirmation( email_content : dict, receiver : str ) -> MIMEMulti
                     <p>¡Gracias por su pedido en la tienda PLIM! Nos complace confirmar que hemos recibido su solicitud. A continuación, encontrará los detalles de su pedido:</p>
 
                     <p>
-                        <span {FONT_BOLD}>ID de la Orden:</span> {email_content["id"]}
-                    </p>
-                    <p>
                         <span {FONT_BOLD}>Fecha del pedido:</span> {email_content["orderDate"]}
                     </p>
 
