@@ -1,6 +1,6 @@
 function createProductCard(imgSrc, title, description, price, id) {
     const card = document.createElement('div');
-    card.className = 'col-3 p-0';
+    card.className = 'product-card';
 
     card.innerHTML = `
         <div class="card">
@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             deleteButton.className = 'boton eliminar-producto';
             deleteButton.innerText = 'Eliminar';
             deleteButton.addEventListener('click', function() {
-                const card = this.closest('.card');
+                const card = this.closest('.product-card');
                 card.remove();
             });
 
@@ -177,7 +177,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
             updateCartDisplay();
 
-            cartAlertMessageElement.textContent = `${product} has been added to the cart!`;
+            cartAlertMessageElement.textContent = `${product} ha sido añadido al carrito`;
             cartAlertElement.classList.remove('d-none');
             cartAlertElement.classList.add('show');
             setTimeout(() => {
