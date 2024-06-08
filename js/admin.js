@@ -34,7 +34,8 @@ document.addEventListener("DOMContentLoaded",function(){
         }
         const selectRoleElement = document.getElementById('role');
         for (let i = 0; i < selectRoleElement.options.length; i++) {
-        if (selectRoleElement.options[i].textContent === data[5]) {
+            if(data[5] == '') selectRoleElement.options[3].selected = true;
+        if (selectRoleElement.options[i].textContent === data[5] ) {
             selectRoleElement.options[i].selected = true;
             break;
         }
@@ -107,7 +108,7 @@ document.addEventListener("DOMContentLoaded",function(){
                 row.addEventListener('click',function(){
                     const data = Array.from(this.children).map(cell => cell.textContent);                    
                     openForm(data);
-
+                    
                     areas.push({id:user.area,name:user.areaName});
 
                 })
@@ -128,7 +129,7 @@ document.addEventListener("DOMContentLoaded",function(){
         const areaName = document.getElementById('area').value;
         const areaId = areas.find(area => area.name == areaName).id;
         const middleName = document.getElementById('middleName').value;
-        const role = (document.getElementById('role').value == 'Usuario regular')?document.getElementById('role').value:'';
+        const role = (document.getElementById('role').value == 'Usuario regular')?'':document.getElementById('role').value;
         const points = document.getElementById('points').value;
         const email = document.getElementById('email').value;
         const currentUser = sessionStorage.getItem('username');

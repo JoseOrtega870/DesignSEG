@@ -79,6 +79,10 @@
                     <div class="col-auto">
                         <button type="button" class="boton w-100">Registrar Área</button>
                     </div>
+                    <div class="col-auto">
+                        <button type="button" class="boton w-100">Editar/Eliminar Área</button>
+                    </div>
+                    
                 </div>
             </div>
         </section>
@@ -118,10 +122,10 @@
                             <div class="mb-3">
                                 <label for="role" class="form-label">Permisos</label>
                                 <select name="role" id="role" class="form-select" required>
-                                    <option selected >Admin</option>
-                                    <option selected >VSE</option>
-                                    <option selected >Champion</option>
-                                    <option selected >Usuario regular</option>
+                                    <option>admin</option>
+                                    <option>vse</option>
+                                    <option>champion</option>
+                                    <option>usuario regular</option>
                                 </select>
                             </div>
                             <div class="mb-3">
@@ -130,7 +134,7 @@
                             </div>
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email</label>
-                                <input type="text" class="form-control" id="email" required>
+                                <input type="email" class="form-control" id="email" required>
                             </div>
                             <div class="mb-3">
                                 <label for="newPassword" class="form-label">Nueva Contraseña, opcional</label>
