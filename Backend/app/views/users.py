@@ -107,6 +107,7 @@ def insertUser(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
     cursor.execute("INSERT INTO users (username, password, role, firstName, middleName, lastName, email, points, area) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)", 
                    (data["username"], data["password"], data["role"], data["firstname"], data["middlename"], data["lastname"], data["email"], data["points"], data["area"]))
     
+    send_email(data["email"], { "name": data["firstname"], "email": data["email"], "username": data["username"] }, "user_signup_confirmation")
     # Commit the transaction
     connection.commit()
     
@@ -154,7 +155,7 @@ def getUsers(cursor:sqlite3.Cursor,connection:sqlite3.Connection,condition):
 @query(database)
 def editUser(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
     # Checks whether the user exists
-    cursor.execute("SELECT password FROM users WHERE username = ?", (data["username"],))
+    cursor.execute("SELECT password, firstname, middlename, lastname, email FROM users WHERE username = ?", (data["username"],))
     user = cursor.fetchone()
     if not user:
         return False
@@ -162,13 +163,33 @@ def editUser(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
     # Check if points where passed, if not default to 0
     if "points" not in data:
         data["points"] = 0
+    """
+        user_data_change_confirmation Returns a user data change confirmation email.
+            email_content: {
+                "name": User name,
+                "previousName": Previous user name,
+                "email": New user email,
+                "previousEmail": Previous user email
+            }
+    """
+    # If user data has changed
+    if user[1] != data["firstname"] or user[2] != data["middlename"] or user[3] != data["lastname"] or user[4] != data["email"]:
+        send_email(data["email"], 
+            { 
+                "name": data["firstname"] + " " + data["middlename"] + " " + data["lastname"], 
+                "previousName": user[1] + " " + user[2] + " " + user[3], 
+                "email": data["email"], 
+                "previousEmail": user[4] 
+            }, 
+            "user_data_change_confirmation"
+        )
 
     # Check if password is passed, if not make it the past one
     if "password" in data:
         data["password"] = hashPassword(data["password"])
+        send_email(data["email"], { "name": data["firstname"] }, "password_reset_confirmation")
     else:
         data["password"] = user[0]
-
     # Insert user
     cursor.execute("UPDATE users SET password = ?, role = ?, firstname = ?, middlename = ?, lastname = ?, points = ?, email = ?, area = ? WHERE username = ?",
                     (data["password"], data["role"], data["firstname"], data["middlename"], data["lastname"], data["points"], data["email"], data["area"], data["username"]))

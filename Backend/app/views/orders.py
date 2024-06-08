@@ -1,6 +1,6 @@
 from flask import Blueprint, request
 from app.utils import *
-
+import time
 bp = Blueprint('orders',__name__, url_prefix='/orders')
 
 
@@ -40,6 +40,9 @@ def orders():
         if validateData(["username","productId","quantity","orderStatus","total"],jsonData) == False:
             response = responseJson(400,"Incorrect parameters sent")
             return response
+        if validateData(["username", "products", "total"], jsonData):
+            response = sendOrderEmail(jsonData)
+            return response
         
         response = createOrder(jsonData)
 
@@ -71,7 +74,8 @@ def createOrder(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
             return { "status": 400, "result": "Not enough points"}
 
         # Insert order and update user points
-        cursor.execute("INSERT INTO orders (user, productId, quantity, orderStatus, total) VALUES (?, ?, ?, ?, ?)", (data["username"], data["productId"], data["quantity"], data["orderStatus"], data["total"]) )
+        cursor.execute("INSERT INTO orders (id, user, productId, quantity, orderStatus, orderDate, total) VALUES (?, ?, ?, ?, ?)", (data["id"], data["username"], data["productId"], data["quantity"], data["orderStatus"], time.strftime("%Y-%m-%d"),data["total"]) )
+
         cursor.execute("UPDATE users SET points = points - ? WHERE username = ?", (data["total"], data["username"]))
         connection.commit()
         return { "status": 200, "result": "Order created"}
@@ -80,6 +84,41 @@ def createOrder(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
         connection.rollback()
         return { "status": 500, "result": e}
     
+@query(database)
+def sendOrderEmail(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
+    try:
+
+        cursor.execute("SELECT firstname, middlename, lastname, email, name FROM users WHERE username = ?", (data["username"],))
+        user = cursor.fetchone()
+
+        user_name = user[0] + " " + user[1] + " " + user[2]
+
+        vseUsers = cursor.execute("SELECT firstname, email FROM users WHERE role = 'VSE'")
+        vseUsers = vseUsers.fetchall()
+
+        for user in vseUsers:
+            email_content = {
+                "name": user[0],
+                "user_name": user_name,
+                "orderDate": time.strftime("%d-%b-%Y"),
+                "products": data["products"],
+                "points": data["total"]
+            }
+            send_email(user[1],email_content, "VSE_new_order")
+
+        email_content = {
+            "name": user[4],
+            "orderDate": time.strftime("%d-%b-%Y"),
+            "products": data["products"],
+            "points": data["total"]
+        }
+        send_email(user[3], email_content, "user_order_confirmation")
+
+        return { "status": 200, "result": "Email sent"}
+    except Exception as e:
+        print(e)
+        return { "status": 500, "result": e}
+
 @query(database)
 def getOrders(cursor:sqlite3.Cursor,connection:sqlite3.Connection):
     # Retrieve order(will be None in case it's not found)

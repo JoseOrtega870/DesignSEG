@@ -16,7 +16,7 @@
         <div class="fixed-top">
             <div class="container-fluid">
                 <div class="row justify-content-evenly align-items-center">
-                    <div class="botones col-auto d-flex justify-content-center align-items-center order-1" id = "containerLeft">
+                    <div class="botones col-auto d-flex justify-content-center align-items-center order-1" id="containerLeft">
                         <a href="#" class="botones perfil">Inicio</a>
                         <a href="#" class="botones perfil">Recompensas</a>
                     </div>
@@ -26,12 +26,12 @@
                     </div>
 
                     <nav class="botones col-auto text-end d-flex align-items-center justify-content-end order-3">
-                        <div id = "containerRight"></div>
+                        <div id="containerRight"></div>
 
                         <a href="#" class=" botones perfil">
-                            <img src="img/persona2.jpg" alt=""> <span id = "nombre">Carlos</span> 
+                            <img src="img/persona2.jpg" alt=""> <span id="nombre">Carlos</span> 
                         </a>
-                        <a href="recompensas.html" class="botones puntos"><span id = "puntos">100 pts </span></a>
+                        <a href="recompensas.html" class="botones puntos"><span id="puntos">100 pts </span></a>
                         <a href="login.html" class="botones cerrar-sesion" id="cerrarSesion">Cerrar Sesión</a>
                     </nav>
                 </div>
@@ -46,9 +46,9 @@
             </div>
         </section>
 
-        <main class="contenido-principal row d-flex justify-content-evenly align-items-center mb-0 ">
+        <main class="contenido-principal row d-flex justify-content-evenly align-items-center mb-0">
             <div class="col-auto contenido-principal scrollable-content">
-                <table class="table table-responsive ">
+                <table class="table table-responsive">
                     <thead>
                         <tr class="titulo text-center">
                             <th>No. de Empleado</th>
@@ -74,16 +74,21 @@
             <div class="container">
                 <div class="row d-flex justify-content-center align-items-center">
                     <div class="col-auto">
-                        <button class="boton w-100 ">Registrar Usuario</button>
+                        <button class="boton w-100" data-bs-toggle="modal" data-bs-target="#userModal">Registrar Usuario</button>
                     </div>
                     <div class="col-auto">
-                        <button type="button" class="boton w-100">Registrar Área</button>
+                        <button type="button" class="boton w-100" data-bs-toggle="modal" data-bs-target="#areaModal">Registrar Área</button>
                     </div>
+                    <div class="col-auto">
+                        <button type="button" class="boton w-100">Editar/Eliminar Área</button>
+                    </div>
+                    
                 </div>
             </div>
         </section>
-         <!-- Modal Formulario -->
-         <div class="modal fade modal-lg" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+        
+        <!-- Modal Formulario Usuario -->
+        <div class="modal fade modal-lg" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -94,7 +99,7 @@
                         <form id="userForm">
                             <div class="mb-3">
                                 <label for="employeeNumber" class="form-label">No. de Empleado</label>
-                                <input type="text" class="form-control" id="employeeNumber" required >
+                                <input type="text" class="form-control" id="employeeNumber" required>
                             </div>
                             <div class="mb-3">
                                 <label for="firstName" class="form-label">Nombre(s)</label>
@@ -113,11 +118,15 @@
                                 <select name="area" id="area" class="form-select" required>
                                     <option selected disabled>Área</option>
                                 </select>
-                               
                             </div>
                             <div class="mb-3">
-                                <label for="role" class="form-label">Rol</label>
-                                <input type="text" class="form-control" id="role" required>
+                                <label for="role" class="form-label">Permisos</label>
+                                <select name="role" id="role" class="form-select" required>
+                                    <option>admin</option>
+                                    <option>vse</option>
+                                    <option>champion</option>
+                                    <option>usuario regular</option>
+                                </select>
                             </div>
                             <div class="mb-3">
                                 <label for="points" class="form-label">Puntos</label>
@@ -125,22 +134,50 @@
                             </div>
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email</label>
-                                <input type="text" class="form-control" id="email" required>
+                                <input type="email" class="form-control" id="email" required>
                             </div>
                             <div class="mb-3">
                                 <label for="newPassword" class="form-label">Nueva Contraseña, opcional</label>
-                                <input type="password" class="form-control" id="newPassword" >
+                                <input type="password" class="form-control" id="newPassword">
                                 <div id="passwordHelp" class="form-text">La contraseña debe tener mínimo 8 caracteres, mínimo un(a): mayúscula, minúscula, número, caracter especial (ej. %$#).</div>
                             </div>
                             <div class="mb-3">
                                 <label for="newPasswordConfirmation" class="form-label">Confirma Nueva Contraseña</label>
-                                <input type="password" class="form-control" id="newPasswordConfirmation" >
+                                <input type="password" class="form-control" id="newPasswordConfirmation">
                                 <div id="passwordHelp" class="form-text">Las contraseñas deben coincidir.</div>
                             </div>
                             <div id="message" class="alert" role="alert" style="display: none;"></div>
                             <div class="modal-footer">
                                 <button id="deleteUser" type="button" class="btn btn-danger">Eliminar Usuario</button>                                
                                 <button type="submit" class="btn btn-success">Guardar Cambios</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Formulario Área -->
+        <div class="modal fade" id="areaModal" tabindex="-1" aria-labelledby="areaModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="areaModalLabel">Registrar Área</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="areaForm">
+                            <div class="mb-3">
+                                <label for="areaName" class="form-label">Nombre del Área</label>
+                                <input type="text" class="form-control" id="areaName" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="employeeInCharge" class="form-label">No. de Empleado Encargado</label>
+                                <input type="text" class="form-control" id="employeeInCharge" required>
+                            </div>
+                            <div id="areaMessage" class="alert" role="alert" style="display: none;"></div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-success">Registrar Área</button>
                             </div>
                         </form>
                     </div>
