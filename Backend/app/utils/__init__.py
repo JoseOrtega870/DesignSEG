@@ -88,9 +88,7 @@ def send_email( receiver : str, email_content: dict, email_type : str ):
             Returns a user data change confirmation email.
 
             email_content: {
-                "name": User name,
-                "id": Order id
-                "user_name": Name of the user who placed the order,
+                "name": Name of the user who placed the order,
                 "orderDate: Order creation date,
                 "products": Array of order products [ { "product": Product name , "quantity": Quantity } ],
                 "points" : Order points cost

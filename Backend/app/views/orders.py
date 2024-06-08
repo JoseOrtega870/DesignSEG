@@ -88,7 +88,7 @@ def createOrder(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
 def sendOrderEmail(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
     try:
 
-        cursor.execute("SELECT firstname, middlename, lastname FROM users WHERE username = ?", (data["username"],))
+        cursor.execute("SELECT firstname, middlename, lastname, email, name FROM users WHERE username = ?", (data["username"],))
         user = cursor.fetchone()
 
         user_name = user[0] + " " + user[1] + " " + user[2]
@@ -104,7 +104,15 @@ def sendOrderEmail(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict
                 "products": data["products"],
                 "points": data["total"]
             }
-            send_email(user[1],email_content, "VSE_new_proposal")
+            send_email(user[1],email_content, "VSE_new_order")
+
+        email_content = {
+            "name": user[4],
+            "orderDate": time.strftime("%d-%b-%Y"),
+            "products": data["products"],
+            "points": data["total"]
+        }
+        send_email(user[3], email_content, "user_order_confirmation")
 
         return { "status": 200, "result": "Email sent"}
     except Exception as e:
