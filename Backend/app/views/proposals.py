@@ -1,5 +1,6 @@
 from flask import Blueprint, request
 from app.utils import *
+import time
 
 bp = Blueprint('proposals',__name__, url_prefix='/proposals')
 
@@ -76,15 +77,32 @@ def createProposal(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict
                     (data["title"], data["description"], data["currentSituation"], data["area"], data["status"], data["type"], data["feedback"], data["category"]))
     
     proposalId = cursor.lastrowid
-
+    proposalUsers = []
     # Insert into UserProposal
     for id in data["usersId"]:
-        data = cursor.execute("SELECT * FROM users WHERE username = ?", (id,))
+        data = cursor.execute("SELECT firstname, middlename, lastname FROM users WHERE username = ?", (id,))
         row = data.fetchone()
+        proposalUsers.append(row[0] + " " + row[1] + " " + row[2])
         if not row:
             connection.rollback()
             return False
         cursor.execute("INSERT INTO UserProposal (user, proposalId) VALUES (?, ?)",(id,proposalId))
+
+    # Send email to all VSE
+    vseUsers = cursor.execute("SELECT firstname, email FROM users WHERE role = 'VSE'")
+    vseUsers = vseUsers.fetchall()
+    for user in vseUsers:
+        email_content = {
+            "name": user[0],
+            "id": proposalId,
+            "title": data["title"],
+            "description": data["description"],
+            "area": data["area"],
+            "category": data["category"],
+            "creationDate": time.strftime("%d-%b-%Y"),
+            "proposalUsers": proposalUsers
+        }
+        send_email(user[1],email_content, "VSE_new_proposal")
 
     # Commit the transaction
     connection.commit()

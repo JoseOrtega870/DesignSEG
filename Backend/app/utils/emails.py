@@ -80,9 +80,6 @@ def VSE_new_order( email_content : dict, receiver : str ) -> MIMEMultipart:
                 <div> 
                     <p>Le informamos que se ha generado un nuevo pedido en la tienda del sistema PLIM. A continuación, encontrará los detalles del pedido:</p>
                     <p>
-                        <span {FONT_BOLD}>ID de la Orden:</span> {email_content["id"]}
-                    </p>
-                    <p>
                         <span {FONT_BOLD}>Pedido realizado por:</span> {email_content["user_name"]}
                     </p>
                     <p>
