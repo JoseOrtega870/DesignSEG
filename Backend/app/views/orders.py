@@ -37,7 +37,7 @@ def orders():
     elif request.method == "POST":
         # Create a new order
         jsonData = request.get_json()
-        if validateData(["username","productId","quantity","orderStatus","total"],jsonData) == False:
+        if validateData(["username","productId","quantity","orderStatus","total","id"],jsonData) == False:
             response = responseJson(400,"Incorrect parameters sent")
             return response
         if validateData(["username", "products", "total"], jsonData):
@@ -74,7 +74,7 @@ def createOrder(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
             return { "status": 400, "result": "Not enough points"}
 
         # Insert order and update user points
-        cursor.execute("INSERT INTO orders (id, user, productId, quantity, orderStatus, orderDate, total) VALUES (?, ?, ?, ?, ?)", (data["id"], data["username"], data["productId"], data["quantity"], data["orderStatus"], time.strftime("%Y-%m-%d"),data["total"]) )
+        cursor.execute("INSERT INTO orders (id, user, productId, quantity, orderStatus, orderDate, total) VALUES (?, ?, ?, ?, ?, ?, ?)", (data["id"], data["username"], data["productId"], data["quantity"], data["orderStatus"], time.strftime("%Y-%m-%d"),data["total"]) )
 
         cursor.execute("UPDATE users SET points = points - ? WHERE username = ?", (data["total"], data["username"]))
         connection.commit()
