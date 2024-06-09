@@ -80,7 +80,7 @@
                         <button type="button" class="boton w-100" data-bs-toggle="modal" data-bs-target="#areaModal">Registrar Área</button>
                     </div>
                     <div class="col-auto">
-                        <button type="button" class="boton w-100">Editar/Eliminar Área</button>
+                        <button type="button" class="boton w-100" data-bs-toggle="modal" data-bs-target="#editAreaModal">Editar/Eliminar Área</button>
                     </div>
                     
                 </div>
@@ -184,6 +184,39 @@
                 </div>
             </div>
         </div>
+
+        <!-- Modal para Editar/Eliminar Área -->
+        <div class="modal fade" id="editAreaModal" tabindex="-1" aria-labelledby="editAreaModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="editAreaModalLabel">Editar/Eliminar Área</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                <form id="editAreaForm">
+                    <div class="mb-3">
+                    <label for="selectEditArea" class="form-label">Seleccionar Área</label>
+                    <select id="selectEditArea" class="form-select" required>
+                        <option value="" disabled selected>Seleccione un área</option>
+                        <!-- Opciones se llenarán dinámicamente -->
+                    </select>
+                    </div>
+                    <div class="mb-3">
+                    <label for="editAreaName" class="form-label">Nombre del Área</label>
+                    <input type="text" class="form-control" id="editAreaName" required>
+                    </div>
+                    <div class="mb-3">
+                    <label for="editEmployeeInCharge" class="form-label">Empleado a Cargo</label>
+                    <input type="text" class="form-control" id="editEmployeeInCharge" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Actualizar</button>
+                    <button type="button" id="deleteArea" class="btn btn-danger">Eliminar</button>
+                </form>
+                </div>
+            </div>
+            </div>
+        </div>  
     </div>
     <script src="js/admin.js"></script>
     <script src="js/navbar.js"></script>

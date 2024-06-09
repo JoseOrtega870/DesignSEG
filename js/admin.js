@@ -9,17 +9,37 @@ document.addEventListener("DOMContentLoaded", function () {
         if (response.ok) {
             const data = await response.json();
             areas = data;
+            const select = document.getElementById('area');
+            select.innerHTML = ''; // Limpiar el contenido anterior
             for (const item of data) {
-                const select = document.getElementById('area');
                 const optionElement = document.createElement("option");
                 optionElement.value = item.name;
                 optionElement.textContent = item.name;
                 select.appendChild(optionElement);
             }
+            populateEditAreaSelect(data);
         }
     }
 
     fetchAreas();
+
+    function populateEditAreaSelect(data) {
+        const selectEditArea = document.getElementById('selectEditArea');
+        selectEditArea.innerHTML = '<option value="" disabled selected>Seleccione un área</option>'; // Limpiar el contenido anterior
+        for (const item of data) {
+            const optionElement = document.createElement("option");
+            optionElement.value = item.id;
+            optionElement.textContent = item.name;
+            selectEditArea.appendChild(optionElement);
+        }
+    }
+
+    document.getElementById('selectEditArea').addEventListener('change', function() {
+        const selectedAreaId = this.value;
+        const selectedArea = areas.find(area => area.id == selectedAreaId);
+        document.getElementById('editAreaName').value = selectedArea.name;
+        document.getElementById('editEmployeeInCharge').value = selectedArea.employeeInCharge;
+    });
 
     function openForm(data) {
         document.getElementById("employeeNumber").value = data[0];
@@ -29,18 +49,18 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("firstName").value = data[3];
         const selectAreaElement = document.getElementById('area');
         for (let i = 0; i < selectAreaElement.options.length; i++) {
-        if (selectAreaElement.options[i].textContent === data[4]) {
-            selectAreaElement.options[i].selected = true;
-            break;
-        }
+            if (selectAreaElement.options[i].textContent === data[4]) {
+                selectAreaElement.options[i].selected = true;
+                break;
+            }
         }
         const selectRoleElement = document.getElementById('role');
         for (let i = 0; i < selectRoleElement.options.length; i++) {
             if(data[5] == '') selectRoleElement.options[3].selected = true;
-        if (selectRoleElement.options[i].textContent === data[5] ) {
-            selectRoleElement.options[i].selected = true;
-            break;
-        }
+            if (selectRoleElement.options[i].textContent === data[5]) {
+                selectRoleElement.options[i].selected = true;
+                break;
+            }
         }
         document.getElementById("points").value = data[6];
         document.getElementById("email").value = data[7];
@@ -66,6 +86,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 processedUsers.push(processedUser);
             }
             const tbodyElement = document.getElementById("users");
+            tbodyElement.innerHTML = ''; // Limpiar el contenido anterior
             processedUsers.forEach(user => {
                 const row = document.createElement("tr");                   
 
@@ -110,7 +131,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     const data = Array.from(this.children).map(cell => cell.textContent);                    
                     openForm(data);
 
-                    areas.push({id:user.area,name:user.areaName});
+                    areas.push({id: user.area, name: user.areaName});
 
                 })
                 tbodyElement.appendChild(row);
@@ -129,7 +150,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const areaName = document.getElementById('area').value;
         const areaId = areas.find(area => area.name == areaName).id;
         const middleName = document.getElementById('middleName').value;
-        const role = (document.getElementById('role').value == 'Usuario regular')?'':document.getElementById('role').value;
+        const role = (document.getElementById('role').value == 'Usuario regular') ? '' : document.getElementById('role').value;
         const points = document.getElementById('points').value;
         const email = document.getElementById('email').value;
         const currentUser = sessionStorage.getItem('username');
@@ -172,18 +193,12 @@ document.addEventListener("DOMContentLoaded", function () {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(updatedUser)
-            })
-                .then(response => {
-                    if (response.ok) {
-                        showMessage('Usuario actualizado exitosamente', 'success');
-                    } else {
-                        showMessage('No se actualizar el usuario. Inténtalo de nuevo más tarde.', 'error');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    showMessage('No se actualizar el usuario. Inténtalo de nuevo más tarde.', 'error');
-                });
+            });
+            if (response.ok) {
+                showMessage('Usuario actualizado exitosamente', 'success');
+            } else {
+                showMessage('No se pudo actualizar el usuario. Inténtalo de nuevo más tarde.', 'error');
+            }
         }
 
         if (password !== passwordConfirmation) {
@@ -215,18 +230,12 @@ document.addEventListener("DOMContentLoaded", function () {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(deletedUser)
-            })
-            .then(response => {
-                if (response.ok) {
-                    showMessage('Usuario eliminado exitosamente', 'success');
-                } else {
-                    showMessage('No se pudo eliminar el usuario. Inténtalo de nuevo más tarde.', 'error');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                showMessage('No se pudo eliminar el usuario. Inténtalo de nuevo más tarde.', 'error');
             });
+            if (response.ok) {
+                showMessage('Usuario eliminado exitosamente', 'success');
+            } else {
+                showMessage('No se pudo eliminar el usuario. Inténtalo de nuevo más tarde.', 'error');
+            }
         }
 
         deleteUser();
@@ -247,7 +256,7 @@ document.addEventListener("DOMContentLoaded", function () {
         event.preventDefault();
 
         const areaName = document.getElementById('areaName').value;
-        const employeeInCharge = document.getElementById('employeeInCharge').value; // Nuevo campo
+        const employeeInCharge = document.getElementById('employeeInCharge').value;
 
         async function registerArea() {
             const response = await fetch('http://127.0.0.1:8080/areas', {
@@ -255,56 +264,90 @@ document.addEventListener("DOMContentLoaded", function () {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ name: areaName, employeeInCharge: employeeInCharge }) // Nuevo campo
-            })
-            .then(response => {
-                if (response.ok) {
-                    showAreaMessage('Área registrada exitosamente', 'success');
-                    fetchAreas();
-                } else {
-                    showAreaMessage('No se pudo registrar el área. Inténtalo de nuevo más tarde.', 'error');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                showAreaMessage('No se pudo registrar el área. Inténtalo de nuevo más tarde.', 'error');
+                body: JSON.stringify({ name: areaName, employeeInCharge: employeeInCharge })
             });
+            if (response.ok) {
+                showMessage('Área registrada exitosamente', 'success');
+                fetchAreas();
+            } else {
+                showMessage('No se pudo registrar el área. Inténtalo de nuevo más tarde.', 'error');
+            }
         }
 
         registerArea();
     });
 
-    function showMessage(message, type) {
-        const messageElement = document.getElementById('message');
-        messageElement.textContent = message;
-        messageElement.className = `alert alert-${type}`;
-        messageElement.style.display = 'block';
-    
-        setTimeout(function () {
-            messageElement.style.display = 'none';
-        }, 5000);
+    async function updateArea(areaId, areaName, employeeInCharge) {
+        const response = await fetch(`http://127.0.0.1:8080/areas/${areaId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name: areaName, employeeInCharge: employeeInCharge })
+        });
+        if (response.ok) {
+            showMessage('Área actualizada exitosamente', 'success');
+            fetchAreas();
+        } else {
+            showMessage('No se pudo actualizar el área. Inténtalo de nuevo más tarde.', 'error');
+        }
     }
 
-    function showAreaMessage(message, type) {
-        const messageElement = document.getElementById('areaMessage');
-        messageElement.textContent = message;
+    async function deleteArea(areaId) {
+        const response = await fetch(`http://127.0.0.1:8080/areas/${areaId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        if (response.ok) {
+            showMessage('Área eliminada exitosamente', 'success');
+            fetchAreas();
+        } else {
+            showMessage('No se pudo eliminar el área. Inténtalo de nuevo más tarde.', 'error');
+        }
+    }
+
+    function openEditAreaModal(data) {
+        document.getElementById('editAreaName').value = data.name;
+        document.getElementById('editEmployeeInCharge').value = data.employeeInCharge;
+        const editAreaModal = new bootstrap.Modal(document.getElementById('editAreaModal'));
+        editAreaModal.show();
+        document.getElementById('editAreaForm').dataset.areaId = data.id;
+    }
+
+    document.getElementById('editAreaForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+        const areaId = this.dataset.areaId;
+        const areaName = document.getElementById('editAreaName').value;
+        const employeeInCharge = document.getElementById('editEmployeeInCharge').value;
+        updateArea(areaId, areaName, employeeInCharge);
+    });
+
+    document.getElementById('deleteArea').addEventListener('click', function () {
+        const areaId = document.getElementById('editAreaForm').dataset.areaId;
+        deleteArea(areaId);
+    });
+
+    function showMessage(message, type) {
+        const messageElement = document.createElement('div');
         messageElement.className = `alert alert-${type}`;
-        messageElement.style.display = 'block';
-    
-        setTimeout(function () {
-            messageElement.style.display = 'none';
-        }, 5000);
+        messageElement.textContent = message;
+        document.body.appendChild(messageElement);
+        setTimeout(() => {
+            messageElement.remove();
+        }, 3000);
     }
 
     function validatePassword(password) {
-        if (password == '') return true;
+        if (password === '') return true;
         const hasMinLength = password.length >= 8;
         const hasUppercase = /[A-Z]/.test(password);
         const hasLowercase = /[a-z]/.test(password);
         const hasNumber = /\d/.test(password);
-        const specialCharRegex = /[!@#$%^&*(),.?":{}|<>]/;
-        const hasSpecialChar = specialCharRegex.test(password);
+        const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
         
         return hasMinLength && hasUppercase && hasLowercase && hasNumber && hasSpecialChar;
     }
+
 });
