@@ -9,7 +9,10 @@ body {
     background-attachment: fixed;
     font-size: 15px;
 }
-
+.scrollable-content {
+    height: 450px;
+    overflow-y: auto;
+}
 .text-primary-blue {
     color: #04236d;
 }

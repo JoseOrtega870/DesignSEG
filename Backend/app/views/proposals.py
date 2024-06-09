@@ -23,7 +23,7 @@ def proposals():
     elif request.method == "PUT":
         # Edit an existing proposal
         jsonData = request.get_json()
-        if validateData(["currentUser","proposalId","title","description","currentSituation","area","status","type","feedback","usersId","creationDate","closeDate","assignedPoints","formerEvaluatorUser","currentEvaluatorUser"],jsonData) == False:
+        if validateData(["currentUser","proposalId","title","description","currentSituation","area","status","type","feedback","usersId","closeDate","assignedPoints","formerEvaluatorUser","currentEvaluatorUser"],jsonData) == False:
             response = responseJson(400,"Incorrect parameters sent")
             return response
         
@@ -38,13 +38,14 @@ def proposals():
         elif result == 2:
             response = responseJson(404,"Proposal not found")
             return response
-        else:
+        elif result == 3:
             return "",200
         
 
     elif request.method == "GET":   
         # Get data for a given user
         id = request.args.get("id")
+        status = request.args.get("status")
         if id != None:
             # Looking for a single user
             proposal = getProposals(["id",id])
@@ -57,6 +58,14 @@ def proposals():
                 # User not found
                 response = responseJson(404,"Proposal not found")
                 return response
+        elif status != None:
+            # Looking for all proposal of certain status
+            proposal = getProposals(["status",status])
+            
+            response = jsonify(proposal)
+            response.status_code = 200
+            return response
+            
         elif not any(request.args.values()):
             # Looking for all users
             proposals = getProposals(["1",1])
@@ -119,8 +128,8 @@ def editProposal(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
         return 2
 
     # Edit proposal
-    cursor.execute("UPDATE proposals SET title = ?, category = ?,currentSituation = ?, area = ?, status = ?, description = ?, type = ?, creationDate = ?, closeDate = ?, assignedPoints = ?, formerEvaluatorUser = ?, currentEvaluatorUser = ? WHERE id = ?",
-                    (data["title"], data["category"], data["currentSituation"], data["area"], data["status"], data["description"], data["type"], data["creationDate"], data["closeDate"], data["assignedPoints"], data["formerEvaluatorUser"], data["currentEvaluatorUser"], data["proposalId"]))
+    cursor.execute("UPDATE proposals SET title = ?, category = ?,currentSituation = ?, area = ?, status = ?, description = ?, type = ?, closeDate = ?, assignedPoints = ?, feedback = ?, formerEvaluatorUser = ?, currentEvaluatorUser = ? WHERE id = ?",
+                    (data["title"], data["category"], data["currentSituation"], data["area"], data["status"], data["description"], data["type"], data["closeDate"], data["assignedPoints"], data["feedback"], data["formerEvaluatorUser"], data["currentEvaluatorUser"], data["proposalId"]))
         
     cursor.execute("DELETE FROM UserProposal WHERE proposalId = ?",(data["proposalId"],))
     # Insert into UserProposal

@@ -7,44 +7,35 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         const data = await response.json();
         areas = data;
-        const select = document.getElementById('area');
-        data.forEach(item => {
-            const optionElement = document.createElement("option");
-            optionElement.value = item.name;
-            optionElement.textContent = item.name;
-            select.appendChild(optionElement);
+        const selects = [document.getElementById('area'), document.getElementById('selectEditArea')];
+        selects.forEach(select => {
+            select.innerHTML = select === selects[1] ? '<option value="" disabled selected>Seleccione un área</option>' : '';
+            data.forEach(item => {
+                const optionElement = document.createElement("option");
+                optionElement.value = select === selects[1] ? item.id : item.name;
+                optionElement.textContent = item.name;
+                select.appendChild(optionElement);
+            });
         });
     }
 
-    function openForm(data) {
-        const formMapping = {
-            "employeeNumber": data[0],
-            "firstName": data[3],
-            "lastName": data[1],
-            "middleName": data[2],
-            "area": data[4],
-            "role": data[5],
-            "points": data[6],
-            "email": data[7]
-        };
+    document.getElementById('selectEditArea').addEventListener('change', function() {
+        const selectedArea = areas.find(area => area.id == this.value);
+        document.getElementById('editAreaName').value = selectedArea.name;
+        document.getElementById('editEmployeeInCharge').value = selectedArea.manager;
+    });
 
-        for (const [key, value] of Object.entries(formMapping)) {
+    function openForm(data) {
+        const formMapping = { "employeeNumber": data[0], "firstName": data[3], "lastName": data[1], "middleName": data[2], "area": data[4], "role": data[5], "points": data[6], "email": data[7] };
+        Object.entries(formMapping).forEach(([key, value]) => {
             const element = document.getElementById(key);
             if (element.tagName === "SELECT") {
-                for (const option of element.options) {
-                    if (option.textContent === value) {
-                        option.selected = true;
-                        break;
-                    }
-                }
+                Array.from(element.options).forEach(option => { if (option.textContent === value) option.selected = true; });
             } else {
                 element.value = value;
-                if (key === "employeeNumber") {
-                    element.setAttribute("readonly", 'true');
-                }
+                if (key === "employeeNumber") element.setAttribute("readonly", 'true');
             }
-        }
-
+        });
         new bootstrap.Modal(document.getElementById('userModal')).show();
     }
 
@@ -54,6 +45,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         const users = await response.json();
         const tbodyElement = document.getElementById("users");
+        tbodyElement.innerHTML = '';
         for (const user of users) {
             const areaResponse = await fetch(`http://127.0.0.1:8080/areas?id=${user.area}`);
             const area = await areaResponse.json();
@@ -66,10 +58,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                 row.appendChild(cell);
             });
 
-            row.addEventListener('click', () => openForm([
-                user.username, user.lastName, user.middleName, user.firstName,
-                user.areaName, user.role, user.points, user.email, user.proposals
-            ]));
+            row.addEventListener('click', () => openForm([user.username, user.lastName, user.middleName, user.firstName, user.areaName, user.role, user.points, user.email, user.proposals]));
             tbodyElement.appendChild(row);
         }
     }
@@ -83,61 +72,43 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
     function validatePassword(password) {
-        if (password === '') return true;
-        return [
-            /.{8,}/, /[A-Z]/, /[a-z]/, /\d/, /[!@#$%^&*(),.?":{}|<>]/
-        ].every(regex => regex.test(password));
+        return password === '' || [/^.{8,}$/, /[A-Z]/, /[a-z]/, /\d/, /[!@#$%^&*(),.?":{}|<>]/].every(regex => regex.test(password));
     }
 
-    async function updateUser(data) {
+    async function handleUserAction(url, method, data, successMessage, errorMessage) {
         try {
-            const response = await fetch('http://127.0.0.1:8080/users', {
-                method: 'PUT',
+            const response = await fetch(url, {
+                method: method,
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             });
-            showMessage('message', response.ok ? 'Usuario actualizado exitosamente' : 'No se pudo actualizar el usuario. Inténtalo de nuevo más tarde.', response.ok ? 'success' : 'error');
+            showMessage('message', response.ok ? successMessage : errorMessage, response.ok ? 'success' : 'error');
+            if (response.ok && method !== 'DELETE') fetchUsers();
         } catch (error) {
             console.error('Error:', error);
-            showMessage('message', 'No se pudo actualizar el usuario. Inténtalo de nuevo más tarde.', 'error');
+            showMessage('message', errorMessage, 'error');
         }
     }
 
-    async function deleteUser(data) {
+    async function handleAreaAction(url, method, data, successMessage, errorMessage) {
         try {
-            const response = await fetch('http://127.0.0.1:8080/users', {
-                method: 'DELETE',
+            const response = await fetch(url, {
+                method: method,
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             });
-            showMessage('message', response.ok ? 'Usuario eliminado exitosamente' : 'No se pudo eliminar el usuario. Inténtalo de nuevo más tarde.', response.ok ? 'success' : 'error');
-        } catch (error) {
-            console.error('Error:', error);
-            showMessage('message', 'No se pudo eliminar el usuario. Inténtalo de nuevo más tarde.', 'error');
-        }
-    }
-
-    async function registerArea(data) {
-        try {
-            const response = await fetch('http://127.0.0.1:8080/areas', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
-            showMessage('areaMessage', response.ok ? 'Área registrada exitosamente' : 'No se pudo registrar el área. Inténtalo de nuevo más tarde.', response.ok ? 'success' : 'error');
+            showMessage(method === 'POST' ? 'areaMessage' : 'areaEditMessage', response.ok ? successMessage : errorMessage, response.ok ? 'success' : 'error');
             if (response.ok) fetchAreas();
         } catch (error) {
             console.error('Error:', error);
-            showMessage('areaMessage', 'No se pudo registrar el área. Inténtalo de nuevo más tarde.', 'error');
+            showMessage(method === 'POST' ? 'areaMessage' : 'areaEditMessage', errorMessage, 'error');
         }
     }
 
     document.getElementById('userForm').addEventListener('submit', function (event) {
         event.preventDefault();
-
         const formData = new FormData(event.target);
         const areaId = areas.find(area => area.name === formData.get('area')).id;
-        const currentUser = sessionStorage.getItem('username');
         const password = formData.get('newPassword');
         const passwordConfirmation = formData.get('newPasswordConfirmation');
 
@@ -148,30 +119,23 @@ document.addEventListener("DOMContentLoaded", async function () {
         } else {
             const updatedUser = Object.fromEntries(formData.entries());
             updatedUser.area = Number(areaId);
-            updatedUser.currentUser = currentUser;
+            updatedUser.currentUser = sessionStorage.getItem('username');
             if (password === '') delete updatedUser.password;
-            updateUser(updatedUser);
+            handleUserAction('http://127.0.0.1:8080/users', 'PUT', updatedUser, 'Usuario actualizado exitosamente', 'No se pudo actualizar el usuario. Inténtalo de nuevo más tarde.');
             event.target.reset();
         }
     });
 
-    document.getElementById('deleteUser').addEventListener('click', function (event) {
-        event.preventDefault();
-        deleteUser({
-            currentUser: sessionStorage.getItem('username'),
-            deleteUser: document.getElementById('employeeNumber').value
-        });
-        document.getElementById('userForm').reset();
-    });
+    
 
     document.getElementById('areaForm').addEventListener('submit', function (event) {
         event.preventDefault();
-        const areaName = document.getElementById('areaName').value;
-        const employeeInCharge = document.getElementById('employeeInCharge').value;
-        registerArea({
-            name: areaName,
-            manager: employeeInCharge
-        });
+        handleAreaAction('http://127.0.0.1:8080/areas', 'POST', { name: document.getElementById('areaName').value, manager: document.getElementById('employeeInCharge').value }, 'Área registrada exitosamente', 'No se pudo registrar el área. Inténtalo de nuevo más tarde.');
+    });
+
+    document.getElementById('editAreaForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+        handleAreaAction(`http://127.0.0.1:8080/areas?id=${document.getElementById('selectEditArea').value}`, 'PUT', { currentUser: sessionStorage.getItem('username'), id: document.getElementById('selectEditArea').value, name: document.getElementById('editAreaName').value, manager: document.getElementById('editEmployeeInCharge').value }, 'Área actualizada exitosamente', 'No se pudo actualizar el área. Inténtalo de nuevo más tarde.');
     });
 
     await fetchAreas();
