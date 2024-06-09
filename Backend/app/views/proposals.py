@@ -45,6 +45,7 @@ def proposals():
     elif request.method == "GET":   
         # Get data for a given user
         id = request.args.get("id")
+        status = request.args.get("status")
         if id != None:
             # Looking for a single user
             proposal = getProposals(["id",id])
@@ -57,6 +58,14 @@ def proposals():
                 # User not found
                 response = responseJson(404,"Proposal not found")
                 return response
+        elif status != None:
+            # Looking for all proposal of certain status
+            proposal = getProposals(["status",status])
+            
+            response = jsonify(proposal)
+            response.status_code = 200
+            return response
+            
         elif not any(request.args.values()):
             # Looking for all users
             proposals = getProposals(["1",1])
