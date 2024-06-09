@@ -332,7 +332,6 @@ def user_order_status_changed( email_content : dict, receiver : str ) -> MIMEMul
         email_content: {
             "name": User name,
             "id": Order id
-            "user_name": Name of the user who placed the order,
             "orderDate: Order creation date,
             "products": Array of order products [ { "product": Product name , "quantity": Quantity } ],
             "previousStatus": Previous order status,

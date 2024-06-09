@@ -95,12 +95,11 @@ def send_email( receiver : str, email_content: dict, email_type : str ):
             }
 
         - user_order_status_changed
-        Returns a User order confirmation email.
+        Returns a User order status changed email.
 
         email_content: {
             "name": User name,
             "id": Order id
-            "user_name": Name of the user who placed the order,
             "orderDate: Order creation date,
             "products": Array of order products [ { "product": Product name , "quantity": Quantity } ],
             "previousStatus": Previous order status,
