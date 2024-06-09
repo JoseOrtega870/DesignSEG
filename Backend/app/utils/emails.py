@@ -166,10 +166,6 @@ def user_signup_confirmation( email_content : dict, receiver : str ) -> MIMEMult
 
     message = set_message("Confirmación de Registro en el Sistema PLIM", receiver)
 
-    user_list = ""
-    for user in email_content["proposalUsers"]:
-        user_list += "<p>" + user + "</p> \n"
-
     content = f"""
         <html>
             <body>
@@ -205,10 +201,6 @@ def password_reset_confirmation( email_content : dict, receiver : str ) -> MIMEM
 
     message = set_message("Confirmación de Cambio de Contraseña", receiver)
 
-    user_list = ""
-    for user in email_content["proposalUsers"]:
-        user_list += "<p>" + user + "</p> \n"
-
     content = f"""
         <html>
             <body>
@@ -239,10 +231,6 @@ def password_reset_confirmation( email_content : dict, receiver : str ) -> MIMEM
 def user_data_change_confirmation( email_content : dict, receiver : str ) -> MIMEMultipart: 
 
     message = set_message("Confirmación de Cambio en sus Datos Personales", receiver)
-
-    user_list = ""
-    for user in email_content["proposalUsers"]:
-        user_list += "<p>" + user + "</p> \n"
 
     content = f"""
         <html>
@@ -332,6 +320,7 @@ def user_order_status_changed( email_content : dict, receiver : str ) -> MIMEMul
         email_content: {
             "name": User name,
             "id": Order id
+            "user_name": Name of the user who placed the order,
             "orderDate: Order creation date,
             "products": Array of order products [ { "product": Product name , "quantity": Quantity } ],
             "previousStatus": Previous order status,

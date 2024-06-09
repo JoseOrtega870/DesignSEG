@@ -37,7 +37,7 @@ def orders():
     elif request.method == "POST":
         # Create a new order
         jsonData = request.get_json()
-        if validateData(["username","productId","quantity","orderStatus","total"],jsonData) == False:
+        if validateData(["username","productId","quantity","orderStatus","total","id"],jsonData) == False:
             response = responseJson(400,"Incorrect parameters sent")
             return response
         if validateData(["username", "products", "total"], jsonData):
@@ -50,7 +50,7 @@ def orders():
 
     elif request.method == "PUT":
         # Edit an existing order
-        if validateData(["currentUser","orderId","username","orderStatus"],request.get_json()) == False:
+        if validateData(["currentUser","orderId","username","orderStatus","orderDate","total","productId","quantity"],request.get_json()) == False:
             response = responseJson(400,"Incorrect parameters sent")
             return response
         response = updateOrder(request.get_json())
@@ -74,7 +74,7 @@ def createOrder(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
             return { "status": 400, "result": "Not enough points"}
 
         # Insert order and update user points
-        cursor.execute("INSERT INTO orders (id, user, productId, quantity, orderStatus, orderDate, total) VALUES (?, ?, ?, ?, ?)", (data["id"], data["username"], data["productId"], data["quantity"], data["orderStatus"], time.strftime("%Y-%m-%d"),data["total"]) )
+        cursor.execute("INSERT INTO orders (id, user, productId, quantity, orderStatus, orderDate, total) VALUES (?, ?, ?, ?, ?, ?, ?)", (data["id"], data["username"], data["productId"], data["quantity"], data["orderStatus"], time.strftime("%Y-%m-%d"),data["total"]) )
 
         cursor.execute("UPDATE users SET points = points - ? WHERE username = ?", (data["total"], data["username"]))
         connection.commit()
@@ -152,6 +152,8 @@ def getOrderById(cursor:sqlite3.Cursor,connection:sqlite3.Connection, id:int):
         data = cursor.execute("SELECT * FROM orders, products WHERE orders.id = ? AND products.id = orders.productId;", (id,))
 
 
+
+
         row = data.fetchall()
         print(row)
         if not row:
@@ -188,7 +190,7 @@ def updateOrder(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
     try:
 
         # Checks whether the order exists
-        cursor.execute("SELECT orderStatus, orderDate, user FROM orders WHERE id = ?;", (data["orderId"],))
+        cursor.execute("SELECT * FROM orders WHERE id = ?;", (data["orderId"],))
         order = cursor.fetchone()
         if not order:
             return {"status": 400, "result": "Order Not Found"}
@@ -202,27 +204,22 @@ def updateOrder(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
         if str(user[0]) != "admin" and str(user[0]) != "VSE":
             return {"status": 403, "result": "User has no order edit privileges"}
 
+        # Checks whether the product exists
+        cursor.execute("SELECT * FROM products WHERE id = ?", (data["productId"],))
+        product = cursor.fetchone()
+        if not product:
+            return {"status": 404, "result": "Product not Found"}
+
+
         # Update order
-        cursor.execute("UPDATE orders SET username = ?, orderStatus = ? WHERE id = ?",
-                        (data["username"], data["orderStatus"], data["orderId"]))
+        cursor.execute("UPDATE orders SET username = ?, productId = ?, quantity = ?, orderStatus = ?, orderDate = ?, total = ? WHERE id = ?",
+                        (data["username"], data["productId"], data["quantity"], data["orderStatus"], data["orderDate"], data["total"], data["orderId"]))
         connection.commit()
 
 
         cursor.execute("SELECT products.name, orders.quantity FROM products, orders WHERE order.id = ? AND products.id = orders.productId", (data["orderId"],))
         products = cursor.fetchall()
-        """
-        
-        - user_order_status_changed
 
-        email_content: {
-            "name": User name,
-            "id": Order id
-            "orderDate: Order creation date,
-            "products": Array of order products [ { "product": Product name , "quantity": Quantity } ],
-            "previousStatus": Previous order status,
-            "newStatus": New order status
-        }
-        """
         cursor.execute("SELECT email, firstName, middleName, lastName FROM users WHERE username = ?", (order[2],))
         order_user = cursor.fetchone()
 
@@ -237,7 +234,6 @@ def updateOrder(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
             }
             send_email(order_user[0],email_content, "user_order_status_changed")
         return {"status": 200, "result": "Order updated"}
-    
     except Exception as e:
         print(e)
         connection.rollback()

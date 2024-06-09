@@ -153,7 +153,7 @@ header .botones .perfil img {
     background-color: white;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
-    width: calc(33.33% - 25px);
+    width: calc(33.33% - 20px);
     display: inline-block;
     vertical-align: top;
     height: 100%;
@@ -259,4 +259,11 @@ section h4 {
 .cerrar-sesion {
     margin-left: 10px;
     color: #FFFFFF; 
+}
+#boton_editar{
+    display: none;
+}
+
+#productoModal .modal-content {
+    padding: 20px;
 }

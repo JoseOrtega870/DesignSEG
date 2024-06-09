@@ -1,0 +1,19 @@
+* {
+    overflow: auto;
+}
+
+.w-full{
+    width: 100%;
+}
+
+.h-full{
+    height: 100%;
+}
+
+.contenedor-propuestas{
+    max-height: 30rem;
+}
+.contenedor-propuestas .container{
+    background-color: rgb(244, 244, 244);
+    color: rgb(0, 0, 0);
+}
