@@ -1,7 +1,7 @@
 const buttons = [
     {href:'home.html', text: 'Inicio'},
     {href:'#', text: 'Recompensas'},
-    {href:'#', text: 'Estadisticas'},
+    {href:'stats.html', text: 'Estadisticas'},
     {href:'#', text: 'Evaluar'},
     {href:'#', text: 'Pedidos'},
     {href:'admin.html', text: 'Usuarios'}

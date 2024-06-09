@@ -31,6 +31,7 @@ async function fetchUser() {
             ["title", "currentSituation", "description","areaName", "status", "category", "creationDate", "assignedPoints"].forEach(key => {
                 document.getElementById(key).value = proposal[key];
             });
+            proposal['users'] = proposal['users'].filter(item => item != sessionStorage.getItem('username'));
             document.getElementById('users').value = proposal['users'].join(', ');
             messageContainer = document.getElementById('feedbackContainer');
             messageContainer.innerHTML = `<label>Mensajes</label>`;
@@ -84,7 +85,7 @@ document.getElementById('improvementForm').addEventListener('submit', async func
         area: areaId,
         status: 'Evaluando VSE',
         type: (formData.get('categoria') === 'seguridad' || formData.get('categoria') === '5s') ? 'No Contable' : 'Contable',
-        feedback: '',
+        feedback: '[]',
         usersId: empleadosArray
     };
 
