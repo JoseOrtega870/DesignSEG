@@ -215,6 +215,24 @@ def updateOrder(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
         cursor.execute("UPDATE orders SET username = ?, productId = ?, quantity = ?, orderStatus = ?, orderDate = ?, total = ? WHERE id = ?",
                         (data["username"], data["productId"], data["quantity"], data["orderStatus"], data["orderDate"], data["total"], data["orderId"]))
         connection.commit()
+
+
+        cursor.execute("SELECT products.name, orders.quantity FROM products, orders WHERE order.id = ? AND products.id = orders.productId", (data["orderId"],))
+        products = cursor.fetchall()
+
+        cursor.execute("SELECT email, firstName, middleName, lastName FROM users WHERE username = ?", (order[2],))
+        order_user = cursor.fetchone()
+
+        if data["orderStatus"] != order[0]:
+            email_content = {
+                "name": order_user[1] + " " + order_user[2] + " " + order_user[3],
+                "id": data["orderId"],
+                "orderDate": order[1],
+                "products": products,
+                "previousStatus": order[0],
+                "newStatus": data["orderStatus"]
+            }
+            send_email(order_user[0],email_content, "user_order_status_changed")
         return {"status": 200, "result": "Order updated"}
     except Exception as e:
         print(e)

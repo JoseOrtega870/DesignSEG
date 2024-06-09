@@ -10,6 +10,10 @@ body {
     font-size: 15px;
 }
 
+.text-primary-blue {
+    color: #04236d;
+}
+
 header .container-fluid {
     background-color: #FFFFFF;
     padding: 10px;
