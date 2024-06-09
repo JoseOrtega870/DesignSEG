@@ -173,19 +173,7 @@ def editProposal(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
                     "message": data["feedback"]
                 }
                 send_email(receiver[0], email_content, "user_has_a_new_message")
-
-        """
-            Returns a champion has a new proposal email.
-            email_content: {
-                "name": Champion name,
-                "id": Proposal id
-                "title": Proposal title,
-                "creationDate: Proposal creation date,
-                "proposalUsers": List of users who created the proposal,
-
-            }
-        """
-
+                
         # If the evaluator is different, send an email
         evaluator = cursor.execute("SELECT Users.email, Users.firstname, Users.middleName, Users.lastName FROM users, proposals WHERE Users.username = ?", (data["currentEvaluatorUser"]))
         evaluator = evaluator.fetchone()
