@@ -10,6 +10,13 @@ body {
     font-size: 15px;
 }
 
+<<<<<<< HEAD
+=======
+.text-primary-blue {
+    color: #04236d;
+}
+
+>>>>>>> f50f2c614cc03b0113ff0d1f49644095d7a6dd77
 header .container-fluid {
     background-color: #FFFFFF;
     padding: 10px;
@@ -178,4 +185,8 @@ section h4 {
 .cerrar-sesion {
     margin-left: 10px;
     color: #FFFFFF; 
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> f50f2c614cc03b0113ff0d1f49644095d7a6dd77
