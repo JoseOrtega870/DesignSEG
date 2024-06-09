@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/superusuario.css">
+    <link rel="stylesheet" href="css/vse.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-    <title>Administrador</title>
+    <title>VSE</title>
     
 </head>
 <body>
@@ -16,16 +16,23 @@
         <div class="fixed-top">
             <div class="container-fluid">
                 <div class="row justify-content-evenly align-items-center">
-                    
+                    <div class="botones col-auto d-flex justify-content-center align-items-center order-1" id = "containerLeft">
+                        <a href="#" class="botones perfil">Inicio</a>
+                        <a href="#" class="botones perfil">Recompensas</a>
+                    </div>
 
                     <div class="col-auto text-center order-2">
                         <img src="img/Seg-1.png" alt="Seg Automotive">
                     </div>
 
                     <nav class="botones col-auto text-end d-flex align-items-center justify-content-end order-3">
+                        <div id = "containerRight"></div>
+
                         <a href="#" class=" botones perfil">
-                            <img src="img/persona2.jpg" alt=""> Carlos
+                            <img src="img/persona2.jpg" alt=""> <span id = "nombre">Carlos</span> 
                         </a>
+                        <a href="recompensas.html" class="botones puntos"><span id = "puntos">100 pts </span></a>
+                        <a href="login.html" class="botones cerrar-sesion" id="cerrarSesion">Cerrar Sesión</a>
                     </nav>
                 </div>
             </div>
@@ -39,86 +46,75 @@
             </div>
         </section>
 
-        <main class="contenido-principal row d-flex justify-content-evenly align-items-center mb-0">
+        <main class="contenido-principal row d-flex justify-content-evenly align-items-center">
             <div class="col-auto contenido-principal">
                 <table class="table">
                     <thead>
                         <tr class="titulo text-center">
-                            <th>No. de Empleado</th>
-                            <th>Apellido Paterno</th>
-                            <th>Apellido Materno</th>
-                            <th>Nombre(s)</th>
+                            <th>Título de la Mejora</th>
+                            <th>Situación Actual</th>
+                            <th>Suferencia de Mejora</th>
                             <th>Área</th>
-                            <th>Rol</th>
-                        </tr>   
+                            <th>Categoría</th>
+                            <th>Empleados Involucrados</th>
+                        </tr>
                     </thead>
                     <tbody class="text-center">
                         <tr>
-                            <td>12345678</td>
                             <td>Carlos Alejandro</td>
                             <td>25</td>
                             <td>Mexico</td>
                             <td>25</td>
                             <td>Mexico</td>
+                            <td>Mexico</td>
+                            <td class="p-0"><button class="botontabla">Detalles</button></td>
                         </tr>
                         <tr>
-                            <td>12345678</td>
                             <td>Alejandro</td>
                             <td>34</td>
                             <td>España</td>
                             <td>34</td>
                             <td>España</td>
+                            <td>España</td>
+                            <td class="p-0"><button class="botontabla">Detalles</button></td>
                         </tr>
                         <tr>
-                            <td>12345678</td>
                             <td>Cesar</td>
                             <td>30</td>
                             <td>Colombia</td>
                             <td>30</td>
                             <td>Colombia</td>
+                            <td>Colombia</td>
+                            <td class="p-0"><button class="botontabla">Detalles</button></td>
                         </tr>
                         <tr>
-                            <td>12345678</td>
                             <td>Carlos Alejandro</td>
                             <td>25</td>
                             <td>Mexico</td>
                             <td>25</td>
                             <td>Mexico</td>
+                            <td>Mexico</td>
+                            <td class="p-0"><button class="botontabla">Detalles</button></td>
                         </tr>
                         <tr>
-                            <td>12345678</td>
                             <td>Alejandro</td>
                             <td>34</td>
                             <td>España</td>
                             <td>34</td>
                             <td>España</td>
+                            <td>España</td>
+                            <td class="p-0"><button class="botontabla">Detalles</button></td>
                         </tr>
                     </tbody>
                 </table>
-
+                <button class="btn btn-primary bt-sm boton d-grid gap-2 col-6 mb-10 mx-auto data-toggle="button"" >Evaluar Mejora</button>
             </div>
         </main>
         <section class="contenedor-botones mt-4">
-            <div class="container">
-                <div class="row d-flex justify-content-evenly align-items-center">
-                    <div class="col-auto">
-                        <button class="boton w-100">Nuevo Registro</button>
-                    </div>
-                    <div class="col-auto">
-                        <button class="boton w-100">Eliminar Registro</button>
-                    </div>
-                    <div class="col-auto">
-                        <button class="boton w-100">Editar Registro</button>
-                    </div>
-                    <div class="col-auto">
-                        <button class="boton w-100">Editar Permisos</button>
-                    </div>
-                    <div class="col-auto">
-                        <button class="boton w-100">Registrar Área</button>
-                    </div>
-                </div>
-            </div>
-        </section>
     </div>
+    
+    <script src="js/home.js"></script>
+    <script src="js/navbar.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
