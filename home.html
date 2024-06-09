@@ -47,7 +47,7 @@
 
         <main class="contenido-principal row d-flex justify-content-evenly align-items-center">
             <div class="col-auto contenido-principal">
-                <table class="table">
+                <table class="table table-responsive">
                     <thead>
                         <tr class="titulo text-center">
                             <th>Título</th>
@@ -126,6 +126,10 @@
         .modal-body {
             overflow-y: auto;
             scroll-behavior: smooth;
+        }
+        .scrollable-content {
+            height: 400px;
+            overflow-y: auto;
         }
     </style>
     <div class="modal fade" id="myModal">
