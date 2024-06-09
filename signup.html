@@ -4,131 +4,97 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="css/styles.css">
-  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(180deg, rgba(1,145,96,1) 0%, rgba(1,42,134,1) 100%);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .form-container {
+      background-color: white;
+      width: 45%;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .form-container h1 {
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+    .form-container .btn {
+      background-color: #012A86;
+      color: white;
+      font-weight: 600;
+    }
+    .form-container .btn:hover {
+        background-color: #019160;
+        color: white;
+        font-weight: 600;
+      }
+  </style>
   <title>Signup</title>
 </head>
 
-<body class="aln">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-4 form-container text-center">
-                <h1>Registrate</h1>
-
-                <form id="signupForm">
-                    <div class="mb-3">
-                        <input type="text" class="form-control" id="noEmpleado" placeholder="No. de Empleado">
-                        <input type="email" class="form-control" id="email" placeholder="Email">
-                    </div>
-                    <div class="mb-3">
-                        <input type="text" class="form-control" id="nombre" placeholder="Nombre(s)">
-                        <input type="text" class="form-control" id="apellidos" placeholder="Apellido(s)">
-                    </div>
-                    <div class="mb-3">
-                        <input type="password" class="form-control" id="contraseña" placeholder="Contraseña">
-                        <input type="password" class="form-control" id="repetirContraseña" placeholder="Repetir Contraseña">
-                    </div>
-                    <div class="mb-3">
-                        <p class="form-text list">* La contraseña debe contener:<br>- Mínimo 8 caracteres<br>- Una letra mayúscula<br>- Una letra minúscula<br>- Un número (0-9)<br>- Un caracter especial (*@_)</p>
-                    </div>
-                    <button type="submit" class="btn">Registro</button>
-                </form>
-                <p>¿Ya tienes cuenta? <a href="login.html">Iniciar Sesion</a></p>
-
-            </div>
+<body>
+  <div class="container form-container">
+    <h1 class="text-center">Crea tu cuenta</h1>
+    <form id="signupForm">
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <input type="text" class="form-control" id="username" placeholder="No. de Empleado" required>
         </div>
-    </div>
+        <div class="form-group col-md-6">
+          <input type="text" class="form-control" id="firstname" placeholder="Nombre(s)" required>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <input type="text" class="form-control" id="middlename" placeholder="Apellido paterno" required>
+        </div>
+        <div class="form-group col-md-6">
+          <input type="text" class="form-control" id="lastname" placeholder="Apellido materno" required>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <select class="form-control" id="area" required>
+            <option value="" disabled selected>Área</option>
+            
+          </select>
+        </div>
+        <div class="form-group col-md-6">
+          <input type="email" class="form-control" id="email" placeholder="Email" required>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <input type="password" class="form-control" id="password" placeholder="Contraseña" required>
+        </div>
+        <div class="form-group col-md-6">
+          <input type="password" class="form-control" id="passwordConfirm" placeholder="Repetir Contraseña" required>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-12">
+          <p class="form-text text-center">La contraseña debe contener:<br>
+            - Mínimo 8 caracteres<br>
+            - Una letra mayúscula<br>
+            - Una letra minúscula<br>
+            - Un número (0-9)<br>
+            - Un caracter especial (*@_)</p>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-block">Registrarme</button>
+    </form>
+    <p class="mt-3 text-center">¿Ya tienes cuenta? <a href="login.html">Iniciar Sesión</a></p>
+  </div>
 </body>
-<script>
-    document.getElementById('signupForm').addEventListener('submit', function (event) {
-        event.preventDefault(); 
-
-        const noEmpleado = document.getElementById('noEmpleado').value;
-        const email = document.getElementById('email').value;
-        const nombre = document.getElementById('nombre').value;
-        const apellidoPaterno = document.getElementById('apellidos').value;
-        const contrasena = document.getElementById('contraseña').value;
-        const confirmacionContraseña = document.getElementById('repetirContraseña').value;
-
-        if (contrasena.length === 0 || confirmacionContraseña.length === 0 || noEmpleado.length === 0 || nombre.length === 0 || apellidoPaterno.length === 0 || email.length === 0) {
-            alert('Porfavor llene todos los campos.');
-            return;
-        }
-
-        if (contrasena !== confirmacionContraseña) {
-            alert('Las contrasenas no coinciden, Porfavor intente de nuevo.');
-            return;
-        }
-
-        // if (contrasena.length < 8) {
-        //     alert('La contrasena debe tener al menos 8 caracteres.');
-        //     return; 
-        // }
-
-        // if (!/[A-Z]/.test(contrasena)) {
-        //     alert('La contrasena debe contener al menos una letra mayúscula.');
-        //     return;
-        // }
-
-        // if (!/[a-z]/.test(contrasena)) {
-        //     alert('La contrasena debe contener al menos una letra minúscula.');
-        //     return;
-        // }
-
-        // if (!/[0-9]/.test(contrasena)) {
-        //     alert('La contrasena debe contener al menos un número (0-9).');
-        //     return;
-        // }
-
-        // if (!/[*@_]/.test(contrasena)) {
-        //     alert('La contrasena debe contener al menos un carácter especial (*@_).');
-        //     return;
-        // }
-
-        const formData = {
-            noEmpleado: noEmpleado,
-            email: email,
-            nombre: nombre,
-            apellidos: apellidoPaterno,
-            contrasena: contrasena
-        };
-
-
-        console.log(formData);
-
-        async function fetchData() {
-            const response = await fetch('http://127.0.0.1:8080/users', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    noEmpleado: noEmpleado,
-                    email: email,
-                    firstname: nombre,
-                    middlename: apellidoPaterno,
-                    lastname: apellidoPaterno,
-                    contrasena: contrasena
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success:', data);
-                //Handle the response from the server
-            })
-            .catch(error => {
-                //Handle any errors
-                console.error('Error:', error);
-            });
-
-        }
-
-        fetchData();
-
-    });
-</script>
-
+<script src="js/signup.js"></script>
 </html>
