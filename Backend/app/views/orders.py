@@ -210,19 +210,7 @@ def updateOrder(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
 
         cursor.execute("SELECT products.name, orders.quantity FROM products, orders WHERE order.id = ? AND products.id = orders.productId", (data["orderId"],))
         products = cursor.fetchall()
-        """
-        
-        - user_order_status_changed
 
-        email_content: {
-            "name": User name,
-            "id": Order id
-            "orderDate: Order creation date,
-            "products": Array of order products [ { "product": Product name , "quantity": Quantity } ],
-            "previousStatus": Previous order status,
-            "newStatus": New order status
-        }
-        """
         cursor.execute("SELECT email, firstName, middleName, lastName FROM users WHERE username = ?", (order[2],))
         order_user = cursor.fetchone()
 
