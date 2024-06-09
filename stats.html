@@ -37,179 +37,81 @@
         </div>
     </header>
 
-    <main class="">
-        <h3 class="text-center bg-white my-3 py-2 text-primary-blue ">Estadisticas</h3>
+    <main>
+        <h3 class="text-center bg-white my-4 py-2 text-primary-blue ">Estadisticas</h3>
+
+        <div class="modal-propuesta d-none" id="proposalModalContainer">
+            <div class="propuesta-modal">
+                <button class="btn btn-danger" id="closeModalButton">Cerrar</button>
+                <div class="contenido-propuesta" id="proposalModal">
+
+                </div>
+            </div>
+        </div>
 
         <div class="d-flex bg-white justify-content-evenly align-items-center text-primary-blue ">
     
             <div class="d-flex justify-content-center gap-5 w-full py-5">
     
-                <div class="p-4 shadow">
+                <div class="p-4 shadow max-proposal-width ">
                     <div class="mb-2">
-                        <label for="filtro">Filtrar por:</label>
-                        <select class="form-select form-select-sm my-2" name="filtro" id="filtro">
-                            <option value="all">Todas las propuestas</option>
+                        <label for="filtro">Ordenar por:</label>
+                        <select class="form-select form-select-sm my-2" name="filtro" id="filtro-pendientes">
+                            <option value="all">Fecha</option>
                             <option value="status">Estatus</option>
-                            <option value="aproved">Aprobados</option>
-                            <option value="rejected">Rechazados</option>
                             <option value="category">Categoría</option>
                             <option value="area">Área</option>
                         </select>
                     </div>
                     <h3>Propuestas pendientes</h3>
     
-                    <div class="p-4 contenedor-propuestas">
-                        <div class="container py-2 rounded text-center shadow-sm mb-4"> 
-                            <div class="row">
-                                <p class="col">Titulo: Mejorar la cafeteria</p>
-                                <p class="col">Fecha de creación: 24/01/2022</p>
-                            </div>
-                            
-                            <div class="row">
-                                <p class="col">Estatus: Pendiente</p>
-                                <p class="col">Evaluador: Carlos</p>
-                            </div>
-                            <div class="d-flex justify-content-end">
-                                <button class="btn btn-primary btn-sm">Más detalles</button>
-    
-                            </div>
-                        </div>
-                        <div class="container py-2 rounded text-center shadow-sm mb-4"> 
-                            <div class="row">
-                                <p class="col">Titulo: Mejorar la cafeteria</p>
-                                <p class="col">Fecha de creación: 24/01/2022</p>
-                            </div>
-                            
-                            <div class="row">
-                                <p class="col">Estatus: Pendiente</p>
-                                <p class="col">Evaluador: Carlos</p>
-                            </div>
-                            <div class="d-flex justify-content-end">
-                                <button class="btn btn-primary btn-sm">Más detalles</button>
-
-                            </div>
-                        </div>
-                        <div class="container py-2 rounded text-center shadow-sm mb-4"> 
-                            <div class="row">
-                                <p class="col">Titulo: Mejorar la cafeteria</p>
-                                <p class="col">Fecha de creación: 24/01/2022</p>
-                            </div>
-                            
-                            <div class="row">
-                                <p class="col">Estatus: Pendiente</p>
-                                <p class="col">Evaluador: Carlos</p>
-                            </div>
-                            <div class="d-flex justify-content-end">
-                                <button class="btn btn-primary btn-sm">Más detalles</button>
-    
-                            </div>
-                        </div>
-                        <div class="container py-2 rounded text-center shadow-sm mb-4"> 
-                            <div class="row">
-                                <p class="col">Titulo: Mejorar la cafeteria</p>
-                                <p class="col">Fecha de creación: 24/01/2022</p>
-                            </div>
-                            
-                            <div class="row">
-                                <p class="col">Estatus: Pendiente</p>
-                                <p class="col">Evaluador: Carlos</p>
-                            </div>
-                            <div class="d-flex justify-content-end">
-                                <button class="btn btn-primary btn-sm">Más detalles</button>
-    
-                            </div>
-                        </div>
-
-                    </div>
+                    <div class="p-4 contenedor-propuestas" id="propuestas-pendientes"></div>
     
                 </div>
-                <div class="p-4 shadow">
+                <div class="p-4 shadow max-proposal-width">
                     <div class="mb-2">
-                        <label for="filtro">Filtrar por:</label>
-                        <select class="form-select form-select-sm my-2" name="filtro" id="filtro">
+                        <label for="filtro">Ordenar por:</label>
+                        <select class="form-select form-select-sm my-2" name="filtro" id="filtro-pendientes">
                             <option value="all">Todas las propuestas</option>
                             <option value="status">Estatus</option>
-                            <option value="aproved">Aprobados</option>
-                            <option value="rejected">Rechazados</option>
                             <option value="category">Categoría</option>
                             <option value="area">Área</option>
                         </select>
                     </div>
                     <h3>Historial de propuestas</h3>
     
-                    <div class="p-4 contenedor-propuestas">
-                        <div class="container py-2 rounded text-center shadow-sm mb-4"> 
-                            <div class="row">
-                                <p class="col">Titulo: Mejorar la cafeteria</p>
-                                <p class="col">Fecha de creación: 24/01/2022</p>
-                            </div>
-                            
-                            <div class="row">
-                                <p class="col">Estatus: Pendiente</p>
-                                <p class="col">Evaluador: Carlos</p>
-                            </div>
-                            <div class="d-flex justify-content-end">
-                                <button class="btn btn-primary btn-sm">Más detalles</button>
-    
-                            </div>
-                        </div>
-                        <div class="container py-2 rounded text-center shadow-sm mb-4"> 
-                            <div class="row">
-                                <p class="col">Titulo: Mejorar la cafeteria</p>
-                                <p class="col">Fecha de creación: 24/01/2022</p>
-                            </div>
-                            
-                            <div class="row">
-                                <p class="col">Estatus: Pendiente</p>
-                                <p class="col">Evaluador: Carlos</p>
-                            </div>
-                            <div class="d-flex justify-content-end">
-                                <button class="btn btn-primary btn-sm">Más detalles</button>
-
-                            </div>
-                        </div>
-                        <div class="container py-2 rounded text-center shadow-sm mb-4"> 
-                            <div class="row">
-                                <p class="col">Titulo: Mejorar la cafeteria</p>
-                                <p class="col">Fecha de creación: 24/01/2022</p>
-                            </div>
-                            
-                            <div class="row">
-                                <p class="col">Estatus: Pendiente</p>
-                                <p class="col">Evaluador: Carlos</p>
-                            </div>
-                            <div class="d-flex justify-content-end">
-                                <button class="btn btn-primary btn-sm">Más detalles</button>
-    
-                            </div>
-                        </div>
-                        <div class="container py-2 rounded text-center shadow-sm mb-4"> 
-                            <div class="row">
-                                <p class="col">Titulo: Mejorar la cafeteria</p>
-                                <p class="col">Fecha de creación: 24/01/2022</p>
-                            </div>
-                            
-                            <div class="row">
-                                <p class="col">Estatus: Pendiente</p>
-                                <p class="col">Evaluador: Carlos</p>
-                            </div>
-                            <div class="d-flex justify-content-end">
-                                <button class="btn btn-primary btn-sm">Más detalles</button>
-    
-                            </div>
-                        </div>
-
-                    </div>
+                    <div class="p-4 contenedor-propuestas" id="historial-propuestas"></div>
                 </div>
             </div>
 
         </div>
 
-        <div class="bg-white d-flex justify-content-center py-2">
-            <div style="width: 800px;">
-                <canvas id="acquisitions"></canvas>
+        <div class="bg-white p-2 container charts ">
+            <div class="row">
+                <div class="col">
+                    <canvas id="proposalsByArea"></canvas>
+                </div>
+                <div class="col">
+                    <canvas id="totalProposals"></canvas>
+                </div>
+                <div class="col">
+                    <canvas id="proposalsByCategory"></canvas>
+                </div>
+                
+            </div>
+            <div class="row">
+                <div class="col">
+                    <canvas id="proposalsByStatus"></canvas>
+                </div>
+                <div class="col">
+                    <canvas id="proposalsByUser"></canvas>
+                </div>
+                <div class="col">
+                    <canvas id="proposalsType"></canvas>
+                </div>
 
             </div>
+
 
         </div>
 

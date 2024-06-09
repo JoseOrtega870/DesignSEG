@@ -206,7 +206,7 @@ def editProposal(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
 @query(database)
 def getProposals(cursor:sqlite3.Cursor,connection:sqlite3.Connection,condition):
     # Retrieve proposal(will be None in case it's not found)
-    data = cursor.execute("SELECT * FROM proposals WHERE " + condition[0] + " = ?", (condition[1],))
+    data = cursor.execute("SELECT * FROM proposals WHERE " + condition[0] + " = ? ORDER BY creationDate", (condition[1],))
     proposals = []
     columns = data.description
     for i in data.fetchall():
