@@ -23,7 +23,7 @@ def proposals():
     elif request.method == "PUT":
         # Edit an existing proposal
         jsonData = request.get_json()
-        if validateData(["currentUser","proposalId","title","description","currentSituation","area","status","type","feedback","usersId","creationDate","closeDate"],jsonData) == False:
+        if validateData(["currentUser","proposalId","title","description","currentSituation","area","status","type","feedback","usersId","closeDate","assignedPoints","formerEvaluatorUser","currentEvaluatorUser"],jsonData) == False:
             response = responseJson(400,"Incorrect parameters sent")
             return response
         
@@ -38,7 +38,7 @@ def proposals():
         elif result == 2:
             response = responseJson(404,"Proposal not found")
             return response
-        else:
+        elif result == 3:
             return "",200
         
 
@@ -119,8 +119,8 @@ def editProposal(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
         return 2
 
     # Edit proposal
-    cursor.execute("UPDATE proposals SET title = ?, category = ?,currentSituation = ?, area = ?, status = ?, description = ?, type = ?, creationDate = ?, closeDate = ? WHERE id = ?",
-                    (data["title"], data["category"], data["currentSituation"], data["area"], data["status"], data["description"], data["type"], data["creationDate"], data["closeDate"], data["proposalId"]))
+    cursor.execute("UPDATE proposals SET title = ?, category = ?,currentSituation = ?, area = ?, status = ?, description = ?, type = ?, closeDate = ?, assignedPoints = ?, feedback = ?, formerEvaluatorUser = ?, currentEvaluatorUser = ? WHERE id = ?",
+                    (data["title"], data["category"], data["currentSituation"], data["area"], data["status"], data["description"], data["type"], data["closeDate"], data["assignedPoints"], data["feedback"], data["formerEvaluatorUser"], data["currentEvaluatorUser"], data["proposalId"]))
         
     cursor.execute("DELETE FROM UserProposal WHERE proposalId = ?",(data["proposalId"],))
     # Insert into UserProposal
@@ -163,6 +163,17 @@ def editProposal(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
                     "message": data["feedback"]
                 }
                 send_email(receiver[0], email_content, "user_has_a_new_message")
+
+        # if proposal[11] != data["currentEvaluatorUser"]:
+        #     email_content = {
+        #         "name": sender[2],
+        #         "id": proposal[0],
+        #         "title": proposal[1],
+        #         "creationDate": proposal[8],
+        #         "oldEvaluator": proposal[11],
+        #         "newEvaluator": data["currentEvaluatorUser"]
+        #     }
+        #     send_email(sender[1], email_content, "proposal_evaluator_change")
 
         connection.commit()
         return 3

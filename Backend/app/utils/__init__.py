@@ -178,14 +178,14 @@ def send_email( receiver : str, email_content: dict, email_type : str ):
 
         case "VSE_or_CHAMPION_has_a_new_message":
             message = VSE_or_CHAMPION_has_a_new_message(email_content, receiver)
-
+    """
     with smtplib.SMTP(host=HOST, port=PORT) as email_server:
         # Login to email_server server
         email_server.starttls(context=CONTEXT)
         email_server.login(SENDER, PASSWORD)
 
         # Send email
-        email_server.sendmail(SENDER, receiver, message.as_string())
+        email_server.sendmail(SENDER, receiver, message.as_string())"""
 
 
 # Function to decorate functions that requiere a connection to the database
@@ -261,7 +261,7 @@ def createTables(cursor:sqlite3.Cursor,connection:sqlite3.Connection):
                 image VARCHAR(100) NOT NULL
                 )""")
     cursor.execute("""CREATE TABLE IF NOT EXISTS Orders(
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                id VARCHAR(30) NOT NULL,
                 user VARCHAR(50) NOT NULL, 
                 productId INTEGER NOT NULL,
                 quantity INTEGER NOT NULL,
