@@ -174,16 +174,30 @@ def editProposal(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
                 }
                 send_email(receiver[0], email_content, "user_has_a_new_message")
 
-        # if proposal[11] != data["currentEvaluatorUser"]:
-        #     email_content = {
-        #         "name": sender[2],
-        #         "id": proposal[0],
-        #         "title": proposal[1],
-        #         "creationDate": proposal[8],
-        #         "oldEvaluator": proposal[11],
-        #         "newEvaluator": data["currentEvaluatorUser"]
-        #     }
-        #     send_email(sender[1], email_content, "proposal_evaluator_change")
+        """
+            Returns a champion has a new proposal email.
+            email_content: {
+                "name": Champion name,
+                "id": Proposal id
+                "title": Proposal title,
+                "creationDate: Proposal creation date,
+                "proposalUsers": List of users who created the proposal,
+
+            }
+        """
+
+        # If the evaluator is different, send an email
+        evaluator = cursor.execute("SELECT Users.email, Users.firstname, Users.middleName, Users.lastName FROM users, proposals WHERE Users.username = ?", (data["currentEvaluatorUser"]))
+        evaluator = evaluator.fetchone()
+        if proposal[13] != data["currentEvaluatorUser"]:
+            email_content = {
+                "name": evaluator[1] + " " + evaluator[2] + " " + evaluator[3],
+                "id": proposal[0],
+                "title": proposal[1],
+                "creationDate": proposal[8],
+                "proposalUsers": data["usersId"]
+            }
+            send_email(evaluator[0], email_content, "champion_has_a_new_proposal")
 
         connection.commit()
         return 3
