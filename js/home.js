@@ -124,14 +124,15 @@ window.addEventListener('resize', adjustModalBodyHeight);
  
 adjustModalBodyHeight();
 
-async function putProposal(data) {
-    
-}
 
 document.getElementById('sendMessage').addEventListener('click', async function (){
     const proposal = await (await fetch(`http://127.0.0.1:8080/proposals?id=${currentProposalId}`)).json();
 
     const feedback = JSON.parse(proposal.feedback);
+    if(document.getElementById('feedback').value == ""){
+        alert('Mensaje vacio');
+        return;
+    }
     const currentMessage = [sessionStorage.getItem('username'),document.getElementById('feedback').value]
     feedback.push(currentMessage);
     const params = {

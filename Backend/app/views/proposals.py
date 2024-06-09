@@ -158,6 +158,7 @@ def editProposal(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
                     "title": proposal[1],
                     "creationDate": proposal[8],
                     "oldStatus": proposal[5],
+                    "feedback" : proposal[1],
                     "status": data["status"]
                 }
                 send_email(receiver[0], email_content, "proposal_status_change")
