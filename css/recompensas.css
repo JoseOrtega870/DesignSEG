@@ -260,3 +260,11 @@ section h4 {
     margin-left: 10px;
     color: #FFFFFF; 
 }
+
+#boton_editar{
+    display: none;
+}
+
+#modificarProductoModal .modal-content {
+    padding: 20px;
+}
