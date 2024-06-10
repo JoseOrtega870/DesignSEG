@@ -1,4 +1,8 @@
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', async function () {
+    const currentUser = await (await fetch(`http://127.0.0.1:8080/users?username=${sessionStorage.getItem('username')}`)).json();
+    if (currentUser['role'] != 'admin' && currentUser['role'] != 'vse'){
+        window.location.href = "home.html";
+    }
     startApp()
 })
 

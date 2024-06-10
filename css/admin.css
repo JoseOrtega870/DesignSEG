@@ -73,6 +73,11 @@ header .botones .perfil img {
 	margin-right: 5px;
 }
 
+.cerrar-sesion {
+    margin-left: 10px;
+    color: #FFFFFF; 
+}
+
 .scrollable-content {
     height: 400px;
     overflow-y: auto;
