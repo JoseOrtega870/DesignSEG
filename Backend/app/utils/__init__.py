@@ -3,17 +3,24 @@ import bcrypt
 from flask import Response,jsonify
 
 import smtplib, ssl
+
+from pathlib import Path
+
 from .emails import *
+
 
 PORT = 587
 
 CONTEXT = ssl.create_default_context()
 
-SENDER = "correo"
+config_file = open('./config.cfg','r')
+config = {}
+for line in config_file:
+    config[line.split('=')[0].rstrip().lstrip()] = line.split('=')[1].replace('\n','').lstrip().rstrip()
 
-PASSWORD = "password"
-
-HOST = "smtp-mail.outlook.com"
+HOST = config['HOST']
+SENDER = config['SENDER_EMAIL_ADDRESS']
+PASSWORD = config['PASSWORD']
 
 database = 'database.db'
 
@@ -178,14 +185,14 @@ def send_email( receiver : str, email_content: dict, email_type : str ):
 
         case "VSE_or_CHAMPION_has_a_new_message":
             message = VSE_or_CHAMPION_has_a_new_message(email_content, receiver)
-    """
+
     with smtplib.SMTP(host=HOST, port=PORT) as email_server:
         # Login to email_server server
         email_server.starttls(context=CONTEXT)
         email_server.login(SENDER, PASSWORD)
 
         # Send email
-        email_server.sendmail(SENDER, receiver, message.as_string())"""
+        email_server.sendmail(SENDER, receiver, message.as_string())
 
 
 # Function to decorate functions that requiere a connection to the database
