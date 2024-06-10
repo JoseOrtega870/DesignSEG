@@ -36,37 +36,39 @@ function renderOrders(orders) {
     let allOrdersRenderData = {}
 
     pendingOrders.forEach( order => {
-
         if (!pendingOrdersRenderData[order.id]) {
             pendingOrdersRenderData[order.id] = {
                 id: order.id,
                 orderDate: order.orderDate,
                 orderStatus: order.orderStatus,
-                total: order.total
+                total: order.total,
+                products : [order.product]
             }
         }
         else {
             pendingOrdersRenderData[order.id].total += order.total
+            pendingOrdersRenderData[order.id].products.push(order.product)
         }
         
     })
     allOrders.forEach( order => {
+        
         if (!allOrdersRenderData[order.id]) {
             allOrdersRenderData[order.id] = {
                 id: order.id,
                 orderDate: order.orderDate,
                 orderStatus: order.orderStatus,
-                total: order.total
+                total: order.total,
+                products : [order.product]
             }
         }
         else {
             allOrdersRenderData[order.id].total += order.total
+            allOrdersRenderData[order.id].products.push(order.product)
         }
 
     })
 
-    console.log(allOrdersRenderData)
-    console.log(pendingOrdersRenderData)
 
     // Clean previous html 
     ordersDiv.innerHTML = ''
@@ -148,7 +150,25 @@ async function showOrder(orderId){
     const url = `http://127.0.0.1:8080/orders?id=${orderId}`
     const ordersFetch = await fetch(url)
     const order = await ordersFetch.json()
-    console.log (order)
+    let orderRenderData = {}
+
+    order.forEach( order => {
+        if (!orderRenderData[order.id]) {
+            orderRenderData[order.id] = {
+                id: order.id,
+                orderDate: order.orderDate,
+                orderStatus: order.orderStatus,
+                total: order.total,
+                products : [order.product],
+                userId: order.userId
+            }
+        }
+        else {
+            orderRenderData[order.id].total += order.total
+            orderRenderData[order.id].products.push(order.product)
+        }
+        
+    })
     disableScroll()
 
     const modalContainer = document.querySelector('#proposalModalContainer')
@@ -160,28 +180,79 @@ async function showOrder(orderId){
         enableScroll()
     })
 
-    let products = []
+    let products = ""
+
+    Object.values(orderRenderData).forEach( order => {
+        order.products.forEach( product => {
+            products += `<li class="fs-5 list-group-item">${product.name}</li>`
+        })
+    })
+
     let total = 0
 
     const modal = document.querySelector('#proposalModal')
     modal.innerHTML = `
         <div class="container text-center">
+
             <div class="row">
                 <div class="col">
-                    <p class="my-0 fs-4 fw-bold">Titulo</p>
-                    <p class="fs-5">${order.title}</p>
+                    <p class="my-0 fs-4 fw-bold">Id del pedido</p>
+                    <p class="fs-5">${orderRenderData[orderId].id}</p>
                 </div>
                 <div class="col">
                     <p class="my-0 fs-4 fw-bold">Fecha del pedido </p>
-                    <p class="fs-5">${order.orderDate}</p>
-                </div>
-                <div class="col">
-                    <p class="my-0 fs-4 fw-bold">Fecha de terminación </p>
-                    <p class="fs-5">${order.closeDate === null || order.closeDate === undefined ? 'Pendiente' : order.closeDate}</p>
+                    <p class="fs-5">${orderRenderData[orderId].orderDate}</p>
                 </div>
             </div>
+                
+            <div class="row">
+                <div class="col">
+                    <p class="my-0 fs-4 fw-bold">Estatus de la orden</p>
+                    <p class="fs-5">${orderRenderData[orderId].orderStatus}</p>
+                    <label>Cambiar estado</label>
+                    <select id="statusSelect"></select>
+                </div>
+                <div class="col">
+                    <p class="my-0 fs-4 fw-bold">Total de la orden</p>
+                    <p class="fs-5">${orderRenderData[orderId].total} puntos</p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col"></div>
+                    <p class="my-0 fs-4 fw-bold">Productos</p>
+                    <ul class="fs-5 list-group list-group-flush">${products}</ul>
+                </div>
+            </div>
+            <button class ="btn btn-primary" id="editButton">Guardar cambios</button>
         </div>
     `
+
+    const statusSelect = document.querySelector('#statusSelect')
+    statusSelect.className = 'form-select'
+    const status = ['En proceso', 'Rechazado', 'Aceptado, disponible para recoger', "Entregado"]
+
+    status.forEach( status => {
+        const option = document.createElement('option')
+        option.value = status
+        option.textContent = status
+        statusSelect.appendChild(option)
+        if (orderRenderData[orderId].orderStatus === status) {
+            option.selected = true
+        }
+    })
+
+    statusSelect.addEventListener('change', function(e){
+        orderRenderData[orderId].orderStatus = e.target.value
+        console.log(orderRenderData)
+    })
+
+    const editButton = document.querySelector('#editButton')
+    editButton.addEventListener('click', function(){
+
+    })
+
+
 }
 
 function disableScroll() {
