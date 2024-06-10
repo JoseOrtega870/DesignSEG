@@ -146,7 +146,7 @@ def editProposal(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
     cursor.execute("SELECT role, email, firstname FROM users WHERE username = ?",(data["currentUser"],))
     sender = result.fetchone()
 
-    if sender[0] == "VSE" or sender[0] == "admin" or sender[0] == "Champion":
+    if sender[0] == "vse" or sender[0] == "admin" or sender[0] == "champion":
         cursor.execute("SELECT Users.email, Users.firstname FROM users, UserProposal WHERE Users.username = UserProposal.user AND UserProposal.proposalId = ?",(data["proposalId"],))
         receivers = cursor.fetchone()
         # If the status is different, send an email
@@ -158,7 +158,7 @@ def editProposal(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
                     "title": proposal[1],
                     "creationDate": proposal[8],
                     "oldStatus": proposal[5],
-                    "feedback" : proposal[1],
+                    "feedback" : proposal[8],
                     "status": data["status"]
                 }
                 send_email(receiver[0], email_content, "proposal_status_change")
@@ -175,7 +175,7 @@ def editProposal(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
                 send_email(receiver[0], email_content, "user_has_a_new_message")
                 
         # If the evaluator is different, send an email
-        evaluator = cursor.execute("SELECT Users.email, Users.firstname, Users.middleName, Users.lastName FROM users, proposals WHERE Users.username = ?", (data["currentEvaluatorUser"]))
+        evaluator = cursor.execute("SELECT Users.email, Users.firstname, Users.middleName, Users.lastName FROM users, proposals WHERE Users.username = ?", (data["currentEvaluatorUser"],))
         evaluator = evaluator.fetchone()
         if proposal[13] != data["currentEvaluatorUser"]:
             email_content = {
