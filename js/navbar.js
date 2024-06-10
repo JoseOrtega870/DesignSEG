@@ -27,6 +27,7 @@ async function fetchUser(){
         return null;
     }
 }
+
 document.addEventListener('DOMContentLoaded',async function(){
     const data = await fetchUser();
     document.getElementById('nombre').textContent = data['firstName'];
