@@ -11,7 +11,7 @@ def orders():
         if len(request.args) > 0:
             if validateData(["username"],request.args):
                 response = getOrdersByUser(request.args.get("username"))
-                return response
+                return jsonify(response)
             if validateData(["id"],request.args) == False:
                 response = responseJson(400,"Incorrect parameters sent")
                 return response
@@ -125,7 +125,7 @@ def sendOrderEmail(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict
 @query(database)
 def getOrdersByUser(cursor:sqlite3.Cursor,connection:sqlite3.Connection, username:str):
     try:
-        data = cursor.execute("SELECT * FROM Orders, Products WHERE Orders.productId = Products.id AND Orders.username = ?", (username,))
+        data = cursor.execute("SELECT * FROM Orders, Products WHERE Orders.productId = Products.id AND Orders.user = ?", (username,))
         row = data.fetchall()
         if not row:
             return None
