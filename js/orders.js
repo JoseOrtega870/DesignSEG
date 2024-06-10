@@ -248,7 +248,8 @@ async function showOrder(orderId){
     })
 
     const editButton = document.querySelector('#editButton')
-    editButton.addEventListener('click', async function(){
+    editButton.addEventListener('click', async function(e){
+        e.preventDefault()
         const url = `http://127.0.0.1:8080/orders`
         const ordersFetch = await fetch(url, {
             method: 'PUT',
@@ -273,6 +274,15 @@ async function showOrder(orderId){
             else if (res.status === 403) {
                 window.alert('No tiene permisos para realizar esta accion')
             }
+            else if (res.status === 500) {
+                return res.json()
+            }
+        })
+        .then(data => {
+            console.log(data)
+        })
+        .catch(err => {
+            console.log(err)
         })
 
         const order = await ordersFetch.json()

@@ -1,9 +1,9 @@
 const buttons = [
     {href:'home.html', text: 'Inicio'},
-    {href:'#', text: 'Recompensas'},
+    {href:'recompensas.html', text: 'Recompensas'},
     {href:'stats.html', text: 'Estadisticas'},
     {href:'vse.html', text: 'Evaluar'},
-    {href:'#', text: 'Pedidos'},
+    {href:'orders.html', text: 'Pedidos'},
     {href:'admin.html', text: 'Usuarios'}
 ]
 
