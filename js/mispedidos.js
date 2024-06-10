@@ -8,7 +8,7 @@ async function fetchUser() {
 
     console.log(user)
 
-    const order = await fetch(`http://127.0.0.1:8080/orders`);
+    const order = await fetch(`http://127.0.0.1:8080/orders/?=${user['name']}`);
     if (!order.ok) return;
 
     console.log(order)
