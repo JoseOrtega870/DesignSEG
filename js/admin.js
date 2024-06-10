@@ -1,4 +1,9 @@
 document.addEventListener("DOMContentLoaded", async function () {
+    const currentUser = await (await fetch(`http://127.0.0.1:8080/users?username=${sessionStorage.getItem('username')}`)).json();
+    if (currentUser['role'] != 'admin'){
+        window.location.href = "home.html";
+    }
+
     let areas = [];
 
     async function fetchAreas() {

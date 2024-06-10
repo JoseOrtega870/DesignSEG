@@ -6,9 +6,10 @@ from .products import bp as products_bp
 from .proposals import bp as proposals_bp
 from .users import bp as users_bp
 from .images import bp as images_bp
+from .start import bp as start_bp
 
 # List of blueprints to be registered
-blueprints = [areas_bp, login_bp, orders_bp, products_bp, proposals_bp, users_bp, images_bp]
+blueprints = [areas_bp, login_bp, orders_bp, products_bp, proposals_bp, users_bp, images_bp, start_bp]
 
 def register_blueprints(app):
     for bp in blueprints:

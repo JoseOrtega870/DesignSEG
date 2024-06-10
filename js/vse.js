@@ -82,6 +82,10 @@ async function getChampsByArea(area){
 }
 
 document.addEventListener('DOMContentLoaded',async function(){
+    const currentUser = await (await fetch(`http://127.0.0.1:8080/users?username=${sessionStorage.getItem('username')}`)).json();
+    if (currentUser['role'] != 'admin' && currentUser['role'] != 'vse'){
+        window.location.href = "home.html";
+    }
     await fetchProposals();
     
     document.getElementById('redirect').addEventListener('click', async function(){
