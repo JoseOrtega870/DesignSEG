@@ -12,7 +12,7 @@ async function createCharts( props ) {
     })
 
 
-    const proposals = props.slice(0, 200)
+    const proposals = props
 
     let proposalsByArea = {}
 
@@ -250,8 +250,9 @@ function renderProposals(proposals) {
 
     allProposals.forEach(proposal => {
         const div = document.createElement('div')
+        div.className = 'container py-2 rounded text-center shadow-sm mb-4'
         div.innerHTML += `
-        <div class="container py-2 rounded text-center shadow-sm mb-4"> 
+
             <div class="row">
                 <p class="col">Titulo: ${proposal.title}</p>
                 <p class="col">Fecha de creación: ${proposal.creationDate}</p>
@@ -264,12 +265,24 @@ function renderProposals(proposals) {
                 <p class="col">Categoria: ${proposal.category}</p>
 
             </div>
-            <div class="d-flex justify-content-end">
-                <button class="btn btn-primary btn-sm">Más detalles</button>    
 
-            </div>
-        </div>
+
         ` 
+        const buttonDiv = document.createElement('div')
+        buttonDiv.className = 'd-flex justify-content-end'
+
+        const button = document.createElement('button')
+        button.className = 'btn btn-primary btn-sm'
+        button.textContent = 'Mas detalles'
+        button.addEventListener('click', function(){
+            showProposal(proposal.id)
+        })
+
+        buttonDiv.appendChild(button)
+
+        div.appendChild(buttonDiv)
+
+        proposalsDiv.appendChild(div)
 
         allProposalsDiv.appendChild(div)
     })
