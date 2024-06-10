@@ -45,6 +45,7 @@ def proposals():
     elif request.method == "GET":   
         # Get data for a given user
         id = request.args.get("id")
+        status = request.args.get("status")
         if id != None:
             # Looking for a single user
             proposal = getProposals(["id",id])
@@ -57,6 +58,14 @@ def proposals():
                 # User not found
                 response = responseJson(404,"Proposal not found")
                 return response
+        elif status != None:
+            # Looking for all proposal of certain status
+            proposal = getProposals(["status",status])
+            
+            response = jsonify(proposal)
+            response.status_code = 200
+            return response
+            
         elif not any(request.args.values()):
             # Looking for all users
             proposals = getProposals(["1",1])
@@ -137,7 +146,7 @@ def editProposal(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
     cursor.execute("SELECT role, email, firstname FROM users WHERE username = ?",(data["currentUser"],))
     sender = result.fetchone()
 
-    if sender[0] == "VSE" or sender[0] == "admin" or sender[0] == "Champion":
+    if sender[0] == "vse" or sender[0] == "admin" or sender[0] == "champion":
         cursor.execute("SELECT Users.email, Users.firstname FROM users, UserProposal WHERE Users.username = UserProposal.user AND UserProposal.proposalId = ?",(data["proposalId"],))
         receivers = cursor.fetchone()
         # If the status is different, send an email
@@ -149,6 +158,7 @@ def editProposal(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
                     "title": proposal[1],
                     "creationDate": proposal[8],
                     "oldStatus": proposal[5],
+                    "feedback" : proposal[8],
                     "status": data["status"]
                 }
                 send_email(receiver[0], email_content, "proposal_status_change")
@@ -163,17 +173,19 @@ def editProposal(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
                     "message": data["feedback"]
                 }
                 send_email(receiver[0], email_content, "user_has_a_new_message")
-
-        # if proposal[11] != data["currentEvaluatorUser"]:
-        #     email_content = {
-        #         "name": sender[2],
-        #         "id": proposal[0],
-        #         "title": proposal[1],
-        #         "creationDate": proposal[8],
-        #         "oldEvaluator": proposal[11],
-        #         "newEvaluator": data["currentEvaluatorUser"]
-        #     }
-        #     send_email(sender[1], email_content, "proposal_evaluator_change")
+                
+        # If the evaluator is different, send an email
+        evaluator = cursor.execute("SELECT Users.email, Users.firstname, Users.middleName, Users.lastName FROM users, proposals WHERE Users.username = ?", (data["currentEvaluatorUser"],))
+        evaluator = evaluator.fetchone()
+        if proposal[13] != data["currentEvaluatorUser"]:
+            email_content = {
+                "name": evaluator[1] + " " + evaluator[2] + " " + evaluator[3],
+                "id": proposal[0],
+                "title": proposal[1],
+                "creationDate": proposal[8],
+                "proposalUsers": data["usersId"]
+            }
+            send_email(evaluator[0], email_content, "champion_has_a_new_proposal")
 
         connection.commit()
         return 3
@@ -206,7 +218,7 @@ def editProposal(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
 @query(database)
 def getProposals(cursor:sqlite3.Cursor,connection:sqlite3.Connection,condition):
     # Retrieve proposal(will be None in case it's not found)
-    data = cursor.execute("SELECT * FROM proposals WHERE " + condition[0] + " = ?", (condition[1],))
+    data = cursor.execute("SELECT * FROM proposals WHERE " + condition[0] + " = ? ORDER BY creationDate", (condition[1],))
     proposals = []
     columns = data.description
     for i in data.fetchall():

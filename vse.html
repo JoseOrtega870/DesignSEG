@@ -16,7 +16,7 @@
         <div class="fixed-top">
             <div class="container-fluid">
                 <div class="row justify-content-evenly align-items-center">
-                    <div class="botones col-auto d-flex justify-content-center align-items-center order-1" id = "containerLeft">
+                    <div class="botones col-auto d-flex justify-content-center align-items-center order-1" id="containerLeft">
                         <a href="#" class="botones perfil">Inicio</a>
                         <a href="#" class="botones perfil">Recompensas</a>
                     </div>
@@ -26,12 +26,12 @@
                     </div>
 
                     <nav class="botones col-auto text-end d-flex align-items-center justify-content-end order-3">
-                        <div id = "containerRight"></div>
+                        <div id="containerRight"></div>
 
                         <a href="#" class=" botones perfil">
-                            <img src="img/persona2.jpg" alt=""> <span id = "nombre">Carlos</span> 
+                            <img src="img/persona2.jpg" alt=""> <span id="nombre">Carlos</span> 
                         </a>
-                        <a href="recompensas.html" class="botones puntos"><span id = "puntos">100 pts </span></a>
+                        <a href="recompensas.html" class="botones puntos"><span id="puntos">100 pts </span></a>
                         <a href="login.html" class="botones cerrar-sesion" id="cerrarSesion">Cerrar Sesión</a>
                     </nav>
                 </div>
@@ -47,74 +47,122 @@
         </section>
 
         <main class="contenido-principal row d-flex justify-content-evenly align-items-center">
-            <div class="col-auto contenido-principal">
-                <table class="table">
+            <div class="col-auto contenido-principal scrollable-content">
+                <table class="table table-responsive">
                     <thead>
                         <tr class="titulo text-center">
-                            <th>Título de la Mejora</th>
-                            <th>Situación Actual</th>
-                            <th>Suferencia de Mejora</th>
+                            <th>Título</th>
                             <th>Área</th>
                             <th>Categoría</th>
-                            <th>Empleados Involucrados</th>
+                            <th>Estado</th>
+                            <th>Fecha de registro</th>
+                            
                         </tr>
                     </thead>
-                    <tbody class="text-center">
-                        <tr>
-                            <td>Carlos Alejandro</td>
-                            <td>25</td>
-                            <td>Mexico</td>
-                            <td>25</td>
-                            <td>Mexico</td>
-                            <td>Mexico</td>
-                            <td class="p-0"><button class="botontabla">Detalles</button></td>
-                        </tr>
-                        <tr>
-                            <td>Alejandro</td>
-                            <td>34</td>
-                            <td>España</td>
-                            <td>34</td>
-                            <td>España</td>
-                            <td>España</td>
-                            <td class="p-0"><button class="botontabla">Detalles</button></td>
-                        </tr>
-                        <tr>
-                            <td>Cesar</td>
-                            <td>30</td>
-                            <td>Colombia</td>
-                            <td>30</td>
-                            <td>Colombia</td>
-                            <td>Colombia</td>
-                            <td class="p-0"><button class="botontabla">Detalles</button></td>
-                        </tr>
-                        <tr>
-                            <td>Carlos Alejandro</td>
-                            <td>25</td>
-                            <td>Mexico</td>
-                            <td>25</td>
-                            <td>Mexico</td>
-                            <td>Mexico</td>
-                            <td class="p-0"><button class="botontabla">Detalles</button></td>
-                        </tr>
-                        <tr>
-                            <td>Alejandro</td>
-                            <td>34</td>
-                            <td>España</td>
-                            <td>34</td>
-                            <td>España</td>
-                            <td>España</td>
-                            <td class="p-0"><button class="botontabla">Detalles</button></td>
-                        </tr>
+                    <tbody class="text-center" id="proposals">                      
                     </tbody>
                 </table>
-                <button class="btn btn-primary bt-sm boton d-grid gap-2 col-6 mb-10 mx-auto data-toggle="button"" >Evaluar Mejora</button>
             </div>
         </main>
         <section class="contenedor-botones mt-4">
     </div>
-    
-    <script src="js/home.js"></script>
+    <div class="modal fade" id="myModal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Detalles de propuesta</h4>
+              <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="form-group">
+                  <label>Título</label>
+                  <input type="text" class="form-control" id="title" readonly>
+                </div>
+                <div class="form-group">
+                  <label>Situación actual</label>
+                  <input type="text" class="form-control" id="currentSituation" readonly>
+                </div>
+                <div class="form-group">
+                  <label>Descripción de propuesta de mejora</label>
+                  <input type="text" class="form-control" id="description" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Área</label>
+                    <input type="text" class="form-control" id="areaName" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Estado</label>
+                    <input type="text" class="form-control" id="status" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Categoría</label>
+                    <input type="text" class="form-control" id="category" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Fecha de registro</label>
+                    <input type="text" class="form-control" id="creationDate" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Puntos asignados</label>
+                    <input type="text" class="form-control" id="assignedPoints">
+                </div>
+                <div class="form-group">
+                    <label>Usuarios asociados</label>
+                    <input type="text" class="form-control" id="users" readonly>
+                </div>
+                <div class="form-group" id = "feedbackContainer">
+                    <label>Mensajes</label>
+                    
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button " class="btn btn-primary" data-toggle="modal" data-target="#redirectModal" data-dismiss="modal" id="redirect">Redirigir</button>
+              <button type="button" class="btn btn-primary" id ='sendMessage'>Responder mensaje</button>
+              <button type="button" class="btn btn-success" id ='accept'>Aceptar</button>
+              <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id ='deny'>Rechazar</button>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+
+      <div class="modal fade" id="redirectModal" tabindex="-1" role="dialog" aria-labelledby="redirectModal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="proposalModalLabel">Redirigir Propuesta</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="proposalForm">
+                        <div class="form-group">
+                            <label for="proposalTitle">Título de la Propuesta</label>
+                            <input type="text" class="form-control" id="proposalTitle" name="proposalTitle" required readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="selectUser">Seleccionar Usuario</label>
+                            <select class="form-control" id="selectUser" name="selectUser" required>
+                                <option value="" disabled selected>Seleccione un usuario</option>
+                            </select>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Enviar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="js/navbar.js"></script>
+    <script src="js/vse.js"></script>
     <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
