@@ -9,11 +9,11 @@ bp = Blueprint('orders',__name__, url_prefix='/orders')
 def orders():
     if request.method == "GET":
         if len(request.args) > 0:
-            if validateData(["id"],request.args) == False:
-                response = responseJson(400,"Incorrect parameters sent")
-                return response
             if validateData(["username"],request.args):
                 response = getOrdersByUser(request.args.get("username"))
+                return response
+            if validateData(["id"],request.args) == False:
+                response = responseJson(400,"Incorrect parameters sent")
                 return response
             # Get order by id
             response = getOrderById(request.args.get("id"))
@@ -52,9 +52,10 @@ def orders():
 
     elif request.method == "PUT":
         # Edit an existing order
-        if validateData(["currentUser","orderId","username","orderStatus","orderDate","total","productId","quantity"],request.get_json()) == False:
+        if validateData(["currentUser", "orderId", "username", "orderStatus"],request.get_json()) == False:
             response = responseJson(400,"Incorrect parameters sent")
             return response
+        print(request.get_json())
         response = updateOrder(request.get_json())
         return responseJson(response["status"], response["result"])
     
