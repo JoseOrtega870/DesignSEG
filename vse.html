@@ -118,7 +118,7 @@
               </form>
             </div>
             <div class="modal-footer">
-              <button type="button " class="btn btn-primary" data-toggle="modal" data-target="#redirectModal" data-dismiss="modal">Redirigir</button>
+              <button type="button " class="btn btn-primary" data-toggle="modal" data-target="#redirectModal" data-dismiss="modal" id="redirect">Redirigir</button>
               <button type="button" class="btn btn-primary" id ='sendMessage'>Responder mensaje</button>
               <button type="button" class="btn btn-success" id ='accept'>Aceptar</button>
               <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id ='deny'>Rechazar</button>
@@ -141,7 +141,7 @@
                     <form id="proposalForm">
                         <div class="form-group">
                             <label for="proposalTitle">Título de la Propuesta</label>
-                            <input type="text" class="form-control" id="proposalTitle" name="proposalTitle" required>
+                            <input type="text" class="form-control" id="proposalTitle" name="proposalTitle" required readonly>
                         </div>
                         <div class="form-group">
                             <label for="selectUser">Seleccionar Usuario</label>

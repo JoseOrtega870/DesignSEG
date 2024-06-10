@@ -42,6 +42,7 @@ def users():
         # Get data for a given user
         username = request.args.get("username")
         role = request.args.get("role")
+        area = request.args.get("area")
         if username != None:
             # Looking for a single user
             user = getUsers(["username",username])
@@ -57,6 +58,12 @@ def users():
         elif role != None:
             # Looking for a particular role
             users = getUsers(["role",role])
+            response = jsonify(users)
+            response.status_code = 200
+            return response
+        elif area != None:
+            # Looking for a particular area
+            users = getUsers(["area",area])
             response = jsonify(users)
             response.status_code = 200
             return response
