@@ -1,6 +1,6 @@
 const buttons = [
     {href:'home.html', text: 'Inicio'},
-    {href:'mispedidos.html', text: 'Mis Pedidos'},
+    {href:'myorders.html', text: 'Mis Pedidos'},
     {href:'stats.html', text: 'Estadisticas'},
     {href:'vse.html', text: 'Evaluar'},
     {href:'#', text: 'Pedidos'},
