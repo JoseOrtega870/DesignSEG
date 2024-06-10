@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded',async function(){
 
             createButton(buttons[0],container);
             createButton(buttons[1],container);
-            createButton(buttons[3],container);
+            createButton({href:'champion.html',text:"Evaluar"},container);
 
             container = document.getElementById('containerRight');
             while (container.firstChild) {
