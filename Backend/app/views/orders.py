@@ -52,9 +52,10 @@ def orders():
 
     elif request.method == "PUT":
         # Edit an existing order
-        if validateData(["currentUser","orderId","username","orderStatus","orderDate","total","productId","quantity"],request.get_json()) == False:
+        if validateData(["currentUser", "orderId", "username", "orderStatus"],request.get_json()) == False:
             response = responseJson(400,"Incorrect parameters sent")
             return response
+        print(request.get_json())
         response = updateOrder(request.get_json())
         return responseJson(response["status"], response["result"])
     

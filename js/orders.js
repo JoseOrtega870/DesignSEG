@@ -248,8 +248,35 @@ async function showOrder(orderId){
     })
 
     const editButton = document.querySelector('#editButton')
-    editButton.addEventListener('click', function(){
+    editButton.addEventListener('click', async function(){
+        const url = `http://127.0.0.1:8080/orders`
+        const ordersFetch = await fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                currentUser: sessionStorage.getItem('username'),
+                orderId: orderId,
+                username: orderRenderData[orderId].userId,
+                orderStatus: orderRenderData[orderId].orderStatus
+            })
+        })
+        .then(res => {
+            if (res.status === 200) {
+                window.alert('La orden ha sido actualizada')
+            }
+            else if (res.status === 400) {
+                window.alert('No se pudo actualizar la orden')
+                return res.json()
+            }
+            else if (res.status === 403) {
+                window.alert('No tiene permisos para realizar esta accion')
+            }
+        })
 
+        const order = await ordersFetch.json()
+        renderOrders(order)
     })
 
 
