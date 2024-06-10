@@ -160,13 +160,20 @@ def getOrdersByUser(cursor:sqlite3.Cursor,connection:sqlite3.Connection, usernam
 def getOrders(cursor:sqlite3.Cursor,connection:sqlite3.Connection):
     # Retrieve order(will be None in case it's not found)
     try:
-        data = cursor.execute("SELECT * FROM Orders;")
+        data = cursor.execute("SELECT * FROM Orders, Products WHERE Orders.productId = Products.id;")
         row = data.fetchall()
         if not row:
             return None
         orders = []
         # Add keys to the values returned 
         for order in row:
+            product = {
+                "id": order[7],
+                "name": order[8],
+                "description": order[9],
+                "price": order[10],
+                "image": order[11]
+            }
             order = {
                 "id": order[0],
                 "userId": order[1],
@@ -174,7 +181,8 @@ def getOrders(cursor:sqlite3.Cursor,connection:sqlite3.Connection):
                 "quantity": order[3],
                 "orderStatus": order[4],
                 "orderDate": order[5],
-                "total": order[6]
+                "total": order[6],
+                "product": product
             }
             orders.append(order)
         return orders

@@ -1,71 +1,98 @@
-let areasOut = [];
-
-async function fetchAreas() {
-    const response = await fetch('http://127.0.0.1:8080/areas');
-    if (!response.ok) return;
-    
-    const areas = await response.json();
-    const select = document.getElementById('area');
-    areas.forEach(area => select.add(new Option(area.name, area.name)));
-    areasOut = areas;
-}
-
-fetchAreas();
-
-document.getElementById('signupForm').addEventListener('submit', async function (event) {
+document.getElementById('signupForm').addEventListener('submit', function (event) {
     event.preventDefault();
 
-    const formData = {
-        username: document.getElementById('username').value,
-        email: document.getElementById('email').value,
-        firstname: document.getElementById('firstname').value,
-        middlename: document.getElementById('middlename').value,
-        lastname: document.getElementById('lastname').value,
-        password: document.getElementById('password').value,
-        area: areasOut.find(area => area.name === document.getElementById('area').value).id,
-        points: 0,
-        role: ''
-    };
+    const noEmpleado = document.getElementById('noEmpleado').value;
+    const email = document.getElementById('email').value;
+    const nombre = document.getElementById('nombre').value;
+    const apellidoPaterno = document.getElementById('apellidos').value;
+    const contrasena = document.getElementById('contrasena').value;
+    const repetirContrasena = document.getElementById('repetirContrasena').value;
 
-    if (formData.password !== document.getElementById('passwordConfirm').value) {
-        return showMessage('Las contraseñas no coinciden, Por favor intente de nuevo.', 'danger');
+    // Perform validation and populate the error messages in an array
+    const errors = [];
+
+    if (!noEmpleado) {
+        errors.push('Ingrese un Número de Empleado');
     }
 
+    if (!email) {
+        errors.push('Ingrese un Correo Electrónico');
+    }
 
-    // if (formData.password.length < 8) {
-    //     alert('La contraseña debe tener al menos 8 caracteres.');
-    //     return; 
-    // }
+    if (!nombre) {
+        errors.push('Ingrese un Nombre');
+    }
 
-    // if (!/[A-Z]/.test(formData.password)) {
-    //     alert('La contraseña debe contener al menos una letra mayúscula.');
-    //     return;
-    // }
+    if (!apellidoPaterno) {
+        errors.push('Ingrese sus Apellidos');
+    }
 
-    // if (!/[a-z]/.test(formData.password)) {
-    //     alert('La contraseña debe contener al menos una letra minúscula.');
-    //     return;
-    // }
+    if (!contrasena) {
+        errors.push('Ingrese su Contraseña');
+    }
 
-    // if (!/[0-9]/.test(formData.password)) {
-    //     alert('La contraseña debe contener al menos un número (0-9).');
-    //     return;
-    // }
+    if (!repetirContrasena) {
+        errors.push('Confirme su contraseña');
+    }
 
-    // if (!/[*@_]/.test(formData.password)) {
-    //     alert('La contraseña debe contener al menos un carácter especial (*@_).';
-    //     return;
-    // }
+    if (contrasena !== repetirContrasena) {
+        errors.push('Las contrasenas no coinciden');
+    }
 
-    const response = await fetch('http://127.0.0.1:8080/users', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-    });
+    // Display the alert if there are any errors
+    if (errors.length > 0) {
+        const errorAlert = document.getElementById('errorAlert');
+        errorAlert.innerHTML = '';
 
-    if (response.ok) {
-        // Redirigir
+        errors.forEach(function (error) {
+            const errorElement = document.createElement('p');
+            errorElement.textContent = error;
+            errorAlert.appendChild(errorElement);
+        });
+
+        errorAlert.style.display = 'block';
     } else {
-        alert('No se pudo realizar el registro. Intente más tarde.');
+        // Submit the form if there are no errors
+        const formData = {
+            noEmpleado: noEmpleado,
+            email: email,
+            nombre: nombre,
+            apellidoPaterno: apellidoPaterno,
+            contrasena: contrasena
+        };
+
+        fetch('/usercreation', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+            .then(response => {
+                if (response.ok) {
+                    // Redirect to the dashboard or perform other actions
+                } else {
+                    errors.push('Failed to create user.');
+                    displayErrorAlert(errors);
+                }
+            })
+            .catch(error => {
+                // Handle any errors
+                console.error('Error:', error);
+            });
     }
+
+    function displayErrorAlert(errors) {
+        const errorAlert = document.getElementById('errorAlert');
+        errorAlert.innerHTML = '';
+
+        errors.forEach(function (error) {
+            const errorElement = document.createElement('p');
+            errorElement.textContent = error;
+            errorAlert.appendChild(errorElement);
+        });
+
+        errorAlert.style.display = 'block';
+    }
+
 });
