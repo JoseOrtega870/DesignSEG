@@ -2,32 +2,39 @@ document.addEventListener('DOMContentLoaded', function () {
     startApp()
 })
 
-
 function startApp(){
-    loadProposals()
+    loadOrders()
 
-    document.getElementById('filtro-pendientes').addEventListener('change', orderProposals)
-    document.getElementById('filtro-historial').addEventListener('change', orderProposals)
+    document.getElementById('pendant-filter').addEventListener('change', orderProposals)
+    document.getElementById('history-filter').addEventListener('change', orderProposals)
 }
 
-async function loadProposals(  ){
 
-    const url = 'http://127.0.0.1:8080/proposals'
-    const proposalFetch = await fetch(url)
 
-    const proposals = await proposalFetch.json()
+async function loadOrders(  ){
 
-    const url2 = 'http://127.0.0.1:8080/orders'
-    const orderFetch = await fetch(url2)
+    const response = await fetch(`http://127.0.0.1:8080/users?username=${sessionStorage.getItem('username')}`);
+    if (!response.ok) return;
+
+    const user = await response.json();
+    const username = user.username;
+
+    const url = `http://127.0.0.1:8080/orders?username=${username}`
+
+    // console.log(url)
+    
+    const orderFetch = await fetch(url)
     const orders = await orderFetch.json()
 
+    // console.log(orders)
     renderOrders(orders)
 
 }
 
-function renderOrders(orders) {
-    const ordersDiv = document.getElementById('ordenes-pendientes')
-    const allOrdersDiv = document.getElementById('historial-ordenes')
+async function renderOrders( orders ){
+
+    const ordersDiv = document.getElementById('pendant-orders')
+    const allOrdersDiv = document.getElementById('order-history')
 
     const pendingOrders = orders.filter(order => order.orderStatus !== 'Aceptado, disponible para recoger' || order.orderStatus !== 'Rechazado' || order.orderStatus !== 'Entregado')
     const allOrders = orders.filter(order => order.orderStatus === 'Aceptado, disponible para recoger' || order.orderStatus === 'Rechazado' || order.orderStatus === 'Entregado')
@@ -36,38 +43,37 @@ function renderOrders(orders) {
     let allOrdersRenderData = {}
 
     pendingOrders.forEach( order => {
+
         if (!pendingOrdersRenderData[order.id]) {
             pendingOrdersRenderData[order.id] = {
                 id: order.id,
                 orderDate: order.orderDate,
                 orderStatus: order.orderStatus,
-                total: order.total,
-                products : [order.product]
+                total: order.total
             }
         }
         else {
             pendingOrdersRenderData[order.id].total += order.total
-            pendingOrdersRenderData[order.id].products.push(order.product)
         }
         
     })
     allOrders.forEach( order => {
-        
         if (!allOrdersRenderData[order.id]) {
             allOrdersRenderData[order.id] = {
                 id: order.id,
                 orderDate: order.orderDate,
                 orderStatus: order.orderStatus,
-                total: order.total,
-                products : [order.product]
+                total: order.total
             }
         }
         else {
             allOrdersRenderData[order.id].total += order.total
-            allOrdersRenderData[order.id].products.push(order.product)
         }
 
     })
+
+    // console.log(allOrdersRenderData)
+    // console.log(pendingOrdersRenderData)
 
 
     // Clean previous html 
@@ -146,6 +152,22 @@ function renderOrders(orders) {
     })
 }
 
+function disableScroll() {
+    // Get the current page scroll position
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop
+    const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft
+
+    // if any scroll is attempted,
+    // set this to the previous value
+    window.onscroll = function () {
+        window.scrollTo(scrollLeft, scrollTop);
+    };
+}
+
+function enableScroll() {
+    window.onscroll = function () { };
+}
+
 async function showOrder(orderId){
     const url = `http://127.0.0.1:8080/orders?id=${orderId}`
     const ordersFetch = await fetch(url)
@@ -209,8 +231,7 @@ async function showOrder(orderId){
                 <div class="col">
                     <p class="my-0 fs-4 fw-bold">Estatus de la orden</p>
                     <p class="fs-5">${orderRenderData[orderId].orderStatus}</p>
-                    <label>Cambiar estado</label>
-                    <select id="statusSelect"></select>
+                    
                 </div>
                 <div class="col">
                     <p class="my-0 fs-4 fw-bold">Total de la orden</p>
@@ -224,82 +245,15 @@ async function showOrder(orderId){
                     <ul class="fs-5 list-group list-group-flush">${products}</ul>
                 </div>
             </div>
-            <button class ="btn btn-primary" id="editButton">Guardar cambios</button>
+            
         </div>
     `
 
-    const statusSelect = document.querySelector('#statusSelect')
-    statusSelect.className = 'form-select'
-    const status = ['En proceso', 'Rechazado', 'Aceptado, disponible para recoger', "Entregado"]
 
-    status.forEach( status => {
-        const option = document.createElement('option')
-        option.value = status
-        option.textContent = status
-        statusSelect.appendChild(option)
-        if (orderRenderData[orderId].orderStatus === status) {
-            option.selected = true
-        }
-    })
-
-    statusSelect.addEventListener('change', function(e){
-        orderRenderData[orderId].orderStatus = e.target.value
-        console.log(orderRenderData)
-    })
-
-    const editButton = document.querySelector('#editButton')
-    editButton.addEventListener('click', async function(){
-        const url = `http://127.0.0.1:8080/orders`
-        const ordersFetch = await fetch(url, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                currentUser: sessionStorage.getItem('username'),
-                orderId: orderId,
-                username: orderRenderData[orderId].userId,
-                orderStatus: orderRenderData[orderId].orderStatus
-            })
-        })
-        .then(res => {
-            if (res.status === 200) {
-                window.alert('La orden ha sido actualizada')
-            }
-            else if (res.status === 400) {
-                window.alert('No se pudo actualizar la orden')
-                return res.json()
-            }
-            else if (res.status === 403) {
-                window.alert('No tiene permisos para realizar esta accion')
-            }
-        })
-
-        const order = await ordersFetch.json()
-        renderOrders(order)
-    })
-
-
-}
-
-function disableScroll() {
-    // Get the current page scroll position
-    const scrollTop = window.pageYOffset || document.documentElement.scrollTop
-    const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft
-
-    // if any scroll is attempted,
-    // set this to the previous value
-    window.onscroll = function () {
-        window.scrollTo(scrollLeft, scrollTop);
-    };
-}
-
-function enableScroll() {
-    window.onscroll = function () { };
 }
 
 async function orderProposals(e) {
-    
+    console.log('Event occurred:', e);
     const url = 'http://127.0.0.1:8080/orders'
     const ordersFetch = await fetch(url)
 

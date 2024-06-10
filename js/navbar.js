@@ -1,6 +1,6 @@
 const buttons = [
     {href:'home.html', text: 'Inicio'},
-    {href:'#', text: 'Recompensas'},
+    {href:'myorders.html', text: 'Mis Pedidos'},
     {href:'stats.html', text: 'Estadisticas'},
     {href:'vse.html', text: 'Evaluar'},
     {href:'#', text: 'Pedidos'},
@@ -27,6 +27,7 @@ async function fetchUser(){
         return null;
     }
 }
+
 document.addEventListener('DOMContentLoaded',async function(){
     const data = await fetchUser();
     document.getElementById('nombre').textContent = data['firstName'];

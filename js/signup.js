@@ -32,30 +32,30 @@ document.getElementById('signupForm').addEventListener('submit', async function 
     }
 
 
-    // if (formData.password.length < 8) {
-    //     alert('La contraseña debe tener al menos 8 caracteres.');
-    //     return; 
-    // }
+    if (formData.password.length < 8) {
+        alert('La contraseña debe tener al menos 8 caracteres.');
+        return; 
+    }
 
-    // if (!/[A-Z]/.test(formData.password)) {
-    //     alert('La contraseña debe contener al menos una letra mayúscula.');
-    //     return;
-    // }
+    if (!/[A-Z]/.test(formData.password)) {
+        alert('La contraseña debe contener al menos una letra mayúscula.');
+        return;
+    }
 
-    // if (!/[a-z]/.test(formData.password)) {
-    //     alert('La contraseña debe contener al menos una letra minúscula.');
-    //     return;
-    // }
+    if (!/[a-z]/.test(formData.password)) {
+        alert('La contraseña debe contener al menos una letra minúscula.');
+        return;
+    }
 
-    // if (!/[0-9]/.test(formData.password)) {
-    //     alert('La contraseña debe contener al menos un número (0-9).');
-    //     return;
-    // }
+    if (!/[0-9]/.test(formData.password)) {
+        alert('La contraseña debe contener al menos un número (0-9).');
+        return;
+    }
 
-    // if (!/[*@_]/.test(formData.password)) {
-    //     alert('La contraseña debe contener al menos un carácter especial (*@_).';
-    //     return;
-    // }
+    if (!/[*@_]/.test(formData.password)) {
+        alert('La contraseña debe contener al menos un carácter especial (*@_).');
+        return;
+    }
 
     const response = await fetch('http://127.0.0.1:8080/users', {
         method: 'POST',
@@ -66,11 +66,12 @@ document.getElementById('signupForm').addEventListener('submit', async function 
     if (response.ok) {
         showMessage('Usuario creado exitosamente.', 'success');
         // Redirigir
+        sessionStorage.setItem('username', username);
+        location.href = "home.html";
     } else {
         alert('No se pudo realizar el registro. Intente más tarde.');
     }
 });
-
 function showMessage(message, type) {
     const messageContainer = document.createElement('div');
     messageContainer.className = `alert alert-${type}`;
@@ -80,6 +81,4 @@ function showMessage(message, type) {
     setTimeout(() => {
         messageContainer.remove();
     }, 5000);
-}
-
-
+};
