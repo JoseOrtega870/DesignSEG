@@ -71,4 +71,15 @@ document.getElementById('signupForm').addEventListener('submit', async function 
     }
 });
 
+function showMessage(message, type) {
+    const messageContainer = document.createElement('div');
+    messageContainer.className = `alert alert-${type}`;
+    messageContainer.textContent = message;
+    document.querySelector('.form-container').prepend(messageContainer);
+
+    setTimeout(() => {
+        messageContainer.remove();
+    }, 5000);
+}
+
 
