@@ -12,7 +12,9 @@ def orders():
             if validateData(["id"],request.args) == False:
                 response = responseJson(400,"Incorrect parameters sent")
                 return response
-            
+            if validateData(["username"],request.args):
+                response = getOrdersByUser(request.args.get("username"))
+                return response
             # Get order by id
             response = getOrderById(request.args.get("id"))
 
@@ -120,6 +122,41 @@ def sendOrderEmail(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict
         return { "status": 500, "result": e}
 
 @query(database)
+def getOrdersByUser(cursor:sqlite3.Cursor,connection:sqlite3.Connection, username:str):
+    try:
+        data = cursor.execute("SELECT * FROM Orders, Products WHERE Orders.productId = Products.id AND Orders.username = ?", (username,))
+        row = data.fetchall()
+        if not row:
+            return None
+        orders = []
+        # Add keys to the values returned 
+        for order in row:
+            product = {
+                "id": order[7],
+                "name": order[8],
+                "description": order[9],
+                "price": order[10],
+                "image": order[11]
+            }
+            order = {
+                "id": order[0],
+                "userId": order[1],
+                "productId": order[2],
+                "quantity": order[3],
+                "orderStatus": order[4],
+                "orderDate": order[5],
+                "total": order[6],
+                "product": product
+            }
+            orders.append(order)
+        return orders
+    except Exception as e:
+        print(e)
+        return None
+
+
+
+@query(database)
 def getOrders(cursor:sqlite3.Cursor,connection:sqlite3.Connection):
     # Retrieve order(will be None in case it's not found)
     try:
@@ -150,10 +187,6 @@ def getOrderById(cursor:sqlite3.Cursor,connection:sqlite3.Connection, id:int):
     try:
         # Retrieve order(will be None in case it's not found)
         data = cursor.execute("SELECT * FROM orders, products WHERE orders.id = ? AND products.id = orders.productId;", (id,))
-
-
-
-
         row = data.fetchall()
         print(row)
         if not row:

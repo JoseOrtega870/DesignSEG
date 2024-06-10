@@ -34,36 +34,33 @@ function renderOrders(orders) {
 
     let pendingOrdersRenderData = {}
     let allOrdersRenderData = {}
-    let products = {}
 
     pendingOrders.forEach( order => {
 
         if (!pendingOrdersRenderData[order.id]) {
             pendingOrdersRenderData[order.id] = {
+                id: order.id,
                 orderDate: order.orderDate,
                 orderStatus: order.orderStatus,
-
+                total: order.total
             }
         }
-
-
-        if (!products[order.id]) {
-            products[order.id] = []
+        else {
+            pendingOrdersRenderData[order.id].total += order.total
         }
-
-
+        
     })
     allOrders.forEach( order => {
-   
         if (!allOrdersRenderData[order.id]) {
             allOrdersRenderData[order.id] = {
+                id: order.id,
                 orderDate: order.orderDate,
                 orderStatus: order.orderStatus,
-
+                total: order.total
             }
         }
-        if (!products[order.id]) {
-            products[order.id] = []
+        else {
+            allOrdersRenderData[order.id].total += order.total
         }
 
     })
@@ -75,25 +72,21 @@ function renderOrders(orders) {
     ordersDiv.innerHTML = ''
     allOrdersDiv.innerHTML = ''
 
-    Object.values(allOrdersRenderData).forEach( orders => {
-        console.log(orders)
-        const productsRender = products[orders[0][0].id]
+    Object.values(allOrdersRenderData).forEach( order => {
+
         const div = document.createElement('div')
         div.className = 'container py-2 rounded text-center shadow-sm mb-4'
         div.innerHTML += `
-
             <div class="row">
                 <p class="col">Id: ${order.id}</p>
                 <p class="col">Fecha del pedido: ${order.orderDate}</p>
-                <p class="col">Producto: ${product.name}</p>
+
             </div>
             
             <div class="row">
                 <p class="col">Estatus: ${order.orderStatus}</p>
-                <p class="col">Cantidad: ${order.quantity}</p>
                 <p class="col">Total: ${order.total}</p>
             </div>
-
 
         ` 
         const buttonDiv = document.createElement('div')
@@ -115,9 +108,7 @@ function renderOrders(orders) {
         allOrdersDiv.appendChild(div)
     })
 
-    Object.values(pendingOrdersRenderData).forEach( orders => {
-        console.log(orders)
-        const productsRender = products[orders[0][0].id]
+    Object.values(pendingOrdersRenderData).forEach( order => {
 
         const div = document.createElement('div')
         div.className = 'container py-2 rounded text-center shadow-sm mb-4'
@@ -126,15 +117,13 @@ function renderOrders(orders) {
         <div class="row">
             <p class="col">Id: ${order.id}</p>
             <p class="col">Fecha del pedido: ${order.orderDate}</p>
-            <p class="col">Producto: ${product.name}</p>
+
         </div>
         
         <div class="row">
             <p class="col">Estatus: ${order.orderStatus}</p>
-            <p class="col">Cantidad: ${order.quantity}</p>
             <p class="col">Total: ${order.total}</p>
         </div>
-
 
     ` 
         const buttonDiv = document.createElement('div')
@@ -159,7 +148,7 @@ async function showOrder(orderId){
     const url = `http://127.0.0.1:8080/orders?id=${orderId}`
     const ordersFetch = await fetch(url)
     const order = await ordersFetch.json()
-    
+    console.log (order)
     disableScroll()
 
     const modalContainer = document.querySelector('#proposalModalContainer')
@@ -173,11 +162,6 @@ async function showOrder(orderId){
 
     let products = []
     let total = 0
-
-
-    order.forEach(order => {
-        console.log(order)
-    })
 
     const modal = document.querySelector('#proposalModal')
     modal.innerHTML = `
