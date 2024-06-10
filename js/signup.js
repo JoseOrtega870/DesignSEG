@@ -66,6 +66,8 @@ document.getElementById('signupForm').addEventListener('submit', async function 
     if (response.ok) {
         showMessage('Usuario creado exitosamente.', 'success');
         // Redirigir
+        sessionStorage.setItem('username', username);
+        location.href = "home.html";
     } else {
         alert('No se pudo realizar el registro. Intente más tarde.');
     }
