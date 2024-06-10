@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-    <title>VSE</title>
+    <title>Champion</title>
     
 </head>
 <body>
@@ -16,7 +16,7 @@
         <div class="fixed-top">
             <div class="container-fluid">
                 <div class="row justify-content-evenly align-items-center">
-                    <div class="botones col-auto d-flex justify-content-center align-items-center order-1" id = "containerLeft">
+                    <div class="botones col-auto d-flex justify-content-center align-items-center order-1" id="containerLeft">
                         <a href="#" class="botones perfil">Inicio</a>
                         <a href="#" class="botones perfil">Recompensas</a>
                     </div>
@@ -26,12 +26,12 @@
                     </div>
 
                     <nav class="botones col-auto text-end d-flex align-items-center justify-content-end order-3">
-                        <div id = "containerRight"></div>
+                        <div id="containerRight"></div>
 
                         <a href="#" class=" botones perfil">
-                            <img src="img/persona2.jpg" alt=""> <span id = "nombre">Carlos</span> 
+                            <img src="img/persona2.jpg" alt=""> <span id="nombre">Carlos</span> 
                         </a>
-                        <a href="recompensas.html" class="botones puntos"><span id = "puntos">100 pts </span></a>
+                        <a href="recompensas.html" class="botones puntos"><span id="puntos">100 pts </span></a>
                         <a href="login.html" class="botones cerrar-sesion" id="cerrarSesion">Cerrar Sesión</a>
                     </nav>
                 </div>
@@ -47,8 +47,8 @@
         </section>
 
         <main class="contenido-principal row d-flex justify-content-evenly align-items-center">
-            <div class="col-auto contenido-principal">
-                <table class="table">
+            <div class="col-auto contenido-principal scrollable-content">
+                <table class="table table-responsive">
                     <thead>
                         <tr class="titulo text-center">
                             <th>Título</th>
@@ -56,14 +56,12 @@
                             <th>Categoría</th>
                             <th>Estado</th>
                             <th>Fecha de registro</th>
-                            <th>Puntos Asignados</th>
+                            
                         </tr>
                     </thead>
                     <tbody class="text-center" id="proposals">                      
                     </tbody>
                 </table>
-
-                <button class="btn btn-primary bt-sm boton d-grid gap-2 col-6 mb-10 mx-auto data-toggle="button"" data-bs-toggle="modal" data-bs-target="#nueva-mejora">Nueva Mejora</button>
             </div>
         </main>
         <section class="contenedor-botones mt-4">
@@ -107,7 +105,7 @@
                 </div>
                 <div class="form-group">
                     <label>Puntos asignados</label>
-                    <input type="text" class="form-control" id="assignedPoints" readonly>
+                    <input type="text" class="form-control" id="assignedPoints">
                 </div>
                 <div class="form-group">
                     <label>Usuarios asociados</label>
@@ -119,18 +117,49 @@
                 </div>
               </form>
             </div>
-            <div class="modal-footer">
-              <button type="button " class="btn btn-primary" data-bs-dismiss="modal">Redirigir</button>
-              <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id = 'sendMessage'>Responder mensaje</button>
-              <button type="button" class="btn btn-success" data-bs-dismiss="modal" id = 'sendMessage'>Aceptar</button>
-              <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id = 'sendMessage'>Rechazar</button>
+            <div class="modal-footer" id="buttonsModal">
+              
             </div>
             
           </div>
         </div>
       </div>
+
+      <div class="modal fade" id="redirectModal" tabindex="-1" role="dialog" aria-labelledby="redirectModal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="proposalModalLabel">Redirigir Propuesta</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="proposalForm">
+                        <div class="form-group">
+                            <label for="proposalTitle">Título de la Propuesta</label>
+                            <input type="text" class="form-control" id="proposalTitle" name="proposalTitle" required readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="selectUser">Seleccionar Usuario</label>
+                            <select class="form-control" id="selectUser" name="selectUser" required>
+                                <option value="" disabled selected>Seleccione un usuario</option>
+                            </select>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Enviar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="js/navbar.js"></script>
     <script src="js/champion.js"></script>
     <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
