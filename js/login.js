@@ -19,7 +19,7 @@ document.getElementById('loginForm').addEventListener('submit', function (event)
 
     // Check if the username and password are correct
     if (errors.length === 0) {
-        fetch('/login', {
+        fetch('127.0.0.1:8080/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

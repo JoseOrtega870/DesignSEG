@@ -69,5 +69,3 @@ document.getElementById('signupForm').addEventListener('submit', async function 
         alert('No se pudo realizar el registro. Intente más tarde.');
     }
 });
-
-
