@@ -55,7 +55,7 @@ def orders():
         if validateData(["currentUser", "orderId", "username", "orderStatus"],request.get_json()) == False:
             response = responseJson(400,"Incorrect parameters sent")
             return response
-        print(request.get_json())
+
         response = updateOrder(request.get_json())
         return responseJson(response["status"], response["result"])
     
@@ -85,7 +85,7 @@ def createOrder(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
     except Exception as e:
         print(e)
         connection.rollback()
-        return { "status": 500, "result": e}
+        return { "status": 500, "result": "Error"}
     
 @query(database)
 def sendOrderEmail(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
@@ -240,26 +240,19 @@ def updateOrder(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
         # Checks whether the user exists and is an admin and has order edit privileges
         cursor.execute("SELECT role FROM users WHERE username = ?", (data["currentUser"],))
         user = cursor.fetchone()
-        print(user[0])
+
         if not user:
             return {"status": 404, "result": "User not Found"}
         if str(user[0]) != "admin" and str(user[0]) != "VSE":
             return {"status": 403, "result": "User has no order edit privileges"}
 
-        # Checks whether the product exists
-        cursor.execute("SELECT * FROM products WHERE id = ?", (data["productId"],))
-        product = cursor.fetchone()
-        if not product:
-            return {"status": 404, "result": "Product not Found"}
-
-
         # Update order
-        cursor.execute("UPDATE orders SET username = ?, productId = ?, quantity = ?, orderStatus = ?, orderDate = ?, total = ? WHERE id = ?",
-                        (data["username"], data["productId"], data["quantity"], data["orderStatus"], data["orderDate"], data["total"], data["orderId"]))
+        cursor.execute("UPDATE orders SET orderStatus = ? WHERE id = ?",
+                        (data["orderStatus"], data["orderId"]))
         connection.commit()
 
 
-        cursor.execute("SELECT products.name, orders.quantity FROM products, orders WHERE order.id = ? AND products.id = orders.productId", (data["orderId"],))
+        cursor.execute("SELECT products.name, orders.quantity FROM products, orders WHERE orders.id = ? AND products.id = orders.productId", (data["orderId"],))
         products = cursor.fetchall()
 
         cursor.execute("SELECT email, firstName, middleName, lastName FROM users WHERE username = ?", (order[2],))
@@ -277,7 +270,7 @@ def updateOrder(cursor:sqlite3.Cursor,connection:sqlite3.Connection,data:dict):
             send_email(order_user[0],email_content, "user_order_status_changed")
         return {"status": 200, "result": "Order updated"}
     except Exception as e:
-        print(e)
         connection.rollback()
-        return False
+        print(e)
+        return {"status": 500, "result": "Internal Server Error"}
 # End of order endpoints
