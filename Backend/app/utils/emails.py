@@ -1,7 +1,15 @@
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-SENDER = "correo@SEG_Automotive.com"
+
+config_file = open('./config.cfg','r')
+config = {}
+for line in config_file:
+    config[line.split('=')[0].rstrip().lstrip()] = line.split('=')[1].replace('\n','').lstrip().rstrip()
+
+
+SENDER = config['SENDER_EMAIL_ADDRESS']
+
 
 FONT_BOLD = "style = ' font-weight: bold; '"
 END_STYLE = "style = ' font-style: italic; '"
