@@ -36,42 +36,36 @@ function renderOrders(orders) {
     let allOrdersRenderData = {}
     let products = {}
 
-    pendingOrders.forEach(async order => {
-        const productFetch = await fetch(`http://127.0.0.1:8080/products?id=${order.productId}`)
-        const product = await productFetch.json()
+    pendingOrders.forEach( order => {
+
         if (!pendingOrdersRenderData[order.id]) {
             pendingOrdersRenderData[order.id] = {
                 orderDate: order.orderDate,
                 orderStatus: order.orderStatus,
-                products: [product]
+
             }
         }
-        pendingOrdersRenderData[order.id].products.push(product)
+
 
         if (!products[order.id]) {
             products[order.id] = []
         }
 
-        products[order.id].push(product)
-    })
-    allOrders.forEach(async order => {
-        const productFetch = await fetch(`http://127.0.0.1:8080/products?id=${order.productId}`)
-        const product = await productFetch.json()
 
+    })
+    allOrders.forEach( order => {
+   
         if (!allOrdersRenderData[order.id]) {
             allOrdersRenderData[order.id] = {
                 orderDate: order.orderDate,
                 orderStatus: order.orderStatus,
-                products: [product]
+
             }
         }
-        allOrdersRenderData[order.id].products.push(product)
-
         if (!products[order.id]) {
             products[order.id] = []
         }
 
-        products[order.id].push(product)
     })
 
     console.log(allOrdersRenderData)
