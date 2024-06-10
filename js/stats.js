@@ -234,7 +234,38 @@ async function loadProposals(  ){
     renderProposals(proposals)
     createCharts(proposals)
 
+    const exportButton = document.getElementById('exportar')
 
+    exportButton.addEventListener('click', () => {
+        exportProposalsCSV(proposals)
+    })
+
+}
+
+function exportProposalsCSV(proposals) {
+    console.log(proposals)
+    let proposalsCSV = 'area,assignedPoints,title,creationDate,status,category,description,currentSituation,closeDate\n'
+    proposals.forEach(proposal => {
+        proposalsCSV +=`${proposal.area},${proposal.assignedPoints},${proposal.title},${proposal.creationDate},${proposal.status},${proposal.category},${proposal.description},${proposal.currentSituation},${proposal.closeDate}\n`
+    })
+    
+    const blob = new Blob([proposalsCSV], { type: 'text/csv;charset=utf-8;' })
+    const downloadLink = document.createElement("a");
+
+    // File name
+    downloadLink.download = "proposals.csv";
+
+    // Create a link to the file
+    downloadLink.href = window.URL.createObjectURL(blob);
+
+    // Hide download link
+    downloadLink.style.display = "none";
+
+    // Add the link to DOM
+    document.body.appendChild(downloadLink);
+
+    // Click download link
+    downloadLink.click();
 }
 
 function renderProposals(proposals) {
